@@ -26,6 +26,11 @@ namespace project_manage_system_backend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", option => option.AllowAnyOrigin());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +46,11 @@ namespace project_manage_system_backend
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors(option =>
+            {
+                option.AllowAnyOrigin();
+            });
 
             app.UseEndpoints(endpoints =>
             {
