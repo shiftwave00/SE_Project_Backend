@@ -6,12 +6,20 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace project_manage_system_backend.Controllers
 {
     [ApiController]
     public class ErrorController : ControllerBase
     {
+        private readonly ILogger _logger;
+
+        public ErrorController(ILogger<ErrorController> logger)
+        {
+            _logger = logger;
+        }
+
         [Route("/error-local-development")]
         public IActionResult ErrorLocalDevelopment(
         [FromServices] IWebHostEnvironment webHostEnvironment)
@@ -23,6 +31,9 @@ namespace project_manage_system_backend.Controllers
             }
 
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
+
+            _logger.LogError(context.Error.Message);
+            _logger.LogError(context.Error.StackTrace);
 
             return Problem(
                 detail: context.Error.StackTrace,

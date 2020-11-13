@@ -31,6 +31,13 @@ namespace project_manage_system_backend
             {
                 c.AddPolicy("AllowOrigin", option => option.AllowAnyOrigin());
             });
+
+            services.AddLogging(builder =>
+            {
+                builder.AddConfiguration(Configuration.GetSection("Logging"))
+                       .AddConsole()
+                       .AddDebug();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
