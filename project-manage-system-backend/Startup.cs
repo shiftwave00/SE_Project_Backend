@@ -38,7 +38,11 @@ namespace project_manage_system_backend
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseExceptionHandler("/error-local-development");
+            }
+            else
+            {
+                app.UseExceptionHandler("/error");
             }
 
             app.UseHttpsRedirection();
@@ -56,6 +60,7 @@ namespace project_manage_system_backend
             {
                 endpoints.MapControllers();
             });
+
         }
     }
 }
