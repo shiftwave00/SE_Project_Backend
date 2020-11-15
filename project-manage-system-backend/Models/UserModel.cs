@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace project_manage_system_backend.Model
+namespace project_manage_system_backend.Models
 {
     public class UserModel
     {
@@ -11,6 +11,6 @@ namespace project_manage_system_backend.Model
 
         public string Name { get; set; }
 
-        public string PlatformName { get; set; }
+        public string Authority { get; set; }
     }
 }

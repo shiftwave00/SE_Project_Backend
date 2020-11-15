@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using project_manage_system_backend.Model;
+using project_manage_system_backend.Models;
 
 namespace project_manage_system_backend.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -20,7 +20,7 @@ namespace project_manage_system_backend.Controllers
             {
                 ID=1,
                 Name="王八蛋",
-                PlatformName="kingEightEgg"
+                Authority="User"
             });
         }
     }
