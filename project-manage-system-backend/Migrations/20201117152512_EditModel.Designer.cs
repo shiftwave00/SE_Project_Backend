@@ -9,8 +9,8 @@ using project_manage_system_backend.Shares;
 namespace project_manage_system_backend.Migrations
 {
     [DbContext(typeof(PMSContext))]
-    [Migration("20201115141216_ProjAndRepo")]
-    partial class ProjAndRepo
+    [Migration("20201117152512_EditModel")]
+    partial class EditModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,12 +27,12 @@ namespace project_manage_system_backend.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("UserID")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("OwnerAccount")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("OwnerAccount");
 
                     b.ToTable("Projects");
                 });
@@ -46,10 +46,10 @@ namespace project_manage_system_backend.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("OwnerID")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("OwnerAccount")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int?>("ProjectID")
+                    b.Property<int?>("ProjectModelID")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Url")
@@ -57,69 +57,62 @@ namespace project_manage_system_backend.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("OwnerID");
+                    b.HasIndex("OwnerAccount");
 
-                    b.HasIndex("ProjectID");
+                    b.HasIndex("ProjectModelID");
 
                     b.ToTable("Repositories");
                 });
 
             modelBuilder.Entity("project_manage_system_backend.Models.UserModel", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Account")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Authority")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AvatarUrl")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("ProjectModelID")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("ProjectModelID");
+                    b.HasKey("Account");
 
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("project_manage_system_backend.Models.ProjectModel", b =>
                 {
-                    b.HasOne("project_manage_system_backend.Models.UserModel", "User")
-                        .WithMany()
-                        .HasForeignKey("UserID");
+                    b.HasOne("project_manage_system_backend.Models.UserModel", "Owner")
+                        .WithMany("Projects")
+                        .HasForeignKey("OwnerAccount");
 
-                    b.Navigation("User");
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("project_manage_system_backend.Models.RepositoryModel", b =>
                 {
                     b.HasOne("project_manage_system_backend.Models.UserModel", "Owner")
                         .WithMany()
-                        .HasForeignKey("OwnerID");
+                        .HasForeignKey("OwnerAccount");
 
-                    b.HasOne("project_manage_system_backend.Models.ProjectModel", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectID");
+                    b.HasOne("project_manage_system_backend.Models.ProjectModel", null)
+                        .WithMany("Repositories")
+                        .HasForeignKey("ProjectModelID");
 
                     b.Navigation("Owner");
-
-                    b.Navigation("Project");
-                });
-
-            modelBuilder.Entity("project_manage_system_backend.Models.UserModel", b =>
-                {
-                    b.HasOne("project_manage_system_backend.Models.ProjectModel", null)
-                        .WithMany("Members")
-                        .HasForeignKey("ProjectModelID");
                 });
 
             modelBuilder.Entity("project_manage_system_backend.Models.ProjectModel", b =>
                 {
-                    b.Navigation("Members");
+                    b.Navigation("Repositories");
+                });
+
+            modelBuilder.Entity("project_manage_system_backend.Models.UserModel", b =>
+                {
+                    b.Navigation("Projects");
                 });
 #pragma warning restore 612, 618
         }

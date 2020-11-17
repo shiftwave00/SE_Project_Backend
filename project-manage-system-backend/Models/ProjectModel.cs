@@ -12,8 +12,8 @@ namespace project_manage_system_backend.Models
 
         public string Name { get; set; }
 
-        public UserModel User { get; set; }
+        public UserModel Owner { get; set; }
 
-        public List<UserModel> Members { get; set; }
+        public List<RepositoryModel> Repositories { get; set; }
     }
 }
