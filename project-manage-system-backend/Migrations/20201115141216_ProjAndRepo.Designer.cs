@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using project_manage_system_backend.Shares;
 
 namespace project_manage_system_backend.Migrations
 {
     [DbContext(typeof(PMSContext))]
-    partial class PMSContextModelSnapshot : ModelSnapshot
+    [Migration("20201115141216_ProjAndRepo")]
+    partial class ProjAndRepo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,19 +66,20 @@ namespace project_manage_system_backend.Migrations
 
             modelBuilder.Entity("project_manage_system_backend.Models.UserModel", b =>
                 {
-                    b.Property<string>("Account")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Authority")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("AvatarUrl")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Account");
+                    b.Property<int?>("ProjectModelID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ID");
 
                     b.HasIndex("ProjectModelID");
 
