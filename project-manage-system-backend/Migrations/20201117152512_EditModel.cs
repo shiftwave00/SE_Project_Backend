@@ -2,15 +2,23 @@
 
 namespace project_manage_system_backend.Migrations
 {
-    public partial class ProjAndRepo : Migration
+    public partial class EditModel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "ProjectModelID",
-                table: "Users",
-                type: "INTEGER",
-                nullable: true);
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Account = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    AvatarUrl = table.Column<string>(type: "TEXT", nullable: true),
+                    Authority = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Account);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Projects",
@@ -19,16 +27,16 @@ namespace project_manage_system_backend.Migrations
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
-                    UserID = table.Column<int>(type: "INTEGER", nullable: true)
+                    OwnerAccount = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Projects", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Projects_Users_UserID",
-                        column: x => x.UserID,
+                        name: "FK_Projects_Users_OwnerAccount",
+                        column: x => x.OwnerAccount,
                         principalTable: "Users",
-                        principalColumn: "ID",
+                        principalColumn: "Account",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -40,74 +48,52 @@ namespace project_manage_system_backend.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
                     Url = table.Column<string>(type: "TEXT", nullable: true),
-                    OwnerID = table.Column<int>(type: "INTEGER", nullable: true),
-                    ProjectID = table.Column<int>(type: "INTEGER", nullable: true)
+                    OwnerAccount = table.Column<string>(type: "TEXT", nullable: true),
+                    ProjectModelID = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Repositories", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Repositories_Projects_ProjectID",
-                        column: x => x.ProjectID,
+                        name: "FK_Repositories_Projects_ProjectModelID",
+                        column: x => x.ProjectModelID,
                         principalTable: "Projects",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Repositories_Users_OwnerID",
-                        column: x => x.OwnerID,
+                        name: "FK_Repositories_Users_OwnerAccount",
+                        column: x => x.OwnerAccount,
                         principalTable: "Users",
-                        principalColumn: "ID",
+                        principalColumn: "Account",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_ProjectModelID",
-                table: "Users",
-                column: "ProjectModelID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Projects_UserID",
+                name: "IX_Projects_OwnerAccount",
                 table: "Projects",
-                column: "UserID");
+                column: "OwnerAccount");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Repositories_OwnerID",
+                name: "IX_Repositories_OwnerAccount",
                 table: "Repositories",
-                column: "OwnerID");
+                column: "OwnerAccount");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Repositories_ProjectID",
+                name: "IX_Repositories_ProjectModelID",
                 table: "Repositories",
-                column: "ProjectID");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Users_Projects_ProjectModelID",
-                table: "Users",
-                column: "ProjectModelID",
-                principalTable: "Projects",
-                principalColumn: "ID",
-                onDelete: ReferentialAction.Restrict);
+                column: "ProjectModelID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Users_Projects_ProjectModelID",
-                table: "Users");
-
             migrationBuilder.DropTable(
                 name: "Repositories");
 
             migrationBuilder.DropTable(
                 name: "Projects");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Users_ProjectModelID",
-                table: "Users");
-
-            migrationBuilder.DropColumn(
-                name: "ProjectModelID",
-                table: "Users");
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }
