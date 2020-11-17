@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using project_manage_system_backend.Dtos;
+using project_manage_system_backend.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -18,7 +20,7 @@ namespace project_manage_system_backend.Services
             _configuration = configuration;
         }
 
-        public string RequestGithubAccessToken(string code)
+        public async Task<string> RequestGithubAccessToken(string code)
         {
             const string url = "https://github.com/login/oauth/access_token";
             string clientId = _configuration.GetValue<string>("githubConfig:client_id");
@@ -30,18 +32,48 @@ namespace project_manage_system_backend.Services
                 {
                     Client_id = clientId,
                     Client_secret = clientSecret,
-                    Code = "8a5fa42530d850095c75"
+                    Code = code
                 };
 
                 var stringContent = new StringContent(JsonSerializer.Serialize(requestData).ToLower(), Encoding.UTF8, "application/json");
-                var responseTask = client.PostAsync(url, stringContent);
-                responseTask.Wait();
+                var responseTask = await client.PostAsync(url, stringContent);
 
-                var result = responseTask.Result;
-                var ReadAsStringAsync = result.Content.ReadAsStringAsync();
+                string resultContent = await responseTask.Content.ReadAsStringAsync();
 
-                return "test";
+                string result = null;
+                resultContent.Split('&').ToList().ForEach(x =>
+                {
+                    if (x.Contains("access_token"))
+                    {
+                        result = x.Split('=').ToList()[1];
+                    }
+                });
+                return result;
             }
+        }
+
+        public async Task<UserModel> RequestGithubUserInfo(string accessToken)
+        {
+            const string url = "https://api.github.com/user";
+
+            UserModel result = null;
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", accessToken);
+                client.DefaultRequestHeaders.Add("User-Agent", "request");
+                var responseTask = await client.GetAsync(url);
+
+                string resultContent = await responseTask.Content.ReadAsStringAsync();
+                var userInfo = JsonSerializer.Deserialize<ResponseGuthubUserInfoDto>(resultContent);//反序列化
+                result = new UserModel
+                {
+                    Account = "github_" + userInfo.login,
+                    Name =  userInfo.login,
+                    AvatarUrl = userInfo.avatar_url,
+                    Authority = "User"
+                };
+            }
+            return result;
         }
     }
 }
