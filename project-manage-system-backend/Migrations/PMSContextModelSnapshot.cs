@@ -64,20 +64,19 @@ namespace project_manage_system_backend.Migrations
 
             modelBuilder.Entity("project_manage_system_backend.Models.UserModel", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Account")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Authority")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AvatarUrl")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("ProjectModelID")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ID");
+                    b.HasKey("Account");
 
                     b.HasIndex("ProjectModelID");
 

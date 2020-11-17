@@ -12,6 +12,9 @@ using System.Text.Json;
 using System.Text;
 using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Services;
+using project_manage_system_backend.Models;
+using project_manage_system_backend.Shares;
+using Microsoft.AspNetCore.Authorization;
 
 namespace project_manage_system_backend.Controllers
 {
@@ -21,18 +24,43 @@ namespace project_manage_system_backend.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly AuthorizeService _authorizationService;
-        public AuthorizeController(IConfiguration configuration)
+        private readonly UserService _userService;
+        private readonly JwtHelper _jwtHelper;
+        public AuthorizeController(IConfiguration configuration, JwtHelper jwt)
         {
             _configuration = configuration;
             _authorizationService = new AuthorizeService(configuration);
+            _userService = new UserService();
+            _jwtHelper = jwt;
         }
 
         [HttpPost("github")]
-        public IActionResult AuthenticateGithub(RequestGithubLoginDto dto)
+        public async Task<IActionResult> AuthenticateGithub(RequestGithubLoginDto dto)
         {
-            _authorizationService.RequestGithubAccessToken(dto.Code);
+            string accessToken = await _authorizationService.RequestGithubAccessToken(dto.Code);
 
-            return Ok();
+            if (!string.IsNullOrEmpty(accessToken))
+            {
+                UserModel userModel = await _authorizationService.RequestGithubUserInfo(accessToken);
+
+                if (!_userService.CheckUserExist(userModel.Account))
+                {
+                    _userService.CreateUser(userModel);
+                }
+
+                return Ok(_jwtHelper.GenerateToken(userModel.Account));
+            }
+            else
+            {
+                throw new Exception("error code");
+            }
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult CheckAuthentucate()
+        {
+            return Ok(User.Identity.Name);
         }
     }
 }
