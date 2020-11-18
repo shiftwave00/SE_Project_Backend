@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Models;
 using project_manage_system_backend.Shares;
@@ -19,11 +20,11 @@ namespace project_manage_system_backend.Services
                 var project = new ProjectModel
                 {
                     Name = projectDto.ProjectName,
-                    Owner = user,
-                    Repositories = new List<RepositoryModel>()
+                    Owner = user
                 };
 
                 user.Projects.Add(project);
+
                 if(dbContext.SaveChanges() == 0)
                 {
                     throw new Exception("create project fail");
