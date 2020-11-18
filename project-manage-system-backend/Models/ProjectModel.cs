@@ -13,7 +13,7 @@ namespace project_manage_system_backend.Models
         public string Name { get; set; }
 
         public UserModel Owner { get; set; }
-
-        public List<RepositoryModel> Repositories { get; set; }
+        
+        public List<RepositoryModel> Repositories { get; } = new List<RepositoryModel>();
     }
 }
