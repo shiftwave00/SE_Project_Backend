@@ -14,6 +14,8 @@ namespace project_manage_system_backend.Models
 
         public string Url { get; set; }
 
-        public string Owner { get; set; }
+        public UserModel Owner { get; set; }
+
+        public ProjectModel Project { get; set; }
     }
 }
