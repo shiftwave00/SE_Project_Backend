@@ -32,12 +32,12 @@ namespace project_manage_system_backend.Services
             }
         }
 
-        public List<UserModel> GetProjectByUserAccount(string account)
+        public List<ProjectModel> GetProjectByUserAccount(string account)
         {
             using (var dbContext = new PMSContext())
             {
-                var user = dbContext.Users;
-                return user.ToList();
+                var user = dbContext.Users.Include(u => u.Projects).ThenInclude(p => p.Repositories).FirstOrDefault(u => u.Account.Equals(account));
+                return user.Projects;
             }
         }
     }
