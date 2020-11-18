@@ -23,7 +23,6 @@ namespace project_manage_system_backend.Services
                 var msg = JsonSerializer.Deserialize<ResponseGithubRepoInfoDto>(content);
                 msg.IsSucess = string.IsNullOrEmpty(msg.message);
                 return msg;
-                   
             }
         }
         public void CreateRepo(RepositoryModel model)
@@ -31,19 +30,11 @@ namespace project_manage_system_backend.Services
             using (var dbContext = new PMSContext())
             {
                 dbContext.Add(model);
-                try
+
+                if (dbContext.SaveChanges() == 0)
                 {
-                    if (dbContext.SaveChanges() == 0)
-                    {
-                        throw new Exception("create repo fail");
-                    }
+                    throw new Exception("create repo fail");
                 }
-                catch (Exception e)
-                {
-                    var a = 5;
-                    
-                }
-                
             }
         }
     }
