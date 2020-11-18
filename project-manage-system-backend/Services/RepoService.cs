@@ -29,11 +29,19 @@ namespace project_manage_system_backend.Services
         {
             using (var dbContext = new PMSContext())
             {
-                dbContext.Add(model);
+                //get repo by url
+                var repo = dbContext.Repositories.Where(m => m.Url.Contains(model.Url)).ToList();
 
+                // check duplicate =>  add or throw exception
+                if (repo.Count == 0)
+                    dbContext.Add(model);
+                else
+                    throw new Exception("Duplicate repo!");
+
+                //save
                 if (dbContext.SaveChanges() == 0)
                 {
-                    throw new Exception("create repo fail");
+                    throw new Exception("DB can't save!");
                 }
             }
         }

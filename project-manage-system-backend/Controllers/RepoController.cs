@@ -35,19 +35,31 @@ namespace project_manage_system_backend.Controllers
                     Url = response.html_url,
                     //Project = new ProjectModel()
                 };
-                _repoService.CreateRepo(model);
-                return Ok(new ResponseDto
+                try
                 {
-                    success = true,
-                    message = "新增成功"
-                });
+                    _repoService.CreateRepo(model);
+                    return Ok(new ResponseDto
+                    {
+                        success = true,
+                        message = "新增成功"
+                    });
+                }
+                catch (Exception e)
+                {
+                    return Ok(new ResponseDto
+                    {
+                        success = false,
+                        message = "新增失敗:" + e.Message
+                    });
+
+                }
             }
             else
             {
                 return Ok(new ResponseDto
                 {
                     success = false,
-                    message = "新增失敗"
+                    message = "新增失敗:" + response.message
                 });
 
             }
