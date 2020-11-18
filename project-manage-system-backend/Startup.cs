@@ -40,7 +40,6 @@ namespace project_manage_system_backend
             });
 
             services.AddSingleton<JwtHelper>();
-
             services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -91,7 +90,7 @@ namespace project_manage_system_backend
                 });
             });
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
