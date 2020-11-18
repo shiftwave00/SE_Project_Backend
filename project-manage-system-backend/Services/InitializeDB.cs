@@ -22,11 +22,7 @@ namespace project_manage_system_backend.Services
 
                 ProjectModel project = new ProjectModel
                 {
-                    Name = "project2",
-                    Repositories = new List<RepositoryModel>
-                    {
-                        repository
-                    }
+                    Name = "project2"
                 };
                 UserModel user = new UserModel
                 {
