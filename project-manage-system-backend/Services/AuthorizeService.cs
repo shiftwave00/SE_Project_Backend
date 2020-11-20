@@ -19,11 +19,10 @@ namespace project_manage_system_backend.Services
         private readonly JwtHelper _jwtHelper;
         private readonly UserService _userService;
         private readonly HttpClient _httpClient;
-        public AuthorizeService(IConfiguration configuration, JwtHelper jwt, HttpClient client = null)
+        public AuthorizeService(IConfiguration configuration, JwtHelper jwt, HttpClient client = null, PMSContext context = null)
         {
             _configuration = configuration;
             _jwtHelper = jwt;
-            _userService = new UserService();
 
             //for testing
             if(client == null)
@@ -33,6 +32,15 @@ namespace project_manage_system_backend.Services
             else
             {
                 _httpClient = client;
+            }
+
+            if(context == null)
+            {
+                _userService = new UserService();
+            }
+            else
+            {
+                _userService = new UserService(context);
             }
         }
 

@@ -20,18 +20,21 @@ using Xunit;
 
 namespace PMS_test
 {
+    [TestCaseOrderer("XUnit.Project.Orderers.AlphabeticalOrderer", "XUnit.Project")]
     public class AuthorizeServiceTests
     {
-        private readonly IConfiguration _configuration;
+        private readonly PMSContext _dbContext;
         private readonly HttpClient _client;
         private readonly AuthorizeService _authorizeService;
+        private readonly UserService _userService;
         private readonly WebApplicationFactory<Startup> factory = new WebApplicationFactory<Startup>();
 
         public AuthorizeServiceTests()
         {
-            var dbContext = new PMSContext(new DbContextOptionsBuilder<PMSContext>()
+            _dbContext = new PMSContext(new DbContextOptionsBuilder<PMSContext>()
                 .UseSqlite(CreateInMemoryDatabase())
                 .Options);
+            _dbContext.Database.EnsureCreated();
 
             var mockHttp = new MockHttpMessageHandler();
 
@@ -44,19 +47,21 @@ namespace PMS_test
             mockHttp.When(HttpMethod.Post, "https://github.com/login/oauth/access_token")
                     .WithContent(content)
                     .Respond("application/text", 
-                    "access_token=f1aee02d3e3a2921bdce88dceb7aa6f08558bbe3&scope=&token_type=bearer");
+                    "access_token=token&scope=&token_type=bearer");
 
             mockHttp.When(HttpMethod.Get, "https://api.github.com/user")
                     .Respond("application/json",
                     "{\"login\":\"testuser\",\"avatar_url\":\"test\"}");
 
             _client = mockHttp.ToHttpClient();
-            _authorizeService = new AuthorizeService(_configuration, new JwtHelper(_configuration), _client);
+            _authorizeService = new AuthorizeService(_configuration, new JwtHelper(_configuration), _client, _dbContext);
+            _userService = new UserService(_dbContext);
         }
+
 
         private static DbConnection CreateInMemoryDatabase()
         {
-            var connection = new SqliteConnection("Filename=:memory:");
+            var connection = new SqliteConnection("DataSource=:memory:");
 
             connection.Open();
 
@@ -64,10 +69,19 @@ namespace PMS_test
         }
 
         [Fact]
-        public async Task TestAuthenticateGithub()
+        public async Task TestFirstLogin()
         {
             string token = await _authorizeService.AuthenticateGithub(new RequestGithubLoginDto { Code = "testcode" });
+            Assert.True(!string.IsNullOrEmpty(token));
+            Assert.True(_userService.CheckUserExist("github_testuser"));
+        }
 
+        [Fact]
+        public async Task TestSecondLogin()
+        {
+            string token = await _authorizeService.AuthenticateGithub(new RequestGithubLoginDto { Code = "testcode" });
+            Assert.True(!string.IsNullOrEmpty(token));
+            Assert.True(_userService.CheckUserExist("github_testuser"));
         }
     }
 }

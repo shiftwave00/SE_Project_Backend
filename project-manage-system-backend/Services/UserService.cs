@@ -10,18 +10,16 @@ namespace project_manage_system_backend.Services
 {
     public class UserService
     {
-        private readonly PMSContext _dbContext; 
-        public UserService(PMSContext context = null)
+        private readonly PMSContext _dbContext;
+        public UserService() 
         {
-            if (context == null)
-            {
-                _dbContext = new PMSContext();
-            }
-            else
-            {
-                _dbContext = context;
-            }
+            _dbContext = new PMSContext();
         }
+        public UserService(PMSContext context )
+        {
+            _dbContext = context;
+        }
+
         public void CreateUser(UserModel model)
         {
             _dbContext.Users.Add(model);
