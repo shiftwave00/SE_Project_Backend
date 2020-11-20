@@ -1,4 +1,5 @@
-﻿using project_manage_system_backend.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using project_manage_system_backend.Models;
 using project_manage_system_backend.Shares;
 using System;
 using System.Collections.Generic;
@@ -9,27 +10,31 @@ namespace project_manage_system_backend.Services
 {
     public class UserService
     {
+        private readonly PMSContext _dbContext; 
+        public UserService(PMSContext context = null)
+        {
+            if (context == null)
+            {
+                _dbContext = new PMSContext();
+            }
+            else
+            {
+                _dbContext = context;
+            }
+        }
         public void CreateUser(UserModel model)
         {
-            using(var dbContext = new PMSContext())
+            _dbContext.Users.Add(model);
+            if (_dbContext.SaveChanges() == 0)
             {
-                dbContext.Add(model);
-                if(dbContext.SaveChanges() == 0)
-                {
-                    throw new Exception("create user fail");
-                }
-
+                throw new Exception("create user fail");
             }
         }
 
         public bool CheckUserExist(string account)
         {
-            using (var dbContext = new PMSContext())
-            {
-                var Users = dbContext.Users.Where(u => u.Account.Equals(account));
-                if (Users.Count() > 0) return true;
-
-            }
+            var Users = _dbContext.Users.Where(u => u.Account.Equals(account));
+            if (Users.Count() > 0) return true;
             return false;
         }
     }
