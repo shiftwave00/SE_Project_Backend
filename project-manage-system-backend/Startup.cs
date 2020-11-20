@@ -45,29 +45,29 @@ namespace project_manage_system_backend
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-                options.IncludeErrorDetails = true; // �w�]�Ȭ� true�A���ɷ|�S�O����
+                options.IncludeErrorDetails = true; // 預設值為 true，有時會特別關閉
 
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    // �z�L�o���ŧi�A�N�i�H�q "sub" ���Ȩó]�w�� User.Identity.Name
+                    // 透過這項宣告，就可以從 "sub" 取值並設定給 User.Identity.Name
                     NameClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier",
-                    // �z�L�o���ŧi�A�N�i�H�q "roles" ���ȡA�åi�� [Authorize] �P�_����
+                    // 透過這項宣告，就可以從 "roles" 取值，並可讓 [Authorize] 判斷角色
                     RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
 
-                    // �@��ڭ̳��|���� Issuer
+                    // 一般我們都會驗證 Issuer
                     ValidateIssuer = true,
                     ValidIssuer = Configuration.GetValue<string>("JwtSettings:Issuer"),
 
-                    // �q�`���ӻݭn���� Audience
+                    // 通常不太需要驗證 Audience
                     ValidateAudience = false,
 
-                    // �@��ڭ̳��|���� Token �����Ĵ���
+                    // 一般我們都會驗證 Token 的有效期間
                     ValidateLifetime = true,
 
-                    // �p�G Token ���]�t key �~�ݭn���ҡA�@�볣�u��ñ���Ӥw
+                    // 如果 Token 中包含 key 才需要驗證，一般都只有簽章而已
                     ValidateIssuerSigningKey = false,
 
-                    // "1234567890123456" ���ӱq IConfiguration ���o
+                    // "1234567890123456" 應該從 IConfiguration 取得
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("JwtSettings:SignKey")))
                 };
             });
