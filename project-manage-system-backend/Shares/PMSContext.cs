@@ -9,6 +9,15 @@ namespace project_manage_system_backend.Shares
 {
     public class PMSContext: DbContext
     {
+        //public PMSContext(DbContextOptions<PMSContext> options = null): base(options==null ? options: options) 
+        //{
+        //
+        //}
+
+        //public PMSContext() 
+        //{ 
+        //}
+
         public DbSet<UserModel> Users { get; set; }
         public DbSet<ProjectModel> Projects { get; set; }
         public DbSet<RepositoryModel> Repositories { get; set; }
