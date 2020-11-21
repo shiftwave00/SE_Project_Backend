@@ -26,7 +26,7 @@ namespace project_manage_system_backend.Services
                 return msg;
             }
         }
-        public void CreateRepo(RepoModel model)
+        public void CreateRepo(Repo model)
         {
             using (var dbContext = new PMSContext())
             {
@@ -47,7 +47,7 @@ namespace project_manage_system_backend.Services
             }
         }
 
-        public List<RepoModel> GetRepositoryByProjectId(int id)
+        public List<Repo> GetRepositoryByProjectId(int id)
         {
             using (var dbContent = new PMSContext())
             {

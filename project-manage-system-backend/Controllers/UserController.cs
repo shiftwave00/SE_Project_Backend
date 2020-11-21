@@ -16,7 +16,7 @@ namespace project_manage_system_backend.Controllers
         [HttpGet]
         public IActionResult GetUser()
         {
-            return Ok(new UserModel
+            return Ok(new User
             {
                 Account="777",
                 Name="王八蛋",

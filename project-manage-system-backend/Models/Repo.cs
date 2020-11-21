@@ -6,14 +6,18 @@ using project_manage_system_backend.Models;
 
 namespace project_manage_system_backend.Models
 {
-    public class ProjectModel
+    public class Repo
     {
         public int ID { get; set; }
 
         public string Name { get; set; }
 
-        public UserModel Owner { get; set; }
-        
-        public List<RepoModel> Repositories { get; } = new List<RepoModel>();
+        public string Url { get; set; }
+        /// <summary>
+        /// 實際 repository (第三方) 的擁有者名稱
+        /// </summary>
+        public string Owner { get; set; }
+
+        //public Project SourceProject { get; set; }
     }
 }
