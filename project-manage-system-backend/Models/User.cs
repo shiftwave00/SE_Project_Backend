@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace project_manage_system_backend.Models
 {
-    public class UserModel
+    public class User
     {
         /// <summary>
         /// 第三方的帳號 Id
@@ -24,6 +24,6 @@ namespace project_manage_system_backend.Models
         /// </summary>
         public string Authority { get; set; }
 
-        public List<ProjectModel> Projects { get; } = new List<ProjectModel>();
+        public List<Project> Projects { get; } = new List<Project>();
     }
 }

@@ -50,7 +50,7 @@ namespace project_manage_system_backend.Services
 
             if (!string.IsNullOrEmpty(accessToken))
             {
-                UserModel userModel = await RequestGithubUserInfo(accessToken);
+                User userModel = await RequestGithubUserInfo(accessToken);
 
                 if (!_userService.CheckUserExist(userModel.Account))
                 {
@@ -94,18 +94,18 @@ namespace project_manage_system_backend.Services
             return result;
         }
 
-        public async Task<UserModel> RequestGithubUserInfo(string accessToken)
+        public async Task<User> RequestGithubUserInfo(string accessToken)
         {
             const string url = "https://api.github.com/user";
 
-            UserModel result = null;
+            User result = null;
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", accessToken);
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "request");
             var responseTask = await _httpClient.GetAsync(url);
 
             string resultContent = await responseTask.Content.ReadAsStringAsync();
             var userInfo = JsonSerializer.Deserialize<ResponseGuthubUserInfoDto>(resultContent);//反序列化
-            result = new UserModel
+            result = new User
             {
                 Account = "github_" + userInfo.login,
                 Name = userInfo.login,

@@ -13,9 +13,9 @@ namespace project_manage_system_backend.Shares
 
         public PMSContext() { }
 
-        public DbSet<UserModel> Users { get; set; }
-        public DbSet<ProjectModel> Projects { get; set; }
-        public DbSet<RepoModel> Repositories { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<Repo> Repositories { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {

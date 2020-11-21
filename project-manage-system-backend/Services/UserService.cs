@@ -20,7 +20,7 @@ namespace project_manage_system_backend.Services
             _dbContext = context;
         }
 
-        public void CreateUser(UserModel model)
+        public void CreateUser(User model)
         {
             _dbContext.Users.Add(model);
             if (_dbContext.SaveChanges() == 0)

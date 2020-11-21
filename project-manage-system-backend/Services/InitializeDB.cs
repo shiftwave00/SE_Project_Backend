@@ -14,17 +14,17 @@ namespace project_manage_system_backend.Services
             using (var dbContext = new PMSContext())
             {
 
-                RepoModel repository = new RepoModel
+                Repo repository = new Repo
                 {
                     Name = "test123",
                     Url = "https::/somewhere",
                 };
 
-                ProjectModel project = new ProjectModel
+                Project project = new Project
                 {
                     Name = "project2"
                 };
-                UserModel user = new UserModel
+                User user = new User
                 {
                     Name = "blakctea123",
                     Account = "test123",

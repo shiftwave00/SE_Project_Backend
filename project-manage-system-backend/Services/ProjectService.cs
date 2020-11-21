@@ -19,7 +19,7 @@ namespace project_manage_system_backend.Services
                 var user = dbContext.Users.Find(projectDto.UserId);
                 if (user != null)
                 {
-                    var project = new ProjectModel
+                    var project = new Models.Project
                     {
                         Name = projectDto.ProjectName,
                         Owner = user
