@@ -27,9 +27,8 @@ namespace project_manage_system_backend.Controllers
             var response = await _repoService.CheckRepoExist(addRepoDto.url);
             if (response.IsSucess)
             {
-                RepositoryModel model = new RepositoryModel()
+                RepoModel model = new RepoModel()
                 {
-                    ID = 123,
                     Name = response.name,
                     Owner = response.owner.login,
                     Url = response.html_url,
@@ -64,6 +63,13 @@ namespace project_manage_system_backend.Controllers
 
             }
 
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetRepositoryByProjectId(int id)
+        {
+            var result = _repoService.GetRepositoryByProjectId(id);
+            return Ok(result);
         }
     }
 }

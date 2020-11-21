@@ -14,6 +14,6 @@ namespace project_manage_system_backend.Models
 
         public UserModel Owner { get; set; }
         
-        public List<RepositoryModel> Repositories { get; } = new List<RepositoryModel>();
+        public List<RepoModel> Repositories { get; } = new List<RepoModel>();
     }
 }

@@ -14,7 +14,7 @@ namespace project_manage_system_backend.Services
             using (var dbContext = new PMSContext())
             {
 
-                RepositoryModel repository = new RepositoryModel
+                RepoModel repository = new RepoModel
                 {
                     Name = "test123",
                     Url = "https::/somewhere",
