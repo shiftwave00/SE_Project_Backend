@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,8 +24,15 @@ namespace project_manage_system_backend.Controllers
         [HttpPost]
         public IActionResult AddProject(ProjectDto projectDto)
         {
-            _projectService.Create(projectDto);
-            return Ok();
+            try
+            {
+                _projectService.Create(projectDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex);
+            }
         }
 
         [HttpGet("{encryptUserId}")]
