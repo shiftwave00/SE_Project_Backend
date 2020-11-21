@@ -1,4 +1,5 @@
-﻿using project_manage_system_backend.Dtos;
+﻿using Microsoft.EntityFrameworkCore;
+using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Models;
 using project_manage_system_backend.Shares;
 using System;
@@ -25,7 +26,7 @@ namespace project_manage_system_backend.Services
                 return msg;
             }
         }
-        public void CreateRepo(RepositoryModel model)
+        public void CreateRepo(RepoModel model)
         {
             using (var dbContext = new PMSContext())
             {
@@ -43,6 +44,15 @@ namespace project_manage_system_backend.Services
                 {
                     throw new Exception("DB can't save!");
                 }
+            }
+        }
+
+        public List<RepoModel> GetRepositoryByProjectId(int id)
+        {
+            using (var dbContent = new PMSContext())
+            {
+                var project = dbContent.Projects.Where(p => p.ID.Equals(id)).Include(p => p.Repositories).First();
+                return project.Repositories;
             }
         }
     }

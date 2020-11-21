@@ -11,11 +11,11 @@ namespace project_manage_system_backend.Shares
     {
         public PMSContext(DbContextOptions<PMSContext> options): base(options) {}
 
-        public PMSContext() {}
+        public PMSContext() { }
 
         public DbSet<UserModel> Users { get; set; }
         public DbSet<ProjectModel> Projects { get; set; }
-        public DbSet<RepositoryModel> Repositories { get; set; }
+        public DbSet<RepoModel> Repositories { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
