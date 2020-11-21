@@ -17,13 +17,21 @@ namespace project_manage_system_backend.Services
             using (var dbContext = new PMSContext())
             {
                 var user = dbContext.Users.Find(projectDto.UserId);
-                var project = new ProjectModel
+                if (user != null)
                 {
-                    Name = projectDto.ProjectName,
-                    Owner = user
-                };
+                    var project = new ProjectModel
+                    {
+                        Name = projectDto.ProjectName,
+                        Owner = user
+                    };
 
-                user.Projects.Add(project);
+                    user.Projects.Add(project);
+                }
+                else
+                {
+                    throw new Exception("user fail");
+                }
+
 
                 if(dbContext.SaveChanges() == 0)
                 {

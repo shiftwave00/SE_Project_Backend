@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using project_manage_system_backend.Services;
 using project_manage_system_backend.Shares;
 
 namespace project_manage_system_backend
@@ -44,29 +45,29 @@ namespace project_manage_system_backend
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-                options.IncludeErrorDetails = true; // ¹w³]­È¬° true¡A¦³®É·|¯S§OÃö³¬
+                options.IncludeErrorDetails = true; // é è¨­å€¼ç‚º trueï¼Œæœ‰æ™‚æœƒç‰¹åˆ¥é—œé–‰
 
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    // ³z¹L³o¶µ«Å§i¡A´N¥i¥H±q "sub" ¨ú­È¨Ã³]©wµ¹ User.Identity.Name
+                    // é€éé€™é …å®£å‘Šï¼Œå°±å¯ä»¥å¾ "sub" å–å€¼ä¸¦è¨­å®šçµ¦ User.Identity.Name
                     NameClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier",
-                    // ³z¹L³o¶µ«Å§i¡A´N¥i¥H±q "roles" ¨ú­È¡A¨Ã¥iÅı [Authorize] §PÂ_¨¤¦â
+                    // é€éé€™é …å®£å‘Šï¼Œå°±å¯ä»¥å¾ "roles" å–å€¼ï¼Œä¸¦å¯è®“ [Authorize] åˆ¤æ–·è§’è‰²
                     RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
 
-                    // ¤@¯ë§Ú­Ì³£·|ÅçÃÒ Issuer
+                    // ä¸€èˆ¬æˆ‘å€‘éƒ½æœƒé©—è­‰ Issuer
                     ValidateIssuer = true,
                     ValidIssuer = Configuration.GetValue<string>("JwtSettings:Issuer"),
 
-                    // ³q±`¤£¤Ó»İ­nÅçÃÒ Audience
+                    // é€šå¸¸ä¸å¤ªéœ€è¦é©—è­‰ Audience
                     ValidateAudience = false,
 
-                    // ¤@¯ë§Ú­Ì³£·|ÅçÃÒ Token ªº¦³®Ä´Á¶¡
+                    // ä¸€èˆ¬æˆ‘å€‘éƒ½æœƒé©—è­‰ Token çš„æœ‰æ•ˆæœŸé–“
                     ValidateLifetime = true,
 
-                    // ¦pªG Token ¤¤¥]§t key ¤~»İ­nÅçÃÒ¡A¤@¯ë³£¥u¦³Ã±³¹¦Ó¤w
+                    // å¦‚æœ Token ä¸­åŒ…å« key æ‰éœ€è¦é©—è­‰ï¼Œä¸€èˆ¬éƒ½åªæœ‰ç°½ç« è€Œå·²
                     ValidateIssuerSigningKey = false,
 
-                    // "1234567890123456" À³¸Ó±q IConfiguration ¨ú±o
+                    // "1234567890123456" æ‡‰è©²å¾ IConfiguration å–å¾—
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("JwtSettings:SignKey")))
                 };
             });

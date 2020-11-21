@@ -14,9 +14,7 @@ namespace project_manage_system_backend.Services
         {
             using (var dbContent = new PMSContext())
             {
-                var project= dbContent.Projects.Include(p => p.Repositories).FirstOrDefault(p => p.ID.Equals(id));
-                //var query = (from r in project.Repositories
-                //             select new { Id = r.ID, Name = r.Name }).ToList();
+                var project = dbContent.Projects.Include(p => p.Repositories).FirstOrDefault(p => p.ID.Equals(id));
                 return project.Repositories;
             }
         }
