@@ -18,6 +18,6 @@ namespace project_manage_system_backend.Models
         /// </summary>
         public string Owner { get; set; }
 
-        //public Project SourceProject { get; set; }
+        public Project Project { get; set; }
     }
 }
