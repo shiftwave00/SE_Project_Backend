@@ -23,9 +23,9 @@ namespace project_manage_system_backend.Controllers
     public class AuthorizeController : ControllerBase
     {
         private readonly AuthorizeService _authorizationService;
-        public AuthorizeController(IConfiguration configuration, JwtHelper jwt)
-        {
-            _authorizationService = new AuthorizeService(configuration, jwt);
+        public AuthorizeController(IConfiguration configuration, PMSContext context, JwtHelper jwt)
+        { 
+            _authorizationService = new AuthorizeService(context, configuration, jwt);
         }
 
         [HttpPost("github")]

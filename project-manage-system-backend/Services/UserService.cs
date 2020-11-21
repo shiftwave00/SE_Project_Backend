@@ -8,17 +8,9 @@ using System.Threading.Tasks;
 
 namespace project_manage_system_backend.Services
 {
-    public class UserService
+    public class UserService : BaseService
     {
-        private readonly PMSContext _dbContext;
-        public UserService() 
-        {
-            _dbContext = new PMSContext();
-        }
-        public UserService(PMSContext context )
-        {
-            _dbContext = context;
-        }
+        public UserService(PMSContext dbContext) : base(dbContext) { }
 
         public void CreateUser(User model)
         {

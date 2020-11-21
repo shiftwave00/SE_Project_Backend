@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Models;
 using project_manage_system_backend.Services;
+using project_manage_system_backend.Shares;
 
 namespace project_manage_system_backend.Controllers
 {
@@ -16,9 +17,9 @@ namespace project_manage_system_backend.Controllers
     public class RepoController : ControllerBase
     {
         private readonly RepoService _repoService;
-        public RepoController()
+        public RepoController(PMSContext dbContext)
         {
-            _repoService = new RepoService();
+            _repoService = new RepoService(dbContext);
         }
 
         [HttpPost()]

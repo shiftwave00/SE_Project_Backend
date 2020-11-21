@@ -52,7 +52,7 @@ namespace PMS_test.ControllersTest
                     "{\"login\":\"testuser\",\"avatar_url\":\"test\"}");
 
             _client = mockHttp.ToHttpClient();
-            _authorizeService = new AuthorizeService(_configuration, new JwtHelper(_configuration), _client, _dbContext);
+            _authorizeService = new AuthorizeService(_dbContext, _configuration, new JwtHelper(_configuration), _client);
             _userService = new UserService(_dbContext);
         }
 
