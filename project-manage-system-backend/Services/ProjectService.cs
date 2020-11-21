@@ -29,7 +29,7 @@ namespace project_manage_system_backend.Services
                 }
                 else
                 {
-                    throw new Exception("user fail");
+                    throw new Exception("user fail，can not find this user");
                 }
 
 
