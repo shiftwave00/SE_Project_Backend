@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Models;
 using project_manage_system_backend.Services;
+using project_manage_system_backend.Shares;
 
 namespace project_manage_system_backend.Controllers
 {
@@ -16,9 +17,9 @@ namespace project_manage_system_backend.Controllers
     {
         private readonly ProjectService _projectService;
 
-        public ProjectController()
+        public ProjectController(PMSContext dbContext)
         {
-            _projectService = new ProjectService();
+            _projectService = new ProjectService(dbContext);
         }
 
         [HttpPost]

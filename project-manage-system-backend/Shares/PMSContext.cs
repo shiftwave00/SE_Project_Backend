@@ -11,8 +11,6 @@ namespace project_manage_system_backend.Shares
     {
         public PMSContext(DbContextOptions<PMSContext> options): base(options) {}
 
-        public PMSContext() { }
-
         public DbSet<User> Users { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Repo> Repositories { get; set; }

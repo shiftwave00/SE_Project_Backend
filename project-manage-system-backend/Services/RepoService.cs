@@ -11,8 +11,10 @@ using System.Threading.Tasks;
 
 namespace project_manage_system_backend.Services
 {
-    public class RepoService
+    public class RepoService : BaseService
     {
+        public RepoService(PMSContext dbContext) : base(dbContext) { }
+
         public async Task<ResponseGithubRepoInfoDto> CheckRepoExist(string url)
         {
             url = url.Replace("github.com", "api.github.com/repos");
@@ -28,32 +30,26 @@ namespace project_manage_system_backend.Services
         }
         public void CreateRepo(Repo model)
         {
-            using (var dbContext = new PMSContext())
+            //get repo by url
+            var repo = _dbContext.Repositories.Where(m => m.Url.Contains(model.Url)).ToList();
+
+            // check duplicate =>  add or throw exception
+            if (repo.Count == 0)
+                _dbContext.Add(model);
+            else
+                throw new Exception("Duplicate repo!");
+
+            //save
+            if (_dbContext.SaveChanges() == 0)
             {
-                //get repo by url
-                var repo = dbContext.Repositories.Where(m => m.Url.Contains(model.Url)).ToList();
-
-                // check duplicate =>  add or throw exception
-                if (repo.Count == 0)
-                    dbContext.Add(model);
-                else
-                    throw new Exception("Duplicate repo!");
-
-                //save
-                if (dbContext.SaveChanges() == 0)
-                {
-                    throw new Exception("DB can't save!");
-                }
+                throw new Exception("DB can't save!");
             }
         }
 
         public List<Repo> GetRepositoryByProjectId(int id)
         {
-            using (var dbContent = new PMSContext())
-            {
-                var project = dbContent.Projects.Where(p => p.ID.Equals(id)).Include(p => p.Repositories).First();
-                return project.Repositories;
-            }
+            var project = _dbContext.Projects.Where(p => p.ID.Equals(id)).Include(p => p.Repositories).First();
+            return project.Repositories;
         }
     }
 }

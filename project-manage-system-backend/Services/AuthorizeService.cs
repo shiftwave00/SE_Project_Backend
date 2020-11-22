@@ -13,13 +13,15 @@ using System.Threading.Tasks;
 
 namespace project_manage_system_backend.Services
 {
-    public class AuthorizeService
+    public class AuthorizeService: BaseService
     {
-        private readonly IConfiguration _configuration;
         private readonly JwtHelper _jwtHelper;
         private readonly UserService _userService;
         private readonly HttpClient _httpClient;
-        public AuthorizeService(IConfiguration configuration, JwtHelper jwt, HttpClient client = null, PMSContext context = null)
+        public AuthorizeService(PMSContext dbContext, 
+                                IConfiguration configuration, 
+                                JwtHelper jwt, 
+                                HttpClient client = null):base(dbContext, configuration)
         {
             _configuration = configuration;
             _jwtHelper = jwt;
@@ -34,14 +36,7 @@ namespace project_manage_system_backend.Services
                 _httpClient = client;
             }
 
-            if(context == null)
-            {
-                _userService = new UserService();
-            }
-            else
-            {
-                _userService = new UserService(context);
-            }
+            _userService = new UserService(dbContext);
         }
 
         public async Task<string> AuthenticateGithub(RequestGithubLoginDto dto)

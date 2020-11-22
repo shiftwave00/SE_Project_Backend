@@ -32,8 +32,8 @@ namespace PMS_test
         public AuthorizeServiceTests()
         {
             _dbContext = new PMSContext(new DbContextOptionsBuilder<PMSContext>()
-                .UseSqlite(CreateInMemoryDatabase())
-                .Options);
+                                            .UseSqlite(CreateInMemoryDatabase())
+                                            .Options);
             _dbContext.Database.EnsureCreated();
 
             var mockHttp = new MockHttpMessageHandler();
@@ -54,7 +54,7 @@ namespace PMS_test
                     "{\"login\":\"testuser\",\"avatar_url\":\"test\"}");
 
             _client = mockHttp.ToHttpClient();
-            _authorizeService = new AuthorizeService(_configuration, new JwtHelper(_configuration), _client, _dbContext);
+            _authorizeService = new AuthorizeService(_dbContext, _configuration, new JwtHelper(_configuration), _client);
             _userService = new UserService(_dbContext);
         }
 

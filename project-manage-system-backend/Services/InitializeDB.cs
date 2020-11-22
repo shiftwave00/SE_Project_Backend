@@ -1,4 +1,5 @@
-﻿using project_manage_system_backend.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using project_manage_system_backend.Models;
 using project_manage_system_backend.Shares;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,9 @@ namespace project_manage_system_backend.Services
     {
         public InitializeDB()
         {
-            using (var dbContext = new PMSContext())
+            using (var dbContext = new PMSContext(new DbContextOptionsBuilder<PMSContext>()
+                                            .UseSqlite("Data Source=PMS_Database.db")
+                                            .Options))
             {
 
                 Repo repository = new Repo
