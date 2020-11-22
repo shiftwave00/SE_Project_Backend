@@ -28,12 +28,14 @@ namespace project_manage_system_backend.Controllers
             var response = await _repoService.CheckRepoExist(addRepoDto.url);
             if (response.IsSucess)
             {
+                var project = _repoService.GetProjectByProjectId(addRepoDto.projectId);
+
                 Repo model = new Repo()
                 {
                     Name = response.name,
                     Owner = response.owner.login,
                     Url = response.html_url,
-                    //Project = new Project()
+                    Project = project
                 };
                 try
                 {

@@ -51,5 +51,11 @@ namespace project_manage_system_backend.Services
             var project = _dbContext.Projects.Where(p => p.ID.Equals(id)).Include(p => p.Repositories).First();
             return project.Repositories;
         }
+
+        public Project GetProjectByProjectId(int id)
+        {
+            var project = _dbContext.Projects.Single(p => p.ID == id);
+            return project;
+        }
     }
 }
