@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using project_manage_system_backend.Models;
 using project_manage_system_backend.Shares;
+using project_manage_system_backend.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,13 @@ namespace project_manage_system_backend.Services
             var Users = _dbContext.Users.Where(u => u.Account.Equals(account));
             if (Users.Count() > 0) return true;
             return false;
+        }
+
+        public UserInfoDto GetUser(string account)
+        {
+            var user = _dbContext.Users.Find(account);
+
+            return new UserInfoDto { Id = user.Account, Name = user.Name, AvatarUrl = user.AvatarUrl };
         }
     }
 }

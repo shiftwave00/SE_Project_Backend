@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using project_manage_system_backend.Models;
+using project_manage_system_backend.Services;
+using project_manage_system_backend.Shares;
 
 namespace project_manage_system_backend.Controllers
 {
@@ -13,15 +15,19 @@ namespace project_manage_system_backend.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly UserService _userService;
+
+        public UserController(PMSContext dbContext)
+        {
+            _userService = new UserService(dbContext);
+        }
+
+        [Authorize]
         [HttpGet]
         public IActionResult GetUser()
         {
-            return Ok(new User
-            {
-                Account="777",
-                Name="王八蛋",
-                Authority="User"
-            });
+            //_userService.GetUser(User.Identity.Name);
+            return Ok(_userService.GetUser(User.Identity.Name));
         }
     }
 }

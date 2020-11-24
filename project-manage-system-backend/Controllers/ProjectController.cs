@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using project_manage_system_backend.Dtos;
@@ -35,11 +36,11 @@ namespace project_manage_system_backend.Controllers
                 return NotFound(ex);
             }
         }
-
-        [HttpGet("{encryptUserId}")]
-        public IActionResult GetProject(string encryptUserId)
+        [Authorize]
+        [HttpGet]
+        public IActionResult GetProject()
         {
-            var result = _projectService.GetProjectByUserAccount(encryptUserId);
+            var result = _projectService.GetProjectByUserAccount(User.Identity.Name);
             return Ok(result);
         }
     }
