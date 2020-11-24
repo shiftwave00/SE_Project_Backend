@@ -39,7 +39,7 @@ namespace project_manage_system_backend.Services
             _userService = new UserService(dbContext);
         }
 
-        public async Task<string> AuthenticateGithub(RequestGithubLoginDto dto)
+        public async Task<AuthorizeDto> AuthenticateGithub(RequestGithubLoginDto dto)
         {
             string accessToken = await RequestGithubAccessToken(dto.Code);
 
@@ -52,7 +52,11 @@ namespace project_manage_system_backend.Services
                     _userService.CreateUser(userModel);
                 }
 
-                return _jwtHelper.GenerateToken(userModel.Account);
+                return new AuthorizeDto 
+                { 
+                    Token = _jwtHelper.GenerateToken(userModel.Account, userModel.Authority),
+                    OauthToken = accessToken
+                };
             }
             else
             {
