@@ -23,7 +23,7 @@ namespace project_manage_system_backend.Controllers
             _repoService = new RepoService(dbContext);
         }
 
-        [HttpPost()]
+        [HttpPost]
         public async Task<IActionResult> AddRepo(RequestAddRepoDto addRepoDto)
         {
             var response = await _repoService.CheckRepoExist(addRepoDto.url);
