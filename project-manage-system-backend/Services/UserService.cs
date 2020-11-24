@@ -33,7 +33,7 @@ namespace project_manage_system_backend.Services
         {
             var user = _dbContext.Users.Find(account);
 
-            return new UserInfoDto {Name = user.Name, AvatarUrl = user.AvatarUrl };
+            return new UserInfoDto { Id = user.Account, Name = user.Name, AvatarUrl = user.AvatarUrl };
         }
     }
 }
