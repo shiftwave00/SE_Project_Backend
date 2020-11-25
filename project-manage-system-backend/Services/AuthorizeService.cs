@@ -26,7 +26,6 @@ namespace project_manage_system_backend.Services
             _configuration = configuration;
             _jwtHelper = jwt;
 
-            //for testing
             if(client == null)
             {
                 _httpClient = new HttpClient();
@@ -97,14 +96,13 @@ namespace project_manage_system_backend.Services
         {
             const string url = "https://api.github.com/user";
 
-            User result = null;
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", accessToken);
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "request");
             var responseTask = await _httpClient.GetAsync(url);
 
             string resultContent = await responseTask.Content.ReadAsStringAsync();
             var userInfo = JsonSerializer.Deserialize<ResponseGuthubUserInfoDto>(resultContent);//反序列化
-            result = new User
+            User result = new User
             {
                 Account = "github_" + userInfo.login,
                 Name = userInfo.login,

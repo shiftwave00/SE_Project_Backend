@@ -24,7 +24,6 @@ namespace PMS_test.ControllersTest
         private readonly PMSContext _dbContext;
         private readonly HttpClient _client;
         private readonly AuthorizeService _authorizeService;
-        private readonly UserService _userService;
         private readonly WebApplicationFactory<Startup> factory = new WebApplicationFactory<Startup>();
 
         public AuthorizeControllerTests()
@@ -53,7 +52,6 @@ namespace PMS_test.ControllersTest
 
             _client = mockHttp.ToHttpClient();
             _authorizeService = new AuthorizeService(_dbContext, _configuration, new JwtHelper(_configuration), _client);
-            _userService = new UserService(_dbContext);
         }
 
         private static DbConnection CreateInMemoryDatabase()
@@ -68,10 +66,10 @@ namespace PMS_test.ControllersTest
         [Fact]
         public async Task TestCheckAuthentucate()
         {
-            string token = await _authorizeService.AuthenticateGithub(new RequestGithubLoginDto { Code = "testcode" });
+            AuthorizeDto token = await _authorizeService.AuthenticateGithub(new RequestGithubLoginDto { Code = "testcode" });
             var client = factory.CreateClient();
 
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token.Token);
 
             var response = client.GetAsync("/authorize");
 
