@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Models;
 using project_manage_system_backend.Shares;
@@ -56,6 +56,22 @@ namespace project_manage_system_backend.Services
         {
             var project = _dbContext.Projects.Single(p => p.ID == id);
             return project;
+        }
+
+        public async Task<List<AllContributorCommitActivityApiDto>> GetContributorsActtivity()
+        { 
+            // todo:fix url
+            string url = "https://api.github.com/repos/109-SETeam/project-manage-system-backend/stats/contributors";
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("User-Agent", "request");
+                var response = await client.GetAsync(url);
+                string content = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<List<AllContributorCommitActivityApiDto>>(content);
+                // sort by commit 
+                result.Sort((r1, r2) => r2.total.CompareTo(r1.total));
+                return result;
+            }
         }
     }
 }
