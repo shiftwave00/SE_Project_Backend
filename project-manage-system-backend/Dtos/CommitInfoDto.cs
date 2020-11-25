@@ -13,7 +13,7 @@ namespace project_manage_system_backend.Dtos
         public int Total { get; set; }
     }
 
-    public class DayOfWeek
+    public class DayCommit
     {
         public string Day { get; set; }
 
@@ -24,7 +24,7 @@ namespace project_manage_system_backend.Dtos
     {
         public string Week { get; set; }
 
-        public List<DayOfWeek> DetailDatas { get; set; }
+        public List<DayCommit> DetailDatas { get; set; }
     }
 
     public class CommitInfoDto

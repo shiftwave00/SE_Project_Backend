@@ -57,12 +57,12 @@ namespace project_manage_system_backend.Services
 
         private DayOfWeekData ConvertToDetailChartData(ResponseCommitInfoDto commitInfo)
         {
-            List<Dtos.DayOfWeek> detailDatas = new List<Dtos.DayOfWeek>();
+            List<Dtos.DayCommit> detailDatas = new List<Dtos.DayCommit>();
 
             int dayOfWeekCount = 0;
             foreach (var day in commitInfo.days)
             {
-                detailDatas.Add(new Dtos.DayOfWeek
+                detailDatas.Add(new Dtos.DayCommit
                 {
                     Day = DateHandler.ConvertToDayOfWeek(dayOfWeekCount++),
                     Commit = day
