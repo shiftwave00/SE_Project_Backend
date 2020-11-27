@@ -46,6 +46,42 @@ namespace project_manage_system_backend.Services
             };
         }
 
+        public async Task<List<CodebaseDto>> RequestCodebase(int repoId)
+        {
+            Repo repo = _dbContext.Repositories.Find(repoId);
+            string repoURL = "https://api.github.com/repos/" + repo.Owner + "/" + repo.Name + "/stats/code_frequency";
+
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", "request");
+
+            var response = await _httpClient.GetAsync(repoURL);
+            var contents = await response.Content.ReadAsStringAsync();
+            var codebases = Newtonsoft.Json.JsonConvert.DeserializeObject<List<int[]>>(contents);
+
+            List<CodebaseDto> codebaseSet = new List<CodebaseDto>();
+
+            foreach (var codebase in codebases)
+            {
+                CodebaseDto codebaseDto = new CodebaseDto() {
+                    date = DateHandler.ConvertToDateString(codebase[0]),
+                    numberOfRowsAdded = Convert.ToInt32(codebase[1]),
+                    numberOfRowsDeleted = Convert.ToInt32(codebase[2]),
+                    numberOfRows = Convert.ToInt32(codebase[1]) + Convert.ToInt32(codebase[2])
+                };
+
+                codebaseSet.Add(codebaseDto);
+            }
+
+            int thisWeekRows = 0;
+
+            foreach (var codebase in codebaseSet)
+            {
+                codebase.numberOfRows += thisWeekRows;
+                thisWeekRows = codebase.numberOfRows;
+            }
+
+            return codebaseSet;
+        }
+
         private WeekTotalData ConvertToWeekChartData(ResponseCommitInfoDto commitInfo)
         {
             return new WeekTotalData
@@ -74,21 +110,6 @@ namespace project_manage_system_backend.Services
                 Week = DateHandler.ConvertToDateString(commitInfo.week),
                 DetailDatas = detailDatas
             };
-        }
-
-        public async Task<List<ContributorsCommitActivityDto>> RequestContributorsActtivity(int repoId)
-        {
-            Repo repo = _dbContext.Repositories.Find(repoId);
-            string url = "https://api.github.com/repos/" + repo.Owner + "/" + repo.Name + "/stats/contributors";
-
-            _httpClient.DefaultRequestHeaders.Add("User-Agent", "request");
-            var response = await _httpClient.GetAsync(url);
-            string content = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<List<ContributorsCommitActivityDto>>(content);
-            // sort by commit 
-            result.Sort((r1, r2) => r2.total.CompareTo(r1.total));
-            return result;
-            
         }
     }
 }

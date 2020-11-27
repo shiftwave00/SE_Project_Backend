@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Models;
 using project_manage_system_backend.Shares;
@@ -57,6 +57,5 @@ namespace project_manage_system_backend.Services
             var project = _dbContext.Projects.Single(p => p.ID == id);
             return project;
         }
-
     }
 }

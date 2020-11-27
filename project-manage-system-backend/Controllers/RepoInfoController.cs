@@ -25,10 +25,10 @@ namespace project_manage_system_backend.Controllers
             return Ok(await _repoInfoService.RequestCommitInfo(repoId));
         }
 
-        [HttpGet("contribute/{repoId}")]
-        public async Task<IActionResult> GetContributorsActtivity(int repoId)
+        [HttpGet("codebase/{repoId}")]
+        public async Task<IActionResult> GetCodebase(int repoId)
         {
-            return Ok(await _repoInfoService.RequestContributorsActtivity(repoId));
+            return Ok(await _repoInfoService.RequestCodebase(repoId));
         }
     }
 }
