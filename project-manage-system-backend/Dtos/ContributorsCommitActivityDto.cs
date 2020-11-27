@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,6 +25,7 @@ namespace project_manage_system_backend.Dtos
         public int a { get; set; }
         public int d { get; set; }
         public int c { get; set; }
+        public string w_s { get; set; }
     }
 
     public class ContributorsCommitActivityDto

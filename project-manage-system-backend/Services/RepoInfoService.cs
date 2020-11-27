@@ -87,6 +87,15 @@ namespace project_manage_system_backend.Services
             var result = JsonSerializer.Deserialize<List<ContributorsCommitActivityDto>>(content);
             // sort by commit 
             result.Sort((r1, r2) => r2.total.CompareTo(r1.total));
+
+            foreach (var item in result)
+            {
+                foreach (var week in item.weeks)
+                {
+                    week.w_s = DateHandler.ConvertToDateString(week.w);
+                }
+            }
+
             return result;
             
         }
