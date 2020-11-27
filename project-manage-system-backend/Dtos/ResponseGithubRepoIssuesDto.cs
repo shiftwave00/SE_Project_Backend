@@ -49,12 +49,12 @@ namespace project_manage_system_backend.Dtos
         /// <summary>
         /// issue created datetime
         /// </summary>
-        public DateTime created_at { get; set; }
+        public string created_at { get; set; }
 
         /// <summary>
         /// issue closed datetime
         /// </summary>
-        public DateTime? closed_at { get; set; }
+        public string closed_at { get; set; }
 
     }
 }

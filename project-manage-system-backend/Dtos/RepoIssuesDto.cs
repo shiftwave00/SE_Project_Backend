@@ -9,7 +9,7 @@ namespace project_manage_system_backend.Dtos
 
     public class GithubRepoIssuesDto
     { 
-        public TimeSpan averageDealwithIssueTime { get; set; }
+        public string averageDealwithIssueTime { get; set; }
 
         public List<ResponseGithubRepoIssuesDto> openIssues { get; set; }
 
