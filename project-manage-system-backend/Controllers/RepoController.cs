@@ -23,12 +23,6 @@ namespace project_manage_system_backend.Controllers
             _repoService = new RepoService(dbContext);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> TestApi()
-        {
-            return Ok(await _repoService.GetContributorsActtivity());
-        }
-
         [HttpPost]
         public async Task<IActionResult> AddRepo(RequestAddRepoDto addRepoDto)
         {
