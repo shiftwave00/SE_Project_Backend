@@ -15,12 +15,5 @@ namespace project_manage_system_backend.Shares
         public DbSet<Project> Projects { get; set; }
         public DbSet<Repo> Repositories { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-        {
-            if (!options.IsConfigured)
-            {
-                options.UseSqlite("Data Source=PMS_Database.db");
-            }
-        }
     }
 }
