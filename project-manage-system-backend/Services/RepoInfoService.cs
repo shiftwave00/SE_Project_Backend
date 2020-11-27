@@ -16,7 +16,7 @@ namespace project_manage_system_backend.Services
         private readonly HttpClient _httpClient;
         public RepoInfoService(PMSContext dbContext, HttpClient client = null) :base(dbContext) 
         {
-            _httpClient = client == null ? new HttpClient() : client;
+            _httpClient = client ?? new HttpClient();
         }
 
         public async Task<CommitInfoDto> RequestCommitInfo(int repoId)
@@ -57,12 +57,12 @@ namespace project_manage_system_backend.Services
 
         private DayOfWeekData ConvertToDetailChartData(ResponseCommitInfoDto commitInfo)
         {
-            List<Dtos.DayCommit> detailDatas = new List<Dtos.DayCommit>();
+            List<DayCommit> detailDatas = new List<DayCommit>();
 
             int dayOfWeekCount = 0;
             foreach (var day in commitInfo.days)
             {
-                detailDatas.Add(new Dtos.DayCommit
+                detailDatas.Add(new DayCommit
                 {
                     Day = DateHandler.ConvertToDayOfWeek(dayOfWeekCount++),
                     Commit = day
