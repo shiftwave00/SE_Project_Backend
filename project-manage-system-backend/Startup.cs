@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,9 +22,11 @@ namespace project_manage_system_backend
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private IWebHostEnvironment _env;
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
 
         public IConfiguration Configuration { get; }
@@ -41,8 +44,19 @@ namespace project_manage_system_backend
                        .AddDebug();
             });
 
-            services.AddDbContext<PMSContext>(options =>
+            if (_env.IsEnvironment("Testing"))
+            {
+                var connect = new SqliteConnection("DataSource=:memory:");
+                connect.Open();
+
+                services.AddDbContext<PMSContext>(options =>
+                options.UseSqlite(connect));
+            }
+            else
+            {
+                services.AddDbContext<PMSContext>(options =>
                 options.UseSqlite("Data Source=PMS_Database.db"));
+            }
 
             services.AddSingleton<JwtHelper>();
             services
@@ -122,7 +136,6 @@ namespace project_manage_system_backend
             {
                 app.UseCors("DeployPolicy");
             }
-
             app.UseAuthentication();
 
             app.UseAuthorization();
