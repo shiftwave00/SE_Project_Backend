@@ -11,16 +11,16 @@ using System.Threading.Tasks;
 
 namespace project_manage_system_backend.Services
 {
-    public class RepoInfoService:BaseService
+    public class RepoInfoService : BaseService
     {
         private readonly HttpClient _httpClient;
-        public RepoInfoService(PMSContext dbContext, HttpClient client = null) :base(dbContext) 
+        public RepoInfoService(PMSContext dbContext, HttpClient client = null) : base(dbContext)
         {
             _httpClient = client ?? new HttpClient();
         }
 
         public async Task<CommitInfoDto> RequestCommitInfo(int repoId)
-        {   
+        {
             Repo repo = _dbContext.Repositories.Find(repoId);
             string url = "https://api.github.com/repos/" + repo.Owner + "/" + repo.Name + "/stats/commit_activity";
 
@@ -44,6 +44,41 @@ namespace project_manage_system_backend.Services
                 WeekTotalData = weekChartDatas,
                 DayOfWeekData = detailChartDatas
             };
+        }
+
+        public async Task<GithubRepoIssuesDto> RequestIssueInfo(int repoId)
+        {
+            GithubRepoIssuesDto result = new GithubRepoIssuesDto();
+            Repo repo = _dbContext.Repositories.Find(repoId);
+            List<double> closedTime = new List<double>();
+            string url = repo.Url.Replace("github.com/", "api.github.com/repos/");
+
+            result.closeIssues = await GetRepoIssues("closed", url,100);
+            result.openIssues = await GetRepoIssues("open", url,100);
+
+            foreach (var item in result.closeIssues)
+                closedTime.Add((item.closed_at.Value - item.created_at).TotalSeconds);  
+            result.averageDealwithIssueTime = TimeSpan.FromSeconds(closedTime.Average());
+            return result;
+        }
+
+        private async Task<List<ResponseGithubRepoIssuesDto>> GetRepoIssues(string state, string url,int perPage)
+        {
+            List<ResponseGithubRepoIssuesDto> result = new List<ResponseGithubRepoIssuesDto>();
+           
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", "request");
+            int page = 0;
+            while (true)
+            {
+                page++;
+                var response = await _httpClient.GetAsync(url + $"/issues?state={state}&per_page=100&page={page}&sort=created");
+                string content = await response.Content.ReadAsStringAsync();
+                var tempList = JsonSerializer.Deserialize<List<ResponseGithubRepoIssuesDto>>(content);
+                result.AddRange(tempList);
+                if (tempList.Count != perPage)
+                    break;
+            }
+            return result;
         }
 
         private WeekTotalData ConvertToWeekChartData(ResponseCommitInfoDto commitInfo)
@@ -75,5 +110,7 @@ namespace project_manage_system_backend.Services
                 DetailDatas = detailDatas
             };
         }
+
+
     }
 }

@@ -24,5 +24,11 @@ namespace project_manage_system_backend.Controllers
         {
             return Ok(await _repoInfoService.RequestCommitInfo(repoId));
         }
+
+        [HttpGet("issue/{repoId}")]
+        public async Task<IActionResult> GetIssueInfo(int repoId)
+        {
+            return Ok(await _repoInfoService.RequestIssueInfo(repoId));
+        }
     }
 }
