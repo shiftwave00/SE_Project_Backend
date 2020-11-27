@@ -21,7 +21,7 @@ namespace project_manage_system_backend.Dtos
         public int c { get; set; }
     }
 
-    public class AllContributorCommitActivityApiDto
+    public class ContributorsCommitActivityDto
     {
         public Author author { get; set; }
         public List<Week> weeks { get; set; }
