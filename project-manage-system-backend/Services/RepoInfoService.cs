@@ -75,5 +75,20 @@ namespace project_manage_system_backend.Services
                 DetailDatas = detailDatas
             };
         }
+
+        public async Task<List<ContributorsCommitActivityDto>> RequestContributorsActtivity(int repoId)
+        {
+            Repo repo = _dbContext.Repositories.Find(repoId);
+            string url = "https://api.github.com/repos/" + repo.Owner + "/" + repo.Name + "/stats/contributors";
+
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", "request");
+            var response = await _httpClient.GetAsync(url);
+            string content = await response.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<List<ContributorsCommitActivityDto>>(content);
+            // sort by commit 
+            result.Sort((r1, r2) => r2.total.CompareTo(r1.total));
+            return result;
+            
+        }
     }
 }

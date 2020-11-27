@@ -58,20 +58,5 @@ namespace project_manage_system_backend.Services
             return project;
         }
 
-        public async Task<List<AllContributorCommitActivityApiDto>> GetContributorsActtivity()
-        { 
-            // todo:fix url
-            string url = "https://api.github.com/repos/109-SETeam/project-manage-system-backend/stats/contributors";
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Add("User-Agent", "request");
-                var response = await client.GetAsync(url);
-                string content = await response.Content.ReadAsStringAsync();
-                var result = JsonSerializer.Deserialize<List<AllContributorCommitActivityApiDto>>(content);
-                // sort by commit 
-                result.Sort((r1, r2) => r2.total.CompareTo(r1.total));
-                return result;
-            }
-        }
     }
 }
