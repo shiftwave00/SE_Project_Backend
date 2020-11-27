@@ -66,7 +66,6 @@ namespace project_manage_system_backend.Controllers
                 });
 
             }
-
         }
 
         [Authorize]

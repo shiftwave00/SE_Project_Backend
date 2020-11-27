@@ -35,5 +35,19 @@ namespace project_manage_system_backend.Services
 
             return new UserInfoDto { Id = user.Account, Name = user.Name, AvatarUrl = user.AvatarUrl };
         }
+
+        public User GetUserModel(string account)
+        {
+            var user = _dbContext.Users.Find(account);
+
+            return new User 
+            { 
+                Account = user.Account, 
+                Name = user.Name, 
+                AvatarUrl = user.AvatarUrl,
+                Authority = user.Authority,
+                Projects = user.Projects
+            };
+        }
     }
 }

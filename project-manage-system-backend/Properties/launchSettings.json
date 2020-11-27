@@ -2,6 +2,10 @@
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/project-manage-system-backend",
+      "sslPort": 0
+    },
     "iisExpress": {
       "applicationUrl": "http://localhost:62566",
       "sslPort": 44307
