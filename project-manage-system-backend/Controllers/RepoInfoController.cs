@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using project_manage_system_backend.Services;
 using project_manage_system_backend.Shares;
@@ -25,10 +26,12 @@ namespace project_manage_system_backend.Controllers
             return Ok(await _repoInfoService.RequestCommitInfo(repoId));
         }
 
+        [Authorize]
         [HttpGet("contribute/{repoId}")]
         public async Task<IActionResult> GetContributorsActtivity(int repoId)
         {
-            return Ok(await _repoInfoService.RequestContributorsActtivity(repoId));
+            string oauth_token = User.Claims.Where(c => c.Type.Equals("oauth")).FirstOrDefault().Value;
+            return Ok(await _repoInfoService.RequestContributorsActtivity(repoId, oauth_token));
         }
     }
 }

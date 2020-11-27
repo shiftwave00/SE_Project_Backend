@@ -1,4 +1,4 @@
-﻿using project_manage_system_backend.Dtos;
+using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Models;
 using project_manage_system_backend.Shares;
 using System;
@@ -76,12 +76,13 @@ namespace project_manage_system_backend.Services
             };
         }
 
-        public async Task<List<ContributorsCommitActivityDto>> RequestContributorsActtivity(int repoId)
+        public async Task<List<ContributorsCommitActivityDto>> RequestContributorsActtivity(int repoId, string oauth_token)
         {
             Repo repo = _dbContext.Repositories.Find(repoId);
             string url = "https://api.github.com/repos/" + repo.Owner + "/" + repo.Name + "/stats/contributors";
 
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "request");
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", oauth_token);
             var response = await _httpClient.GetAsync(url);
             string content = await response.Content.ReadAsStringAsync();
             var result = JsonSerializer.Deserialize<List<ContributorsCommitActivityDto>>(content);
