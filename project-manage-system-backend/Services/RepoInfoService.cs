@@ -1,4 +1,4 @@
-using project_manage_system_backend.Dtos;
+﻿using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Models;
 using project_manage_system_backend.Shares;
 using System;
@@ -93,12 +93,10 @@ namespace project_manage_system_backend.Services
             {
                 foreach (var week in item.weeks)
                 {
-                    week.w_s = DateHandler.ConvertToDateString(week.w);
+                    week.ws = DateHandler.ConvertToDateString(week.w);
                 }
             }
-
             return result;
-            
         }
     }
 }

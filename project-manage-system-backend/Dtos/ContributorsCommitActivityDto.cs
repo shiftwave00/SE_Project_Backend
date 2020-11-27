@@ -21,11 +21,11 @@ namespace project_manage_system_backend.Dtos
     /// </summary>
     public class Week
     {
+        public string ws { get; set; }
         public int w { get; set; }
         public int a { get; set; }
         public int d { get; set; }
         public int c { get; set; }
-        public string w_s { get; set; }
     }
 
     public class ContributorsCommitActivityDto
