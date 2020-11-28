@@ -126,6 +126,29 @@ namespace project_manage_system_backend.Services
             };
         }
 
+        public async Task<List<ContributorsCommitActivityDto>> RequestContributorsActtivity(int repoId, string oauth_token)
+        {
+            Repo repo = _dbContext.Repositories.Find(repoId);
+            string url = "https://api.github.com/repos/" + repo.Owner + "/" + repo.Name + "/stats/contributors";
 
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", "request");
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", oauth_token);
+            var response = await _httpClient.GetAsync(url);
+            string content = await response.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<List<ContributorsCommitActivityDto>>(content);
+            // sort by commit 
+            result.Sort((r1, r2) => r2.total.CompareTo(r1.total));
+
+            foreach (var item in result)
+            {
+                foreach (var week in item.weeks)
+                {
+                    week.ws = DateHandler.ConvertToDateString(week.w);
+                    item.totalAdditions += week.a;
+                    item.totalDeletions += week.d;
+                }
+            }
+            return result;
+        }
     }
 }
