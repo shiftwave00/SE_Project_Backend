@@ -33,5 +33,13 @@ namespace project_manage_system_backend.Controllers
             string oauth_token = User.Claims.Where(c => c.Type.Equals("oauth")).FirstOrDefault().Value;
             return Ok(await _repoInfoService.RequestContributorsActtivity(repoId, oauth_token));
         }
+        
+        [HttpGet("issue/{repoId}")]
+        public async Task<IActionResult> GetIssueInfo(int repoId)
+        {
+            string token = User.Claims.Where(c => c.Type.Equals("oauth")).FirstOrDefault().Value;
+            return Ok(await _repoInfoService.RequestIssueInfo(repoId,token));
+
+        }
     }
 }
