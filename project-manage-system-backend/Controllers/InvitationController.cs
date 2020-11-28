@@ -29,26 +29,37 @@ namespace project_manage_system_backend.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult Invite(string Applicant, int projectId)
+        public IActionResult Invite(InvitationDto invitationDto)
         {
-            if (_userService.CheckUserExist(Applicant))
+            if (_userService.CheckUserExist(invitationDto.ApplicantId))
             {
                 User inviter = _userService.GetUserModel(User.Identity.Name);
-                User applicant = _userService.GetUserModel(Applicant);
-                Project project = _repoService.GetProjectByProjectId(projectId);
+                User applicant = _userService.GetUserModel(invitationDto.ApplicantId);
+                Project project = _repoService.GetProjectByProjectId(invitationDto.ProjectId);
 
                 try
                 {
-                    _invitationService.CreateInvitation(inviter, applicant, project);
-
-                    // todo
-                    // sendMsg to applicant
-
-                    return Ok(new ResponseDto
+                    var invitation = _invitationService.CreateInvitation(inviter, applicant, project);
+                    if (!_invitationService.IsInvitationExist(invitation))
                     {
-                        success = true,
-                        message = "送出邀請"
-                    });
+                        _invitationService.AddInvitation(invitation);
+                        // todo
+                        // sendMsg to applicant
+
+                        return Ok(new ResponseDto
+                        {
+                            success = true,
+                            message = "送出邀請"
+                        });
+                    }
+                    else
+                    {
+                        return Ok(new ResponseDto
+                        {
+                            success = true,
+                            message = "送出邀請"
+                        });
+                    }
                 }
                 catch (Exception e)
                 {
@@ -59,8 +70,34 @@ namespace project_manage_system_backend.Controllers
             return Ok(new ResponseDto
             {
                 success = false,
-                message = "找不到使用者: " + Applicant
+                message = "找不到使用者: " + invitationDto.ApplicantId
             });
+        }
+
+        [Authorize]
+        [HttpPost("Reply")]
+        public IActionResult ReplyToInvitation(ReplyToInvitationDto replyToInvitationDto)
+        {
+            Invitation invitation = _invitationService.GetInvitation(replyToInvitationDto.InvitationId);
+
+            if (invitation.IsAgreed)
+            {
+                _userService.AddProject(invitation);
+            }
+
+            try
+            {
+                _invitationService.DeleteInvitation(invitation);
+                return Ok(new ResponseDto
+                {
+                    success = true,
+                    message = "刪除成功"
+                });
+            }
+            catch (Exception e)
+            {
+                return NotFound(e);
+            }
         }
     }
 }

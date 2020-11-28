@@ -14,7 +14,7 @@ namespace project_manage_system_backend.Shares
         public DbSet<User> Users { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Repo> Repositories { get; set; }
-        public DbSet<Invitation> invitations { get; set; }
+        public DbSet<Invitation> Invitations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

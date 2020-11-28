@@ -25,7 +25,7 @@ namespace project_manage_system_backend.Services
 
                 Project project = new Project
                 {
-                    Name = "project2"
+                    Name = "project1"
                 };
                 User user = new User
                 {
@@ -37,7 +37,28 @@ namespace project_manage_system_backend.Services
                 dbContext.Add(user);
                 dbContext.Add(repository);
                 dbContext.Add(project);
-                
+
+                repository = new Repo
+                {
+                    Name = "test234",
+                    Url = "https::/somewhere",
+                };
+
+                project = new Project
+                {
+                    Name = "project2"
+                };
+                user = new User
+                {
+                    Name = "AAAAAAAA",
+                    Account = "test246",
+                    AvatarUrl = "https://avatars2.githubusercontent.com/u/37148109?s=460&u=eaae4f4b457f9bf49f6dea8451568308ca7aba38&v=4",
+                    Authority = "",
+                };
+                dbContext.Add(user);
+                dbContext.Add(repository);
+                dbContext.Add(project);
+
                 dbContext.SaveChanges();
             }
         }

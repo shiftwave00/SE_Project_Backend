@@ -40,14 +40,18 @@ namespace project_manage_system_backend.Services
         {
             var user = _dbContext.Users.Find(account);
 
-            return new User 
-            { 
-                Account = user.Account, 
-                Name = user.Name, 
-                AvatarUrl = user.AvatarUrl,
-                Authority = user.Authority,
-                Projects = user.Projects
-            };
+            return user;
+        }
+
+        public void AddProject(Invitation invitation)
+        {
+            var user = invitation.Applicant;
+            user.Projects.Add(invitation.InvitedProject);
+            
+            if (_dbContext.SaveChanges() == 0)
+            {
+                // throw new Exception("Add project fail!");
+            }
         }
     }
 }
