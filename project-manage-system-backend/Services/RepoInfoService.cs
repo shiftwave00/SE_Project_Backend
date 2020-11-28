@@ -94,6 +94,8 @@ namespace project_manage_system_backend.Services
                 foreach (var week in item.weeks)
                 {
                     week.ws = DateHandler.ConvertToDateString(week.w);
+                    item.totalAdditions += week.a;
+                    item.totalDeletions += week.d;
                 }
             }
             return result;

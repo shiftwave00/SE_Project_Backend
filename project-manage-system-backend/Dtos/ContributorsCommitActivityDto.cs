@@ -33,5 +33,7 @@ namespace project_manage_system_backend.Dtos
         public Author author { get; set; }
         public List<Week> weeks { get; set; }
         public int total { get; set; }
+        public int totalAdditions { get; set; }
+        public int totalDeletions { get; set; }
     }
 }
