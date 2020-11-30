@@ -19,10 +19,19 @@ namespace project_manage_system_backend.Services
                 Inviter = inviter,
                 Applicant = applicant,
                 InvitedProject = project,
-                IsAgreed = false
+                IsAgreed = true
             };
 
             return invitation;
+        }
+
+        public List<Invitation> GetInvitations(User user)
+        {
+            List<Invitation> invitations = _dbContext.Invitations
+                                                     .Include(i => i.Inviter)
+                                                     .Include(i => i.InvitedProject)
+                                                     .Where(i => i.Applicant.Equals(user)).ToList();
+            return invitations;
         }
 
         public void AddInvitation(Invitation invitation)

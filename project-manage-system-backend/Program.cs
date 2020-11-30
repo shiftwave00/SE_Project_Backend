@@ -15,6 +15,7 @@ namespace project_manage_system_backend
     {
         public static void Main(string[] args)
         {
+            // var db = new InitializeDB();
             // NLog: setup the logger first to catch all errors
             var logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             try

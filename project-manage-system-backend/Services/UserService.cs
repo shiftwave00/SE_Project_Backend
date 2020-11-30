@@ -46,11 +46,11 @@ namespace project_manage_system_backend.Services
         public void AddProject(Invitation invitation)
         {
             var user = invitation.Applicant;
-            user.Projects.Add(invitation.InvitedProject);
+            user.Projects.Add(new UserProject { User = user, Project = invitation.InvitedProject });
             
             if (_dbContext.SaveChanges() == 0)
             {
-                // throw new Exception("Add project fail!");
+                throw new Exception("Add project fail!");
             }
         }
     }

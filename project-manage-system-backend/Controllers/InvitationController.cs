@@ -56,8 +56,8 @@ namespace project_manage_system_backend.Controllers
                     {
                         return Ok(new ResponseDto
                         {
-                            success = true,
-                            message = "送出邀請"
+                            success = false,
+                            message = "請勿重複邀請"
                         });
                     }
                 }
@@ -72,6 +72,15 @@ namespace project_manage_system_backend.Controllers
                 success = false,
                 message = "找不到使用者: " + invitationDto.ApplicantId
             });
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult GetInvitations()
+        {
+            User user = _userService.GetUserModel(User.Identity.Name);
+            var result = _invitationService.GetInvitations(user);
+            return Ok(result);
         }
 
         [Authorize]
