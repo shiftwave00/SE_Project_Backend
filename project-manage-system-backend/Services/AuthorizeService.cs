@@ -53,7 +53,7 @@ namespace project_manage_system_backend.Services
 
                 return new AuthorizeDto 
                 { 
-                    Token = _jwtHelper.GenerateToken(userModel.Account, userModel.Authority),
+                    Token = _jwtHelper.GenerateToken(userModel.Account, accessToken, userModel.Authority),
                     OauthToken = accessToken
                 };
             }

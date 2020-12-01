@@ -18,7 +18,7 @@ namespace project_manage_system_backend.Shares
         {
             this.Configuration = configuration;
         }
-        public string GenerateToken(string userAccount, string role = "User", int expireMinutes = 3600)
+        public string GenerateToken(string userAccount, string oauthToken, string role = "User", int expireMinutes = 3600)
         {
             var issuer = Configuration.GetValue<string>("JwtSettings:Issuer");
             var signKey = Configuration.GetValue<string>("JwtSettings:SignKey");
@@ -29,7 +29,7 @@ namespace project_manage_system_backend.Shares
             // 在 RFC 7519 規格中(Section#4)，總共定義了 7 個預設的 Claims，我們應該只用的到兩種！
             claims.Add(new Claim(JwtRegisteredClaimNames.Sub, userAccount)); // User.Identity.Name
             claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())); // JWT ID
-
+            claims.Add(new Claim("oauth", oauthToken)); // Oauth Token
 
             // 你可以自行擴充 "roles" 加入登入者該有的角色
             claims.Add(new Claim("roles", role));
