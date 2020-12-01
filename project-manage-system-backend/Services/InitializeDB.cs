@@ -20,7 +20,7 @@ namespace project_manage_system_backend.Services
                 Repo repository = new Repo
                 {
                     Name = "test123",
-                    Url = "https::/somewhere",
+                    Url = "https://github.com/109-SETeam/project-manage-system-backend",
                 };
 
                 Project project = new Project
