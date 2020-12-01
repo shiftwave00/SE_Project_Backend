@@ -31,6 +31,7 @@ namespace project_manage_system_backend.Services
                                                      .Include(i => i.Inviter)
                                                      .Include(i => i.InvitedProject)
                                                      .Where(i => i.Applicant.Equals(user)).ToList();
+            invitations.Reverse();
             return invitations;
         }
 

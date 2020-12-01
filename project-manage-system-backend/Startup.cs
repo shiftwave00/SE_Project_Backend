@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using project_manage_system_backend.Services;
 using project_manage_system_backend.Shares;
+using project_manage_system_backend.SignalR;
 
 namespace project_manage_system_backend
 {
@@ -140,6 +141,8 @@ namespace project_manage_system_backend
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseSignalR((routes) => { routes.MapHub<NotificationHub>("/hub/Notification"); });
 
             app.UseEndpoints(endpoints =>
             {
