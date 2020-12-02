@@ -26,6 +26,12 @@ namespace project_manage_system_backend.Controllers
             return Ok(await _repoInfoService.RequestCommitInfo(repoId));
         }
 
+        [HttpGet("codebase/{repoId}")]
+        public async Task<IActionResult> GetCodebase(int repoId)
+        {
+            return Ok(await _repoInfoService.RequestCodebase(repoId));
+        }
+        
         [Authorize]
         [HttpGet("contribute/{repoId}")]
         public async Task<IActionResult> GetContributorsActtivity(int repoId)
@@ -39,7 +45,6 @@ namespace project_manage_system_backend.Controllers
         {
             string token = User.Claims.Where(c => c.Type.Equals("oauth")).FirstOrDefault().Value;
             return Ok(await _repoInfoService.RequestIssueInfo(repoId,token));
-
         }
     }
 }
