@@ -82,7 +82,7 @@ namespace project_manage_system_backend.Services
             return codebaseSet;
         }
 
-        public async Task<GithubRepoIssuesDto> RequestIssueInfo(int repoId,string token)
+        public async Task<RepoIssuesDto> RequestIssueInfo(int repoId,string token)
         {
             RepoIssuesDto result = new RepoIssuesDto();
             Repo repo = _dbContext.Repositories.Find(repoId);
