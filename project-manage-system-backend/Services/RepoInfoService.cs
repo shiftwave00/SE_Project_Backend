@@ -46,9 +46,9 @@ namespace project_manage_system_backend.Services
             };
         }
 
-        public async Task<GithubRepoIssuesDto> RequestIssueInfo(int repoId,string token)
+        public async Task<RepoIssuesDto> RequestIssueInfo(int repoId,string token)
         {
-            GithubRepoIssuesDto result = new GithubRepoIssuesDto();
+            RepoIssuesDto result = new RepoIssuesDto();
             Repo repo = _dbContext.Repositories.Find(repoId);
             List<double> closedTime = new List<double>();
             string url = repo.Url.Replace("github.com/", "api.github.com/repos/");

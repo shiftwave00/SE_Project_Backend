@@ -5,9 +5,7 @@ using System.Threading.Tasks;
 
 namespace project_manage_system_backend.Dtos
 {
-    
-
-    public class GithubRepoIssuesDto
+    public class RepoIssuesDto
     { 
         public string averageDealwithIssueTime { get; set; }
 

@@ -25,9 +25,11 @@ namespace PMS_test.ControllersTest
         private readonly HttpClient _client;
         private readonly RepoInfoService _repoInfoService;
 
-        private const string _owner = "";
-        private const string _name = "";
+        private const string _owner = "WeedChen";
+        private const string _name = "AutoPlaneCup";
         private const string _commitUrl = "https://api.github.com/repos/" + _owner + "/" + _name + "/stats/commit_activity";
+        private const string _openIssueUrl = "https://api.github.com/repos/" + _owner + "/" + _name + "/issues?state=open&per_page=100&page=1&sort=created";
+        private const string _closedIssueUrl = "https://api.github.com/repos/" + _owner + "/" + _name + "/issues?state=closed&per_page=100&page=1&sort=created";
 
         public RepoInfoServiceTests()
         {
@@ -57,7 +59,42 @@ namespace PMS_test.ControllersTest
                     .Respond("application/json",
                     "[{\"total\":2,\"week\":1575158400,\"days\":[2,0,0,0,0,0,0]},{\"total\":7,\"week\":1575763200,\"days\":[0,2,0,2,3,0,0]}]");
 
+            //issue
+
+            RepoIssuesDto dto = new RepoIssuesDto();
+            DateTime closed = Convert.ToDateTime("2020/12/03");
+            DateTime created = Convert.ToDateTime("2020/12/01");
+            dto.averageDealwithIssueTime = TimeSpan.FromSeconds((created - closed).TotalSeconds).ToString(@"dd\.hh\:mm\:\:ss\.\.");
+            dto.openIssues = JsonConvert.DeserializeObject<List<ResponseGithubRepoIssuesDto>>(CreateFakeIssues("open"));
+            dto.closeIssues = JsonConvert.DeserializeObject<List<ResponseGithubRepoIssuesDto>>(CreateFakeIssues("closed"));
+
+            string json = JsonConvert.SerializeObject(dto);
+
+            mockHttp.When(HttpMethod.Get, _openIssueUrl)
+                    .Respond("application/json", CreateFakeIssues("open"));
+            mockHttp.When(HttpMethod.Get, _closedIssueUrl)
+                    .Respond("application/json", CreateFakeIssues("closed"));
             return mockHttp.ToHttpClient();
+        }
+
+        private string CreateFakeIssues(string status)
+        {
+            DateTime closed = Convert.ToDateTime("2020-12-03");
+            DateTime created = Convert.ToDateTime("2020-12-01");
+
+            List<ResponseGithubRepoIssuesDto> openList = new List<ResponseGithubRepoIssuesDto>()
+            {
+                new ResponseGithubRepoIssuesDto()
+                { created_at=created.ToString("yyyy-MM-dd HH:mm:ss"),number =1,state="open",title="test",user = new user{html_url="",login="aaa" },closed_at="",html_url="" }
+            };
+            List<ResponseGithubRepoIssuesDto> closedList = new List<ResponseGithubRepoIssuesDto>()
+            {
+                new ResponseGithubRepoIssuesDto()
+                { created_at=created.ToString("yyyy-MM-dd HH:mm:ss"),closed_at=closed.ToString("yyyy-MM-dd HH:mm:ss"),number=2,state="closed",title="test",user = new user{html_url="",login="aaa" },html_url=""}
+            };
+            string openjson = JsonConvert.SerializeObject(openList);
+            string closedjson = JsonConvert.SerializeObject(closedList);
+            return status == "open" ? openjson : closedjson;
         }
 
         private void InitialDatabase()
@@ -66,7 +103,7 @@ namespace PMS_test.ControllersTest
             {
                 Name = _name,
                 Owner = _owner,
-                Url = "https://github.com/" + _owner + "" + _name + ""
+                Url = "https://github.com/" + _owner + "/" + _name + ""
             });
             _dbContext.SaveChanges();
         }
@@ -120,5 +157,23 @@ namespace PMS_test.ControllersTest
             var commitInfoStr = JsonConvert.SerializeObject(commitInfo);
             Assert.Equal(expectedStr, commitInfoStr);
         }
+
+        [Fact]
+        public async Task TestRequestIssueInfo()
+        {
+            RepoIssuesDto dto = new RepoIssuesDto();
+            DateTime closed = Convert.ToDateTime("2020-12-03");
+            DateTime created = Convert.ToDateTime("2020-12-01");
+            dto.averageDealwithIssueTime = TimeSpan.FromSeconds((created - closed).TotalSeconds).ToString(@"dd\.hh\:mm\:\:ss\.\.").Replace("..", "秒").Replace(".", "天").Replace("::", "分鐘").Replace(":", "小時"); ;
+            dto.openIssues = JsonConvert.DeserializeObject<List<ResponseGithubRepoIssuesDto>>(CreateFakeIssues("open"));
+            dto.closeIssues = JsonConvert.DeserializeObject<List<ResponseGithubRepoIssuesDto>>(CreateFakeIssues("closed"));
+            var excepted = JsonConvert.SerializeObject(dto);
+
+            var issues = await _repoInfoService.RequestIssueInfo(1, "KENFOnwogneorngIONefokwNGFIONROPGNro");
+            string actual = JsonConvert.SerializeObject(issues);
+
+            Assert.Equal(excepted, actual);
+        }
+
     }
 }
