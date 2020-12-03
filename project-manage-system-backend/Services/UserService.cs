@@ -42,9 +42,9 @@ namespace project_manage_system_backend.Services
             return new UserInfoDto { Id = user.Account, Name = user.Name, AvatarUrl = user.AvatarUrl };
         }
 
-        public List<UserInfoDto> GetAllUser()
+        public List<UserInfoDto> GetAllUser(string inviterId)
         {
-            return _dbContext.Users.Select(u => new UserInfoDto
+            return _dbContext.Users.Where(u => u.Account != inviterId).Select(u => new UserInfoDto
             {
                 Id = u.Account,
                 Name = u.Name,

@@ -53,7 +53,7 @@ namespace project_manage_system_backend.Controllers
         {
             if (_userService.IsProjectOwner(_userService.GetUserModel(User.Identity.Name), invitationDto.ProjectId))
             {
-                return Ok(_userService.GetAllUser());
+                return Ok(_userService.GetAllUser(User.Identity.Name));
             }
 
             return Ok(new ResponseDto
