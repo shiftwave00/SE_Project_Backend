@@ -29,6 +29,12 @@ namespace project_manage_system_backend.Services
             return false;
         }
 
+        public bool IsProjectOwner(User owner, int projectId)
+        {
+            var project = _dbContext.Projects.Include(p => p.Owner).Where(p => p.ID.Equals(projectId)).First();
+            return project.Owner.Equals(owner);
+        }
+
         public UserInfoDto GetUser(string account)
         {
             var user = _dbContext.Users.Find(account);
@@ -36,9 +42,19 @@ namespace project_manage_system_backend.Services
             return new UserInfoDto { Id = user.Account, Name = user.Name, AvatarUrl = user.AvatarUrl };
         }
 
+        public List<UserInfoDto> GetAllUser()
+        {
+            return _dbContext.Users.Select(u => new UserInfoDto
+            {
+                Id = u.Account,
+                Name = u.Name,
+                AvatarUrl = u.AvatarUrl
+            }).ToList();
+        }
+
         public User GetUserModel(string account)
         {
-            var user = _dbContext.Users.Find(account);
+            var user = _dbContext.Users.Include(u => u.Projects).ThenInclude(p => p.Project).First(u => u.Account.Equals(account));
 
             return user;
         }

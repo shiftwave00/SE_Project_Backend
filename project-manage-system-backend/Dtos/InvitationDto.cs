@@ -14,5 +14,6 @@ namespace project_manage_system_backend.Dtos
     public class ReplyToInvitationDto
     {
         public int InvitationId { get; set; }
+        public bool IsAgreed { get; set; }
     }
 }

@@ -19,7 +19,7 @@ namespace project_manage_system_backend.Services
                 Inviter = inviter,
                 Applicant = applicant,
                 InvitedProject = project,
-                IsAgreed = true
+                IsAgreed = false
             };
 
             return invitation;
@@ -51,6 +51,12 @@ namespace project_manage_system_backend.Services
                 );
             if (Invitation.Count() > 0) return true;
             return false;
+        }
+
+        public bool IsUserInProject(User user, Project project)
+        {
+            var projectList = user.Projects.Where(p => p.ProjectId == project.ID).ToList();
+            return projectList.Count() > 0;
         }
         
         public void DeleteInvitation(Invitation invitation)

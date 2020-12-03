@@ -28,8 +28,44 @@ namespace project_manage_system_backend.Controllers
         }
 
         [Authorize]
-        [HttpPost]
+        [HttpGet("checkowner/{id}")]
+        public IActionResult IsOwner(int id)
+        {
+            if (_userService.IsProjectOwner(_userService.GetUserModel(User.Identity.Name), id))
+            {
+                return Ok(new ResponseDto
+                {
+                    success = true,
+                    message = "專案擁有者，可以邀請人"
+                });
+            }
+
+            return Ok(new ResponseDto
+            {
+                success = false,
+                message = "非專案的擁有者，無法邀請其他人加入專案"
+            });
+        }
+
+        [Authorize]
+        [HttpPost("users")]
         public IActionResult Invite(InvitationDto invitationDto)
+        {
+            if (_userService.IsProjectOwner(_userService.GetUserModel(User.Identity.Name), invitationDto.ProjectId))
+            {
+                return Ok(_userService.GetAllUser());
+            }
+
+            return Ok(new ResponseDto
+            {
+                success = false,
+                message = "非專案的擁有者，無法邀請其他人加入專案"
+            });
+        }
+
+        [Authorize]
+        [HttpPost("sendinvitation")]
+        public IActionResult SendInvitation(InvitationDto invitationDto)
         {
             if (_userService.CheckUserExist(invitationDto.ApplicantId))
             {
@@ -37,34 +73,46 @@ namespace project_manage_system_backend.Controllers
                 User applicant = _userService.GetUserModel(invitationDto.ApplicantId);
                 Project project = _repoService.GetProjectByProjectId(invitationDto.ProjectId);
 
-                try
+                if (_userService.IsProjectOwner(inviter, invitationDto.ProjectId) && !_invitationService.IsUserInProject(applicant, project))
                 {
-                    var invitation = _invitationService.CreateInvitation(inviter, applicant, project);
-                    if (!_invitationService.IsInvitationExist(invitation))
+                    try
                     {
-                        _invitationService.AddInvitation(invitation);
-                        // todo
-                        // sendMsg to applicant
+                        var invitation = _invitationService.CreateInvitation(inviter, applicant, project);
+                        if (!_invitationService.IsInvitationExist(invitation))
+                        {
+                            _invitationService.AddInvitation(invitation);
+                            // todo
+                            // sendMsg to applicant
 
-                        return Ok(new ResponseDto
+                            return Ok(new ResponseDto
+                            {
+                                success = true,
+                                message = "送出邀請"
+                            });
+                        }
+                        else
                         {
-                            success = true,
-                            message = "送出邀請"
-                        });
+                            return Ok(new ResponseDto
+                            {
+                                success = false,
+                                message = "已送出邀請，請勿重複邀請"
+                            });
+                        }
                     }
-                    else
+                    catch (Exception e)
                     {
-                        return Ok(new ResponseDto
-                        {
-                            success = false,
-                            message = "請勿重複邀請"
-                        });
+                        return NotFound(e);
                     }
                 }
-                catch (Exception e)
+                else
                 {
-                    return NotFound(e);
+                    return Ok(new ResponseDto
+                    {
+                        success = false,
+                        message = "使用者: " + invitationDto.ApplicantId + " 已在專案中"
+                    });
                 }
+                
             }
 
             return Ok(new ResponseDto
@@ -84,12 +132,12 @@ namespace project_manage_system_backend.Controllers
         }
 
         [Authorize]
-        [HttpPost("Reply")]
+        [HttpPost("reply")]
         public IActionResult ReplyToInvitation(ReplyToInvitationDto replyToInvitationDto)
         {
             Invitation invitation = _invitationService.GetInvitation(replyToInvitationDto.InvitationId);
 
-            if (invitation.IsAgreed)
+            if (replyToInvitationDto.IsAgreed)
             {
                 _userService.AddProject(invitation);
             }
