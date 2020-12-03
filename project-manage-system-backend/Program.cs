@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
+using project_manage_system_backend.Services;
 
 namespace project_manage_system_backend
 {
@@ -14,6 +15,7 @@ namespace project_manage_system_backend
     {
         public static void Main(string[] args)
         {
+            // var db = new InitializeDB();
             // NLog: setup the logger first to catch all errors
             var logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             try

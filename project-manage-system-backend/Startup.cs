@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using project_manage_system_backend.Services;
 using project_manage_system_backend.Shares;
+using project_manage_system_backend.SignalR;
 
 namespace project_manage_system_backend
 {
@@ -110,6 +111,7 @@ namespace project_manage_system_backend
             });
 
             services.AddControllers().AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -139,6 +141,8 @@ namespace project_manage_system_backend
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseSignalR((routes) => { routes.MapHub<NotificationHub>("/hub/Notification"); });
 
             app.UseEndpoints(endpoints =>
             {

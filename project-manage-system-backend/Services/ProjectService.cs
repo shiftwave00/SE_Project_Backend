@@ -19,17 +19,16 @@ namespace project_manage_system_backend.Services
             var user = _dbContext.Users.Find(projectDto.UserId);
             if (user != null)
             {
-                var project = new Models.Project
+                var project = new Models.UserProject
                 {
-                    Name = projectDto.ProjectName,
-                    Owner = user
+                    Project = new Models.Project { Name = projectDto.ProjectName, Owner = user },
                 };
 
                 user.Projects.Add(project);
             }
             else
             {
-                throw new Exception("user fail，can not find this user");
+                throw new Exception("user fail, can not find this user");
             }
 
 
@@ -41,9 +40,9 @@ namespace project_manage_system_backend.Services
 
         public List<ProjectResultDto> GetProjectByUserAccount(string account)
         {
-            var user = _dbContext.Users.Include(u => u.Projects).FirstOrDefault(u => u.Account.Equals(account));
-            var query = (from p in user.Projects
-                        select new ProjectResultDto { Id = p.ID, Name = p.Name }).ToList();
+            var user = _dbContext.Users.Include(u => u.Projects).ThenInclude(p => p.Project).FirstOrDefault(u => u.Account.Equals(account));
+            var query = (from up in user.Projects
+                        select new ProjectResultDto { Id = up.Project.ID, Name = up.Project.Name }).ToList();
             return query;
         }
     }
