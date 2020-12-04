@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using project_manage_system_backend.Services;
 using project_manage_system_backend.Shares;
@@ -19,6 +20,7 @@ namespace project_manage_system_backend.Controllers
             _repoInfoService = new RepoInfoService(dbContext);
         }
 
+        [Authorize]
         [HttpGet("commit/{repoId}")]
         public async Task<IActionResult> GetCommitInfo(int repoId)
         {
