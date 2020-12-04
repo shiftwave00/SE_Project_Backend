@@ -78,7 +78,7 @@ namespace PMS_test.ControllersTest
 
             /* contributors ActivityUrl */
             mockHttp.When(HttpMethod.Get, _contributorsActivityUrl)
-                    .Respond("application/json", CreateFakeContributorsActtivityData(false));
+                    .Respond("application/json", CreateFakeContributorsActivityData(false));
 
             return mockHttp.ToHttpClient();
         }
@@ -181,7 +181,7 @@ namespace PMS_test.ControllersTest
             Assert.Equal(excepted, actual);
         }
         
-        private string CreateFakeContributorsActtivityData(bool isExcepted)
+        private string CreateFakeContributorsActivityData(bool isExcepted)
         {
             var weeks = new List<Week>
             {
@@ -211,11 +211,11 @@ namespace PMS_test.ControllersTest
         }
 
         [Fact]
-        public async Task TestRequestContributorsActtivity()
+        public async Task TestRequestContributorsActivity()
         {
-            var contributorsActtivityInfo = await _repoInfoService.RequestContributorsActtivity(1, "KENFOnwogneorngIONefokwNGFIONROPGNro");
+            var contributorsActtivityInfo = await _repoInfoService.RequestContributorsActivity(1, "KENFOnwogneorngIONefokwNGFIONROPGNro");
             string actual = JsonConvert.SerializeObject(contributorsActtivityInfo);
-            var excepted = CreateFakeContributorsActtivityData(true);
+            var excepted = CreateFakeContributorsActivityData(true);
             Assert.Equal(excepted, actual);
         }
     }
