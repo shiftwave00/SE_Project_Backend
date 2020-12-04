@@ -109,7 +109,7 @@ namespace project_manage_system_backend.Controllers
                     return Ok(new ResponseDto
                     {
                         success = false,
-                        message = "使用者: " + invitationDto.ApplicantId + " 已在專案中"
+                        message = "使用者: " + applicant.Name + " 已在專案中"
                     });
                 }
                 
@@ -118,7 +118,7 @@ namespace project_manage_system_backend.Controllers
             return Ok(new ResponseDto
             {
                 success = false,
-                message = "找不到使用者: " + invitationDto.ApplicantId
+                message = "找不到該使用者，請輸入正確的使用者名稱"
             });
         }
 
