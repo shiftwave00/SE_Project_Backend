@@ -30,6 +30,7 @@ namespace PMS_test.ControllersTest
         private const string _commitUrl = "https://api.github.com/repos/" + _owner + "/" + _name + "/stats/commit_activity";
         private const string _openIssueUrl = "https://api.github.com/repos/" + _owner + "/" + _name + "/issues?state=open&per_page=100&page=1&sort=created";
         private const string _closedIssueUrl = "https://api.github.com/repos/" + _owner + "/" + _name + "/issues?state=closed&per_page=100&page=1&sort=created";
+        private const string _contributorsActivityUrl = "https://api.github.com/repos/" + _owner + "/" + _name + "/stats/contributors";
 
         public RepoInfoServiceTests()
         {
@@ -74,6 +75,11 @@ namespace PMS_test.ControllersTest
                     .Respond("application/json", CreateFakeIssues("open"));
             mockHttp.When(HttpMethod.Get, _closedIssueUrl)
                     .Respond("application/json", CreateFakeIssues("closed"));
+
+            /* contributors ActivityUrl */
+            mockHttp.When(HttpMethod.Get, _contributorsActivityUrl)
+                    .Respond("application/json", CreateFakeContributorsActtivityData(false));
+
             return mockHttp.ToHttpClient();
         }
 
@@ -174,6 +180,43 @@ namespace PMS_test.ControllersTest
 
             Assert.Equal(excepted, actual);
         }
+        
+        private string CreateFakeContributorsActtivityData(bool isExcepted)
+        {
+            var weeks = new List<Week>
+            {
+                new Week { ws = isExcepted? "10/25":"", w = 1603584000, a = 0, d = 0, c = 0 },
+                new Week { ws = isExcepted? "11/01":"", w = 1604188800, a = 0, d = 0, c = 0 },
+                new Week { ws = isExcepted? "11/08":"", w = 1604793600, a = 0, d = 0, c = 0 },
+                new Week { ws = isExcepted? "11/15":"", w = 1605398400, a = 778, d = 649, c = 32 },
+                new Week { ws = isExcepted? "11/22":"", w = 1606003200, a = 289, d = 93, c = 13 },
+                new Week { ws = isExcepted? "11/29":"", w = 1606608000, a = 8, d = 4, c = 3 }
+            };
 
+            ContributorsCommitActivityDto contributorsCommitActivityDto = new ContributorsCommitActivityDto
+            {
+                author = new Author
+                {
+                    avatar_url = "https://avatars2.githubusercontent.com/u/31059035?v=4",
+                    html_url = "https://github.com/zxjte9411",
+                    login = _owner
+                },
+                total = 48,
+                weeks = weeks,
+                totalAdditions = isExcepted ? 1075 : 0,
+                totalDeletions = isExcepted ? 746 : 0
+            };
+            List<ContributorsCommitActivityDto> contributorsCommitActivities = new List<ContributorsCommitActivityDto> { contributorsCommitActivityDto };
+            return JsonConvert.SerializeObject(contributorsCommitActivities);
+        }
+
+        [Fact]
+        public async Task TestRequestContributorsActtivity()
+        {
+            var contributorsActtivityInfo = await _repoInfoService.RequestContributorsActtivity(1, "KENFOnwogneorngIONefokwNGFIONROPGNro");
+            string actual = JsonConvert.SerializeObject(contributorsActtivityInfo);
+            var excepted = CreateFakeContributorsActtivityData(true);
+            Assert.Equal(excepted, actual);
+        }
     }
 }
