@@ -20,6 +20,7 @@ namespace project_manage_system_backend.Controllers
             _repoInfoService = new RepoInfoService(dbContext);
         }
 
+        [Authorize]
         [HttpGet("commit/{repoId}")]
         public async Task<IActionResult> GetCommitInfo(int repoId)
         {
