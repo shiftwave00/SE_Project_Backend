@@ -30,6 +30,7 @@ namespace PMS_test.ControllersTest
         private const string _commitUrl = "https://api.github.com/repos/" + _owner + "/" + _name + "/stats/commit_activity";
         private const string _openIssueUrl = "https://api.github.com/repos/" + _owner + "/" + _name + "/issues?state=open&per_page=100&page=1&sort=created";
         private const string _closedIssueUrl = "https://api.github.com/repos/" + _owner + "/" + _name + "/issues?state=closed&per_page=100&page=1&sort=created";
+        private const string _codebaseUrl = "https://api.github.com/repos/" + _owner + "/" + _name + "/stats/code_frequency";
 
         public RepoInfoServiceTests()
         {
@@ -58,6 +59,10 @@ namespace PMS_test.ControllersTest
             mockHttp.When(HttpMethod.Get, _commitUrl)
                     .Respond("application/json",
                     "[{\"total\":2,\"week\":1575158400,\"days\":[2,0,0,0,0,0,0]},{\"total\":7,\"week\":1575763200,\"days\":[0,2,0,2,3,0,0]}]");
+
+            mockHttp.When(HttpMethod.Get, _codebaseUrl)
+                    .Respond("application/json",
+                    "[[1603584000, 17220, 0], [1604188800, 112, -193]]");
 
             //issue
 
@@ -156,6 +161,22 @@ namespace PMS_test.ControllersTest
             var expectedStr = JsonConvert.SerializeObject(expected);
             var commitInfoStr = JsonConvert.SerializeObject(commitInfo);
             Assert.Equal(expectedStr, commitInfoStr);
+        }
+
+        [Fact]
+        public async Task TestRequestCodebase()
+        {
+            List<CodebaseDto> codebaseDtos = new List<CodebaseDto>()
+            {
+                new CodebaseDto(){ Date = "10/25", NumberOfRowsAdded = 17220, NumberOfRowsDeleted = 0, NumberOfRows = 17220 },
+                new CodebaseDto(){ Date = "11/01", NumberOfRowsAdded = 112, NumberOfRowsDeleted = -193, NumberOfRows = 17139 }
+            };
+
+            var codebaseInfo = await _repoInfoService.RequestCodebase(1);
+
+            var expectedStr = JsonConvert.SerializeObject(codebaseDtos);
+            var codebaseStr = JsonConvert.SerializeObject(codebaseInfo);
+            Assert.Equal(expectedStr, codebaseStr);
         }
 
         [Fact]
