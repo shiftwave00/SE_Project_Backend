@@ -64,9 +64,7 @@ namespace project_manage_system_backend.Services
             _dbContext.Invitations.Remove(invitation);
 
             if (_dbContext.SaveChanges() == 0)
-            {
                 throw new Exception("Delete invitation fail!");
-            }
         }
 
         public Invitation GetInvitation(int id)
