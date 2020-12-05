@@ -162,7 +162,7 @@ namespace project_manage_system_backend.Services
             };
         }
 
-        public async Task<List<ContributorsCommitActivityDto>> RequestContributorsActtivity(int repoId, string oauth_token)
+        public async Task<List<ContributorsCommitActivityDto>> RequestContributorsActivity(int repoId, string oauth_token)
         {
             Repo repo = _dbContext.Repositories.Find(repoId);
             string url = "https://api.github.com/repos/" + repo.Owner + "/" + repo.Name + "/stats/contributors";

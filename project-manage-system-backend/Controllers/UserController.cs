@@ -26,7 +26,6 @@ namespace project_manage_system_backend.Controllers
         [HttpGet]
         public IActionResult GetUser()
         {
-            //_userService.GetUser(User.Identity.Name);
             return Ok(_userService.GetUser(User.Identity.Name));
         }
     }
