@@ -38,7 +38,7 @@ namespace project_manage_system_backend.Controllers
         public async Task<IActionResult> GetContributorsActtivity(int repoId)
         {
             string oauth_token = User.Claims.Where(c => c.Type.Equals("oauth")).FirstOrDefault().Value;
-            return Ok(await _repoInfoService.RequestContributorsActtivity(repoId, oauth_token));
+            return Ok(await _repoInfoService.RequestContributorsActivity(repoId, oauth_token));
         }
         
         [HttpGet("issue/{repoId}")]
