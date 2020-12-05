@@ -62,10 +62,10 @@ namespace project_manage_system_backend.Services
             foreach (var codebase in codebases)
             {
                 CodebaseDto codebaseDto = new CodebaseDto() {
-                    date = DateHandler.ConvertToDateString(codebase[0]),
-                    numberOfRowsAdded = Convert.ToInt32(codebase[1]),
-                    numberOfRowsDeleted = Convert.ToInt32(codebase[2]),
-                    numberOfRows = Convert.ToInt32(codebase[1]) + Convert.ToInt32(codebase[2])
+                    Date = DateHandler.ConvertToDateString(codebase[0]),
+                    NumberOfRowsAdded = Convert.ToInt32(codebase[1]),
+                    NumberOfRowsDeleted = Convert.ToInt32(codebase[2]),
+                    NumberOfRows = Convert.ToInt32(codebase[1]) + Convert.ToInt32(codebase[2])
                 };
 
                 codebaseSet.Add(codebaseDto);
@@ -75,8 +75,8 @@ namespace project_manage_system_backend.Services
 
             foreach (var codebase in codebaseSet)
             {
-                codebase.numberOfRows += thisWeekRows;
-                thisWeekRows = codebase.numberOfRows;
+                codebase.NumberOfRows += thisWeekRows;
+                thisWeekRows = codebase.NumberOfRows;
             }
 
             return codebaseSet;
