@@ -13,20 +13,23 @@ namespace project_manage_system_backend.Services
 {
     public class RepoService : BaseService
     {
-        public RepoService(PMSContext dbContext) : base(dbContext) { }
+        private readonly HttpClient _httpClient;
+        public RepoService(PMSContext dbContext, HttpClient client = null) : base(dbContext) 
+        { 
+            _httpClient = client ?? new HttpClient(); 
+        }
 
         public async Task<ResponseGithubRepoInfoDto> CheckRepoExist(string url)
         {
             url = url.Replace("github.com", "api.github.com/repos");
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Add("User-Agent", "request");
-                var result = await client.GetAsync(url);
-                string content = await result.Content.ReadAsStringAsync();
-                var msg = JsonSerializer.Deserialize<ResponseGithubRepoInfoDto>(content);
-                msg.IsSucess = string.IsNullOrEmpty(msg.message);
-                return msg;
-            }
+
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", "request");
+            var result = await _httpClient.GetAsync(url);
+            string content = await result.Content.ReadAsStringAsync();
+            var msg = JsonSerializer.Deserialize<ResponseGithubRepoInfoDto>(content);
+            msg.IsSucess = string.IsNullOrEmpty(msg.message);
+            return msg;
+            
         }
         public void CreateRepo(Repo model)
         {
