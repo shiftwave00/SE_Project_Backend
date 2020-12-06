@@ -125,14 +125,8 @@ namespace PMS_test.ControllersTest
                 Url = response.url,
                 Project = _repoService.GetProjectByProjectId(1),
             };
-            try
-            {
-                _repoService.CreateRepo(repo);
-            }
-            catch (Exception e)
-            {
-                Assert.Equal("Duplicate repo!", e.Message);
-            }
+            var actual = Assert.Throws<Exception>(() => _repoService.CreateRepo(repo));
+            Assert.Equal("Duplicate repo!", actual.Message);
         }
 
         [Fact]
