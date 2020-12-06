@@ -106,7 +106,7 @@ namespace project_manage_system_backend.Services
             {
                 item.created_at = Convert.ToDateTime(item.created_at).ToString("yyyy-MM-dd HH:mm:ss");
             }
-            //var average = TimeSpan.FromSeconds(closedTime.Average());
+
             result.averageDealwithIssueTime = TimeSpan.FromSeconds(closedTime.Average()).ToString(@"dd\.hh\:mm\:\:ss\.\.");
             result.averageDealwithIssueTime = result.averageDealwithIssueTime.Replace("..", "秒").Replace(".", "天").Replace("::", "分鐘").Replace(":", "小時");
             return result;

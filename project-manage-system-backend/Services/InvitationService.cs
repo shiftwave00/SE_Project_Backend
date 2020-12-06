@@ -4,7 +4,6 @@ using project_manage_system_backend.Shares;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace project_manage_system_backend.Services
 {
@@ -56,7 +55,7 @@ namespace project_manage_system_backend.Services
         public bool IsUserInProject(User user, Project project)
         {
             var projectList = user.Projects.Where(p => p.ProjectId == project.ID).ToList();
-            return projectList.Count() > 0;
+            return projectList.Count > 0;
         }
         
         public void DeleteInvitation(Invitation invitation)

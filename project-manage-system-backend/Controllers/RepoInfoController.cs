@@ -34,14 +34,14 @@ namespace project_manage_system_backend.Controllers
         [HttpGet("contribute/{repoId}")]
         public async Task<IActionResult> GetContributorsActtivity(int repoId)
         {
-            string oauth_token = User.Claims.Where(c => c.Type.Equals("oauth")).FirstOrDefault().Value;
+            string oauth_token = User.Claims.FirstOrDefault(c => c.Type.Equals("oauth")).Value;
             return Ok(await _repoInfoService.RequestContributorsActivity(repoId, oauth_token));
         }
         
         [HttpGet("issue/{repoId}")]
         public async Task<IActionResult> GetIssueInfo(int repoId)
         {
-            string token = User.Claims.Where(c => c.Type.Equals("oauth")).FirstOrDefault().Value;
+            string token = User.Claims.FirstOrDefault(c => c.Type.Equals("oauth")).Value;
             return Ok(await _repoInfoService.RequestIssueInfo(repoId,token));
         }
     }

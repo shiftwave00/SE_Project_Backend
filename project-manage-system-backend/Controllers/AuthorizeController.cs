@@ -29,7 +29,7 @@ namespace project_manage_system_backend.Controllers
         [HttpGet]
         public IActionResult CheckAuthentucate()
         {
-            return Ok(User.Claims.Where(c => c.Type.Equals("oauth")).FirstOrDefault().Value);
+            return Ok(User.Claims.FirstOrDefault(c => c.Type.Equals("oauth")).Value);
         }
     }
 }
