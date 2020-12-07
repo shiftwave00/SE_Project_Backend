@@ -23,9 +23,8 @@ namespace project_manage_system_backend.Services
 
         public bool CheckUserExist(string account)
         {
-            var Users = _dbContext.Users.Where(u => u.Account.Equals(account));
-            if (Users.Count() > 0) return true;
-            return false;
+            var Users = _dbContext.Users.Where(u => u.Account.Equals(account)).ToList();
+            return Users.Any();
         }
 
         public bool IsProjectOwner(User owner, int projectId)

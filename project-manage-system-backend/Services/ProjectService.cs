@@ -42,5 +42,18 @@ namespace project_manage_system_backend.Services
                         select new ProjectResultDto { Id = up.Project.ID, Name = up.Project.Name }).ToList();
             return query;
         }
+
+        public void DeleteProject(int projectId)
+        {
+            var invitations = _dbContext.Invitations.Where(i => i.InvitedProject.ID.Equals(projectId));
+            _dbContext.Invitations.RemoveRange(invitations);
+            var repos = _dbContext.Repositories.Where(r => r.Project.ID.Equals(projectId));
+            _dbContext.Repositories.RemoveRange(repos);
+            var project = _dbContext.Projects.Find(projectId);
+            _dbContext.Projects.Remove(project);
+
+            if (_dbContext.SaveChanges() == 0)
+                throw new Exception("Delete project fail!");
+        }
     }
 }
