@@ -48,14 +48,13 @@ namespace project_manage_system_backend.Services
                 (i => 
                     i.Inviter.Equals(invitation.Inviter) && i.Applicant.Equals(invitation.Applicant) && i.InvitedProject.Equals(invitation.InvitedProject)
                 );
-            if (Invitation.Count() > 0) return true;
-            return false;
+            return Invitation.Any();
         }
 
         public bool IsUserInProject(User user, Project project)
         {
             var projectList = user.Projects.Where(p => p.ProjectId == project.ID).ToList();
-            return projectList.Count > 0;
+            return projectList.Any();
         }
         
         public void DeleteInvitation(Invitation invitation)

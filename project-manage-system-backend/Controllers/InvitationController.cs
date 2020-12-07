@@ -77,8 +77,6 @@ namespace project_manage_system_backend.Controllers
                         if (!_invitationService.IsInvitationExist(invitation))
                         {
                             _invitationService.AddInvitation(invitation);
-                            // todo
-                            // sendMsg to applicant
 
                             return Ok(new ResponseDto
                             {
