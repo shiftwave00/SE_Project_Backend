@@ -228,6 +228,8 @@ namespace PMS_test.ControllersTest
                 totalDeletions = isExcepted ? 746 : 0
             };
             List<ContributorsCommitActivityDto> contributorsCommitActivities = new List<ContributorsCommitActivityDto> { contributorsCommitActivityDto };
+            contributorsCommitActivityDto.total = 50;
+            contributorsCommitActivities.Add(contributorsCommitActivityDto);
             return JsonConvert.SerializeObject(contributorsCommitActivities);
         }
 

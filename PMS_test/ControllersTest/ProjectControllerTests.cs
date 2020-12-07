@@ -41,14 +41,18 @@ namespace PMS_test.ControllersTest
                 AvatarUrl = "none",
                 Name = "name"
             });
-
-            _dbContext.Projects.Add(new Project
+            var user = _dbContext.Users.Find("github_testuser");
+            var project = new UserProject
             {
-                Name = "project",
-                Owner = _dbContext.Users.Find("github_testuser"),
-                Repositories = null
-            });
-
+                Project = new Project
+                {
+                    Name = "project",
+                    Owner = user,
+                    Repositories = null
+                },
+                User = user
+            };
+            user.Projects.Add(project);
             _dbContext.SaveChanges();
         }
 

@@ -1,17 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
-using project_manage_system_backend.Services;
+using System;
 
 namespace project_manage_system_backend
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
