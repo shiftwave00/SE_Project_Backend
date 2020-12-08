@@ -28,11 +28,19 @@ namespace project_manage_system_backend.Controllers
             try
             {
                 _projectService.Create(projectDto);
-                return Ok();
+                return Ok(new ResponseDto
+                {
+                    success = true,
+                    message = "新增成功"
+                });
             }
             catch (Exception ex)
             {
-                return NotFound(ex);
+                return Ok(new ResponseDto
+                {
+                    success = false,
+                    message = "新增失敗" + ex.Message
+                });
             }
         }
 
