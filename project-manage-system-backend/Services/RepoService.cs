@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace project_manage_system_backend.Services
@@ -21,23 +22,28 @@ namespace project_manage_system_backend.Services
 
         public async Task<ResponseGithubRepoInfoDto> CheckRepoExist(string url)
         {
-            url = url.Replace("github.com", "api.github.com/repos");
+            string matchPatten = @"^http(s)?://([\w-]+.)+[\w-]+(/[\w- ./?%&=])?$";
+            if(!Regex.IsMatch(url, matchPatten))
+                return new ResponseGithubRepoInfoDto() { message = "Url Error" };
 
+            url = url.Replace(".git", "");
+            url = url.Replace("github.com", "api.github.com/repos");
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "request");
             var result = await _httpClient.GetAsync(url);
             string content = await result.Content.ReadAsStringAsync();
             var msg = JsonSerializer.Deserialize<ResponseGithubRepoInfoDto>(content);
             msg.IsSucess = string.IsNullOrEmpty(msg.message);
             return msg;
-            
         }
         public void CreateRepo(Repo model)
         {
-            //get repo by url
-            var repo = _dbContext.Repositories.Where(m => m.Url.Contains(model.Url)).ToList();
+            //get project by id
+            var project = _dbContext.Projects.Include(r => r.Repositories).Where(p=>p.ID==model.Project.ID).First();
+
+            var repo = project.Repositories.Where(r=>r.Url==model.Url);
 
             // check duplicate =>  add or throw exception
-            if (repo.Count == 0)
+            if (!repo.Any())
                 _dbContext.Add(model);
             else
                 throw new Exception("Duplicate repo!");
