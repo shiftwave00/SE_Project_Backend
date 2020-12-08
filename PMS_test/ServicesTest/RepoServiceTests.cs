@@ -149,5 +149,19 @@ namespace PMS_test.ControllersTest
             Assert.Equal(_successFakeRepository, actual.Url);
             Assert.Equal(1, actual.Project.ID);
         }
+        
+        [Fact]
+        public void TestDeleteRepoSuccess()
+        {
+            bool result = _repoService.DeleteRepo(1,1);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void TestDeleteRepoFail()
+        {
+            bool result = _repoService.DeleteRepo(2, 1);
+            Assert.False(result);
+        }
     }
 }
