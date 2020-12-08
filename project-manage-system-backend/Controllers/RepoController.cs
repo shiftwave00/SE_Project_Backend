@@ -19,6 +19,7 @@ namespace project_manage_system_backend.Controllers
             _repoService = new RepoService(dbContext);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddRepo(RequestAddRepoDto addRepoDto)
         {
@@ -62,6 +63,29 @@ namespace project_manage_system_backend.Controllers
                 });
 
             }
+        }
+
+        
+        [HttpDelete]
+        public IActionResult DeleteRepo(int repoId,int projectId)
+        {
+            try
+            {
+                bool success = _repoService.DeleteRepo(projectId, repoId);
+                return Ok(new ResponseDto()
+                {
+                    success = success,
+                    message = success ? "Success" : "Error"
+                });
+            }
+            catch (Exception e)
+            {
+                return Ok(new ResponseDto()
+                {
+                    success = false,
+                    message = e.Message
+                });
+            } 
         }
 
         [Authorize]
