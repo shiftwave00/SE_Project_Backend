@@ -41,6 +41,13 @@ namespace PMS_test.ControllersTest
                 AvatarUrl = "none",
                 Name = "name"
             });
+            _dbContext.Users.Add(new User
+            {
+                Account = "testAccount2",
+                Authority = "User2",
+                AvatarUrl = "none2",
+                Name = "name2"
+            });
             var user = _dbContext.Users.Find("github_testuser");
             var project = new UserProject
             {
@@ -59,7 +66,9 @@ namespace PMS_test.ControllersTest
         [Fact]
         public async Task TestAddProjectSuccess()
         {
-            ProjectDto dto = new ProjectDto
+            ProjectDto dto;
+
+            dto = new ProjectDto
             {
                 ProjectName = "testProject",
                 UserId = "testAccount"
@@ -68,12 +77,26 @@ namespace PMS_test.ControllersTest
             var content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
             var requestTask = await _client.PostAsync("/project", content);
 
-
             Assert.True(requestTask.IsSuccessStatusCode);
 
             var autual = _dbContext.Projects.Find(2);
-
             string expectedName = "testProject";
+
+            Assert.Equal(expectedName, autual.Name);
+
+            dto = new ProjectDto
+            {
+                ProjectName = "testProject",
+                UserId = "testAccount2"
+            };
+
+            content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
+            requestTask = await _client.PostAsync("/project", content);
+
+            Assert.True(requestTask.IsSuccessStatusCode);
+
+            autual = _dbContext.Projects.Find(3);
+            expectedName = "testProject";
 
             Assert.Equal(expectedName, autual.Name);
         }
@@ -90,7 +113,54 @@ namespace PMS_test.ControllersTest
             var content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
             var requestTask = await _client.PostAsync("/project", content);
 
-            Assert.True(requestTask.StatusCode == System.Net.HttpStatusCode.NotFound);
+            var result = requestTask.Content.ReadAsStringAsync().Result;
+            var responseDto = JsonSerializer.Deserialize<ResponseDto>(result);
+            Assert.False(responseDto.success);
+        }
+
+        [Fact]
+        public async Task TestAddDuplicateProject()
+        {
+            ProjectDto dto = new ProjectDto
+            {
+                ProjectName = "testProject",
+                UserId = "testAccount"
+            };
+
+            var content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
+            var requestTask = await _client.PostAsync("/project", content);
+
+            Assert.True(requestTask.IsSuccessStatusCode);
+
+            ProjectDto duplicateDto = new ProjectDto
+            {
+                ProjectName = "testProject",
+                UserId = "testAccount"
+            };
+
+            var duplicateContent = new StringContent(JsonSerializer.Serialize(duplicateDto), Encoding.UTF8, "application/json");
+            var duplicateRequestTask = await _client.PostAsync("/project", duplicateContent);
+
+            var result = duplicateRequestTask.Content.ReadAsStringAsync().Result;
+            var responseDto = JsonSerializer.Deserialize<ResponseDto>(result);
+            Assert.False(responseDto.success);
+        }
+
+        [Fact]
+        public async Task TestAddEmptyProjectName()
+        {
+            ProjectDto dto = new ProjectDto
+            {
+                ProjectName = "",
+                UserId = "testAccount"
+            };
+
+            var content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
+            var requestTask = await _client.PostAsync("/project", content);
+
+            var result = requestTask.Content.ReadAsStringAsync().Result;
+            var responseDto = JsonSerializer.Deserialize<ResponseDto>(result);
+            Assert.False(responseDto.success);
         }
 
         [Fact]

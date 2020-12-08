@@ -13,15 +13,31 @@ namespace project_manage_system_backend.Services
 
         public void Create(ProjectDto projectDto)
         {
-            var user = _dbContext.Users.Find(projectDto.UserId);
+            if (projectDto.ProjectName == "")
+            {
+                throw new Exception("please enter project name");
+            }
+            var user = _dbContext.Users.Include(u => u.Projects).ThenInclude(p => p.Project).FirstOrDefault(u => u.Account.Equals(projectDto.UserId));
+            
             if (user != null)
             {
-                var project = new Models.UserProject
+                var userProject = (from up in user.Projects
+                                   where up.Project.Name == projectDto.ProjectName
+                                   select up.Project.Name).ToList();
+                if (userProject.Count == 0)
                 {
-                    Project = new Models.Project { Name = projectDto.ProjectName, Owner = user },
-                };
+                    var newProject = new Models.UserProject
+                    {
+                        Project = new Models.Project { Name = projectDto.ProjectName, Owner = user },
+                    };
 
-                user.Projects.Add(project);
+                    user.Projects.Add(newProject);
+                }
+                else
+                {
+                    throw new Exception("duplicate project name");
+                }
+
             }
             else
             {
