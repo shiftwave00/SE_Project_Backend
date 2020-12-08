@@ -61,7 +61,8 @@ namespace project_manage_system_backend.Services
 
             foreach (var codebase in codebases)
             {
-                CodebaseDto codebaseDto = new CodebaseDto() {
+                CodebaseDto codebaseDto = new CodebaseDto()
+                {
                     Date = DateHandler.ConvertToDateString(codebase[0]),
                     NumberOfRowsAdded = Convert.ToInt32(codebase[1]),
                     NumberOfRowsDeleted = Convert.ToInt32(codebase[2]),
@@ -82,15 +83,16 @@ namespace project_manage_system_backend.Services
             return codebaseSet;
         }
 
-        public async Task<RepoIssuesDto> RequestIssueInfo(int repoId,string token)
+        public async Task<RepoIssuesDto> RequestIssueInfo(int repoId, string token)
         {
             RepoIssuesDto result = new RepoIssuesDto();
             Repo repo = _dbContext.Repositories.Find(repoId);
             List<double> closedTime = new List<double>();
             string url = repo.Url.Replace("github.com/", "api.github.com/repos/");
 
-            result.closeIssues = await GetRepoIssues("closed", url,100,token);
-            result.openIssues = await GetRepoIssues("open", url,100,token);
+
+            result.closeIssues = await GetRepoIssues("closed", url, 100, token);
+            result.openIssues = await GetRepoIssues("open", url, 100, token);
 
             foreach (var item in result.closeIssues)
             {
@@ -100,7 +102,7 @@ namespace project_manage_system_backend.Services
                 item.closed_at = closed.ToString("yyyy-MM-dd HH:mm:ss");
                 item.created_at = created.ToString("yyyy-MM-dd HH:mm:ss");
 
-                closedTime.Add((closed-created).TotalSeconds);
+                closedTime.Add((closed - created).TotalSeconds);
             }
             foreach (var item in result.openIssues)
             {
@@ -112,23 +114,20 @@ namespace project_manage_system_backend.Services
             return result;
         }
 
-        private async Task<List<ResponseGithubRepoIssuesDto>> GetRepoIssues(string state, string url,int perPage,string token)
+        private async Task<List<ResponseGithubRepoIssuesDto>> GetRepoIssues(string state, string url, int perPage, string token)
         {
             List<ResponseGithubRepoIssuesDto> result = new List<ResponseGithubRepoIssuesDto>();
-           
+
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "request");
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
-            int page = 0;
-            while (true)
-            {
-                page++;
-                var response = await _httpClient.GetAsync(url + $"/issues?state={state}&per_page=100&page={page}&sort=created");
-                string content = await response.Content.ReadAsStringAsync();
-                var tempList = JsonSerializer.Deserialize<List<ResponseGithubRepoIssuesDto>>(content);
-                result.AddRange(tempList);
-                if (tempList.Count != perPage)
-                    break;
-            }
+            int page = 1;
+
+
+            var response = await _httpClient.GetAsync(url + $"/issues?state={state}&per_page=100&page={page}&sort=created");
+            string content = await response.Content.ReadAsStringAsync();
+            var tempList = JsonSerializer.Deserialize<List<ResponseGithubRepoIssuesDto>>(content);
+            result.AddRange(tempList);
+
             return result;
         }
 
