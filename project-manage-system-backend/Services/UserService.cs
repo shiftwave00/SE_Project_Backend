@@ -67,5 +67,21 @@ namespace project_manage_system_backend.Services
                 throw new Exception("Add project fail!");
             }
         }
+
+        public void DeleteUserByAccount(string accouunt)
+        {
+            var user = _dbContext.Users.Include(u => u.Projects).FirstOrDefault(u =>  u.Account == accouunt);
+            if (user == null)
+                throw new Exception("User not found!");
+            if (user.Projects.Any())
+            {
+                var userProjects = user.Projects.Where(p => p.Account == user.Account).ToList();
+                ProjectService projectService = new ProjectService(_dbContext);
+                userProjects.ForEach(up => projectService.DeleteProject(up.ProjectId));
+            }
+            _dbContext.Users.Remove(user);
+            if (_dbContext.SaveChanges() == 0)
+                throw new Exception("Delet user fail!");
+        }
     }
 }
