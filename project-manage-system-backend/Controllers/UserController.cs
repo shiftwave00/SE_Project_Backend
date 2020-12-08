@@ -25,20 +25,27 @@ namespace project_manage_system_backend.Controllers
         }
 
         [Authorize]
+        [HttpGet("admin")]
+        public IActionResult GetAllUser()
+        {
+            return Ok(_userService.GetAllUserExceptAdmin(User.Identity.Name));
+        }
+
+        [Authorize]
         [HttpDelete]
-        public IActionResult DeleteUser(DeleteUserDto deleteUserDto)
+        public IActionResult DeleteUser(string account)
         {
             try
             {
                 if (User.Identity.AuthenticationType == "Admin")
                 {
-                    _userService.DeleteUserByAccount(deleteUserDto.account);
-                    return Ok(new ResponseDto { success = true, message = "刪除成功!" });
+                    _userService.DeleteUserByAccount(account);
+                    return Ok(new ResponseDto { success = true, message = "delete success!" });
                 }
             }
             catch (System.Exception e)
             {
-                return Ok(new ResponseDto { success = false, message = $"刪除失敗：{e.Message}" });
+                return Ok(new ResponseDto { success = false, message = $"delete fail：{e.Message}" });
             }
             return BadRequest();
         }

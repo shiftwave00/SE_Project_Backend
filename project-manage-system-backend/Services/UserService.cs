@@ -67,6 +67,11 @@ namespace project_manage_system_backend.Services
                 throw new Exception("Add project fail!");
             }
         }
+        
+        public List<User> GetAllUserExceptAdmin(string account)
+        {
+            return _dbContext.Users.Where(u => u.Account != account).ToList();
+        }
 
         public void DeleteUserByAccount(string accouunt)
         {
