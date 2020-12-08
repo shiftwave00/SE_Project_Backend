@@ -41,7 +41,7 @@ namespace project_manage_system_backend.Controllers
                     return Ok(new ResponseDto
                     {
                         success = true,
-                        message = "新增成功"
+                        message = "Add Success"
                     });
                 }
                 catch (Exception e)
@@ -49,7 +49,7 @@ namespace project_manage_system_backend.Controllers
                     return Ok(new ResponseDto
                     {
                         success = false,
-                        message = "新增失敗:" + e.Message
+                        message = "Add Fail:" + e.Message
                     });
 
                 }
@@ -59,7 +59,7 @@ namespace project_manage_system_backend.Controllers
                 return Ok(new ResponseDto
                 {
                     success = false,
-                    message = "新增失敗:" + response.message
+                    message = "Add Fail:" + response.message
                 });
 
             }
