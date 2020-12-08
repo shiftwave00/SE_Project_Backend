@@ -19,6 +19,7 @@ namespace project_manage_system_backend.Controllers
             _repoService = new RepoService(dbContext);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddRepo(RequestAddRepoDto addRepoDto)
         {
@@ -40,7 +41,7 @@ namespace project_manage_system_backend.Controllers
                     return Ok(new ResponseDto
                     {
                         success = true,
-                        message = "新增成功"
+                        message = "Add Success"
                     });
                 }
                 catch (Exception e)
@@ -48,7 +49,7 @@ namespace project_manage_system_backend.Controllers
                     return Ok(new ResponseDto
                     {
                         success = false,
-                        message = "新增失敗:" + e.Message
+                        message = "Add Fail:" + e.Message
                     });
 
                 }
@@ -58,10 +59,33 @@ namespace project_manage_system_backend.Controllers
                 return Ok(new ResponseDto
                 {
                     success = false,
-                    message = "新增失敗:" + response.message
+                    message = "Add Fail:" + response.message
                 });
 
             }
+        }
+
+        
+        [HttpDelete]
+        public IActionResult DeleteRepo(int repoId,int projectId)
+        {
+            try
+            {
+                bool success = _repoService.DeleteRepo(projectId, repoId);
+                return Ok(new ResponseDto()
+                {
+                    success = success,
+                    message = success ? "Success" : "Error"
+                });
+            }
+            catch (Exception e)
+            {
+                return Ok(new ResponseDto()
+                {
+                    success = false,
+                    message = e.Message
+                });
+            } 
         }
 
         [Authorize]
