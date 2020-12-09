@@ -2,6 +2,7 @@
 {
     public class ProjectDto
     {
+        public int ProjectId { set; get; }
         public string ProjectName { set; get; }
         public string UserId { set; get; }
     }

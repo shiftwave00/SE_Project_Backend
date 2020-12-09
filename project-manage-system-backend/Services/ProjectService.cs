@@ -37,7 +37,6 @@ namespace project_manage_system_backend.Services
                 {
                     throw new Exception("duplicate project name");
                 }
-
             }
             else
             {
@@ -51,12 +50,45 @@ namespace project_manage_system_backend.Services
             }
         }
 
+        public void EditProjectName(ProjectDto projectDto)
+        {
+            if (projectDto.ProjectName == "")
+            {
+                throw new Exception("please enter project name");
+            }
+
+            var project = _dbContext.Projects.Find(projectDto.ProjectId);
+
+            project.Name = projectDto.ProjectName;
+
+            _dbContext.Update(project);
+
+            if (_dbContext.SaveChanges() == 0)
+            {
+                throw new Exception("edit project name fail");
+            }
+        }
+
         public List<ProjectResultDto> GetProjectByUserAccount(string account)
         {
             var user = _dbContext.Users.Include(u => u.Projects).ThenInclude(p => p.Project).ThenInclude(p => p.Owner).FirstOrDefault(u => u.Account.Equals(account));
             var query = (from up in user.Projects
                         select new ProjectResultDto { Id = up.Project.ID, Name = up.Project.Name, OwnerId = up.Project.Owner.Account, OwnerName = up.Project.Owner.Name }).ToList();
             return query;
+        }
+
+        public ProjectResultDto GetProjectByProjectId(ProjectDto projectDto)
+        {
+            List<ProjectResultDto> userProject = GetProjectByUserAccount(projectDto.UserId);
+
+            foreach (ProjectResultDto projectResultDto in userProject)
+            {
+                if (projectResultDto.Id == projectDto.ProjectId)
+                {
+                    return projectResultDto;
+                }
+            }
+            throw new Exception("error project");
         }
 
         public void DeleteProject(int projectId)
