@@ -31,7 +31,7 @@ namespace project_manage_system_backend.Controllers
                 return Ok(new ResponseDto
                 {
                     success = true,
-                    message = "·s¼W¦¨¥\"
+                    message = "æ–°å¢æˆåŠŸ"
                 });
             }
             catch (Exception ex)
@@ -39,7 +39,7 @@ namespace project_manage_system_backend.Controllers
                 return Ok(new ResponseDto
                 {
                     success = false,
-                    message = "·s¼W¥¢±Ñ" + ex.Message
+                    message = "æ–°å¢å¤±æ•—" + ex.Message
                 });
             }
         }
@@ -55,7 +55,7 @@ namespace project_manage_system_backend.Controllers
                     return Ok(new ResponseDto
                     {
                         success = true,
-                        message = "§ó§ï¦¨¥\",
+                        message = "æ›´æ”¹æˆåŠŸ",
                     });
                 }
                 else
@@ -75,33 +75,45 @@ namespace project_manage_system_backend.Controllers
         }
 
         [Authorize]
-        [HttpPost("delete")]
-        public IActionResult DeleteProject(DeleteProjectDto projectDto)
+        [HttpDelete("{projectId}/{userId}")]
+        public IActionResult DeleteProject(int projectId, string userId)
         {
-            try
+            if (_userService.CheckUserExist(userId))
             {
-                if (CheckUserIsProjectOwner(projectDto.UserId, projectDto.ProjectId))
+                var user = _userService.GetUserModel(userId);
+                if (_userService.IsProjectOwner(user, projectId))
                 {
-                    _projectService.DeleteProject(projectDto.ProjectId);
-
-                    return Ok(new ResponseDto
+                    try
                     {
-                        success = true,
-                        message = "§R°£¦¨¥\",
-                    });
+                        _projectService.DeleteProject(projectId);
+
+                        return Ok(new ResponseDto
+                        {
+                            success = true,
+                            message = "ï¿½èŠ·î¨’ï¿½î“ï¿½",
+                        });
+                    }
+                    catch (Exception e)
+                    {
+                        return NotFound(new ResponseDto
+                        {
+                            success = false,
+                            message = e.Message,
+                        });
+                    }
                 }
                 else
                 {
-                    return NotFound();
+                    return Ok(new ResponseDto
+                    {
+                        success = false,
+                        message = "ï¿½îµ¤ï¿½ç¢ï‡ï¿½ï¿½ï¦Â€ï†¹ï¿½ï¿½âŠ¥ï¿½ï¿½èŠ·î¨’ç”‡æ–‡ï¿½ç¢ï¿½",
+                    });
                 }
             }
-            catch(Exception ex)
+            else
             {
-                return NotFound(new ResponseDto
-                {
-                    success = false,
-                    message = ex.Message,
-                });
+                return NotFound();
             }
         }
 
