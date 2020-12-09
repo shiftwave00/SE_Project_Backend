@@ -45,22 +45,22 @@ namespace project_manage_system_backend.Controllers
         }
 
         [Authorize]
-        [HttpPost("delete")]
-        public IActionResult DeleteProject(DeleteProjectDto projectDto)
+        [HttpDelete("{projectId}/{userId}")]
+        public IActionResult DeleteProject(int projectId, string userId)
         {
-            if (_userService.CheckUserExist(projectDto.UserId))
+            if (_userService.CheckUserExist(userId))
             {
-                var user = _userService.GetUserModel(projectDto.UserId);
-                if (_userService.IsProjectOwner(user, projectDto.ProjectId))
+                var user = _userService.GetUserModel(userId);
+                if (_userService.IsProjectOwner(user, projectId))
                 {
                     try
                     {
-                        _projectService.DeleteProject(projectDto.ProjectId);
+                        _projectService.DeleteProject(projectId);
 
                         return Ok(new ResponseDto
                         {
                             success = true,
-                            message = "§R°£¦¨¥\",
+                            message = "åˆªé™¤æˆåŠŸ",
                         });
                     }
                     catch (Exception e)
@@ -77,7 +77,7 @@ namespace project_manage_system_backend.Controllers
                     return Ok(new ResponseDto
                     {
                         success = false,
-                        message = "«D±M®×¾Ö¦³ªÌ¡AµLªk§R°£¦¹±M®×",
+                        message = "éå°ˆæ¡ˆæ“æœ‰è€…ï¼Œç„¡æ³•åˆªé™¤æ­¤å°ˆæ¡ˆ",
                     });
                 }
             }
