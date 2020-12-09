@@ -44,46 +44,64 @@ namespace project_manage_system_backend.Controllers
             }
         }
 
+        [HttpPost("edit")]
+        public IActionResult EditProjectName(ProjectDto projectDto)
+        {
+            try
+            {
+                if (CheckUserIsProjectOwner(projectDto.UserId, projectDto.ProjectId))
+                {
+                    _projectService.EditProjectName(projectDto);
+                    return Ok(new ResponseDto
+                    {
+                        success = true,
+                        message = "更改成功",
+                    });
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch(Exception ex)
+            {
+                return Ok(new ResponseDto
+                {
+                    success = false,
+                    message = ex.Message,
+                });
+            }
+
+        }
+
         [Authorize]
         [HttpPost("delete")]
         public IActionResult DeleteProject(DeleteProjectDto projectDto)
         {
-            if (_userService.CheckUserExist(projectDto.UserId))
+            try
             {
-                var user = _userService.GetUserModel(projectDto.UserId);
-                if (_userService.IsProjectOwner(user, projectDto.ProjectId))
+                if (CheckUserIsProjectOwner(projectDto.UserId, projectDto.ProjectId))
                 {
-                    try
-                    {
-                        _projectService.DeleteProject(projectDto.ProjectId);
+                    _projectService.DeleteProject(projectDto.ProjectId);
 
-                        return Ok(new ResponseDto
-                        {
-                            success = true,
-                            message = "刪除成功",
-                        });
-                    }
-                    catch (Exception e)
+                    return Ok(new ResponseDto
                     {
-                        return NotFound(new ResponseDto
-                        {
-                            success = false,
-                            message = e.Message,
-                        });
-                    }
+                        success = true,
+                        message = "刪除成功",
+                    });
                 }
                 else
                 {
-                    return Ok(new ResponseDto
-                    {
-                        success = false,
-                        message = "非專案擁有者，無法刪除此專案",
-                    });
+                    return NotFound();
                 }
             }
-            else
+            catch(Exception ex)
             {
-                return NotFound();
+                return NotFound(new ResponseDto
+                {
+                    success = false,
+                    message = ex.Message,
+                });
             }
         }
 
@@ -93,6 +111,34 @@ namespace project_manage_system_backend.Controllers
         {
             var result = _projectService.GetProjectByUserAccount(User.Identity.Name);
             return Ok(result);
+        }
+
+
+        [HttpPost("get")]
+        public IActionResult GetProject(ProjectDto projectDto)
+        {
+            var result = _projectService.GetProjectByProjectId(projectDto);
+            return Ok(result);
+        }
+
+        private bool CheckUserIsProjectOwner(string userId, int projectId)
+        {
+            if (_userService.CheckUserExist(userId))
+            {
+                var user = _userService.GetUserModel(userId);
+                if (_userService.IsProjectOwner(user, projectId))
+                {
+                    return true;
+                }
+                else
+                {
+                    throw new Exception("you are not the project owner");
+                }
+            }
+            else
+            {
+                throw new Exception("you are not the system user");
+            }
         }
     }
 }
