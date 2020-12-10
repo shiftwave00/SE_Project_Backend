@@ -164,6 +164,114 @@ namespace PMS_test.ControllersTest
         }
 
         [Fact]
+        public async Task TestEditProjectName()
+        {
+            ProjectDto dto;
+
+            dto = new ProjectDto
+            {
+                ProjectName = "testProject",
+                UserId = "testAccount"
+            };
+
+            var content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
+            var requestTask = await _client.PostAsync("/project", content);
+
+            Assert.True(requestTask.IsSuccessStatusCode);
+
+            dto = new ProjectDto
+            {
+                ProjectId = 2,
+                ProjectName = "newEditProject",
+                UserId = "testAccount"
+            };
+
+            content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
+            requestTask = await _client.PostAsync("/project/edit", content);
+
+            Assert.True(requestTask.IsSuccessStatusCode);
+
+            var autual = _dbContext.Projects.Find(2);
+            string expectedName = "newEditProject";
+
+            Assert.Equal(expectedName, autual.Name);
+        }
+
+        [Fact]
+        public async Task TestEditProjectNameWithEmptyName()
+        {
+            ProjectDto dto;
+
+            dto = new ProjectDto
+            {
+                ProjectName = "testProject",
+                UserId = "testAccount"
+            };
+
+            var content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
+            var requestTask = await _client.PostAsync("/project", content);
+
+            Assert.True(requestTask.IsSuccessStatusCode);
+
+            dto = new ProjectDto
+            {
+                ProjectId = 2,
+                ProjectName = "",
+                UserId = "testAccount"
+            };
+
+            content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
+            requestTask = await _client.PostAsync("/project/edit", content);
+
+
+            var result = requestTask.Content.ReadAsStringAsync().Result;
+            var responseDto = JsonSerializer.Deserialize<ResponseDto>(result);
+
+            Assert.False(responseDto.success);
+        }
+
+        [Fact]
+        public async Task TestEditProjectNameWithDuplicateName()
+        {
+            ProjectDto dto;
+
+            dto = new ProjectDto
+            {
+                ProjectName = "testProject",
+                UserId = "testAccount"
+            };
+
+            var content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
+            await _client.PostAsync("/project", content);
+
+            dto = new ProjectDto
+            {
+                ProjectName = "testProject2",
+                UserId = "testAccount"
+            };
+
+            content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
+            await _client.PostAsync("/project", content);
+
+
+            dto = new ProjectDto
+            {
+                ProjectId = 2,
+                ProjectName = "testProject2",
+                UserId = "testAccount"
+            };
+
+            content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
+            var requestTask = await _client.PostAsync("/project/edit", content);
+
+
+            var result = requestTask.Content.ReadAsStringAsync().Result;
+            var responseDto = JsonSerializer.Deserialize<ResponseDto>(result);
+
+            Assert.False(responseDto.success);
+        }
+
+        [Fact]
         public async Task TestGetProject()
         {
             var requestTask = await _client.GetAsync("/project");
@@ -177,7 +285,9 @@ namespace PMS_test.ControllersTest
                 new ProjectResultDto
                 {
                     Id=1,
-                    Name="project"
+                    Name="project",
+                    OwnerId = "github_testuser",
+                    OwnerName = "testuser"
                 }
             };
 

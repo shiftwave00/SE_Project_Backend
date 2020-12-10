@@ -56,6 +56,10 @@ namespace project_manage_system_backend.Services
             {
                 throw new Exception("please enter project name");
             }
+            else if (_dbContext.Projects.Where(p => p.Name == projectDto.ProjectName).ToList().Count != 0)
+            {
+                throw new Exception("duplicate project name");
+            }
 
             var project = _dbContext.Projects.Find(projectDto.ProjectId);
 
