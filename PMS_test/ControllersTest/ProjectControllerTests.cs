@@ -48,12 +48,12 @@ namespace PMS_test.ControllersTest
                 AvatarUrl = "none2",
                 Name = "name2"
             });
-            var user = _dbContext.Users.Find("github_testuser");
+            var user = _dbContext.Users.Find("testAccount");
             var project = new UserProject
             {
                 Project = new Project
                 {
-                    Name = "project",
+                    Name = "testproject",
                     Owner = user,
                     Repositories = null
                 },
@@ -71,32 +71,15 @@ namespace PMS_test.ControllersTest
             dto = new ProjectDto
             {
                 ProjectName = "testProject",
-                UserId = "testAccount"
             };
 
             var content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
-            var requestTask = await _client.PostAsync("/project", content);
+            var requestTask = await _client.PostAsync("/project/add", content);
 
             Assert.True(requestTask.IsSuccessStatusCode);
 
             var autual = _dbContext.Projects.Find(2);
             string expectedName = "testProject";
-
-            Assert.Equal(expectedName, autual.Name);
-
-            dto = new ProjectDto
-            {
-                ProjectName = "testProject",
-                UserId = "testAccount2"
-            };
-
-            content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
-            requestTask = await _client.PostAsync("/project", content);
-
-            Assert.True(requestTask.IsSuccessStatusCode);
-
-            autual = _dbContext.Projects.Find(3);
-            expectedName = "testProject";
 
             Assert.Equal(expectedName, autual.Name);
         }
@@ -106,12 +89,11 @@ namespace PMS_test.ControllersTest
         {
             ProjectDto dto = new ProjectDto
             {
-                ProjectName = "testProject",
-                UserId = "notExistUser"
+                ProjectName = "testProject"
             };
 
             var content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
-            var requestTask = await _client.PostAsync("/project", content);
+            var requestTask = await _client.PostAsync("/project/add", content);
 
             var result = requestTask.Content.ReadAsStringAsync().Result;
             var responseDto = JsonSerializer.Deserialize<ResponseDto>(result);
@@ -123,23 +105,21 @@ namespace PMS_test.ControllersTest
         {
             ProjectDto dto = new ProjectDto
             {
-                ProjectName = "testProject",
-                UserId = "testAccount"
+                ProjectName = "testProject"
             };
 
             var content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
-            var requestTask = await _client.PostAsync("/project", content);
+            var requestTask = await _client.PostAsync("/project/add", content);
 
             Assert.True(requestTask.IsSuccessStatusCode);
 
             ProjectDto duplicateDto = new ProjectDto
             {
-                ProjectName = "testProject",
-                UserId = "testAccount"
+                ProjectName = "testProject"
             };
 
             var duplicateContent = new StringContent(JsonSerializer.Serialize(duplicateDto), Encoding.UTF8, "application/json");
-            var duplicateRequestTask = await _client.PostAsync("/project", duplicateContent);
+            var duplicateRequestTask = await _client.PostAsync("/project/add", duplicateContent);
 
             var result = duplicateRequestTask.Content.ReadAsStringAsync().Result;
             var responseDto = JsonSerializer.Deserialize<ResponseDto>(result);
@@ -152,11 +132,10 @@ namespace PMS_test.ControllersTest
             ProjectDto dto = new ProjectDto
             {
                 ProjectName = "",
-                UserId = "testAccount"
             };
 
             var content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
-            var requestTask = await _client.PostAsync("/project", content);
+            var requestTask = await _client.PostAsync("/project/add", content);
 
             var result = requestTask.Content.ReadAsStringAsync().Result;
             var responseDto = JsonSerializer.Deserialize<ResponseDto>(result);
@@ -170,12 +149,11 @@ namespace PMS_test.ControllersTest
 
             dto = new ProjectDto
             {
-                ProjectName = "testProject",
-                UserId = "testAccount"
+                ProjectName = "testProject"
             };
 
             var content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
-            var requestTask = await _client.PostAsync("/project", content);
+            var requestTask = await _client.PostAsync("/project/add", content);
 
             Assert.True(requestTask.IsSuccessStatusCode);
 
@@ -183,7 +161,6 @@ namespace PMS_test.ControllersTest
             {
                 ProjectId = 2,
                 ProjectName = "newEditProject",
-                UserId = "testAccount"
             };
 
             content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
@@ -204,12 +181,11 @@ namespace PMS_test.ControllersTest
 
             dto = new ProjectDto
             {
-                ProjectName = "testProject",
-                UserId = "testAccount"
+                ProjectName = "testProject"
             };
 
             var content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
-            var requestTask = await _client.PostAsync("/project", content);
+            var requestTask = await _client.PostAsync("/project/add", content);
 
             Assert.True(requestTask.IsSuccessStatusCode);
 
@@ -217,7 +193,6 @@ namespace PMS_test.ControllersTest
             {
                 ProjectId = 2,
                 ProjectName = "",
-                UserId = "testAccount"
             };
 
             content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
@@ -237,28 +212,25 @@ namespace PMS_test.ControllersTest
 
             dto = new ProjectDto
             {
-                ProjectName = "testProject",
-                UserId = "testAccount"
+                ProjectName = "testProject"
             };
 
             var content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
-            await _client.PostAsync("/project", content);
+            await _client.PostAsync("/project/add", content);
 
             dto = new ProjectDto
             {
-                ProjectName = "testProject2",
-                UserId = "testAccount"
+                ProjectName = "testProject2"
             };
 
             content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
-            await _client.PostAsync("/project", content);
+            await _client.PostAsync("/project/add", content);
 
 
             dto = new ProjectDto
             {
-                ProjectId = 2,
-                ProjectName = "testProject2",
-                UserId = "testAccount"
+                ProjectId = 4,
+                ProjectName = "testProject2"
             };
 
             content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
@@ -274,6 +246,14 @@ namespace PMS_test.ControllersTest
         [Fact]
         public async Task TestGetProject()
         {
+            ProjectDto dto = new ProjectDto
+            {
+                ProjectName = "testProject"
+            };
+
+            var content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
+            await _client.PostAsync("/project/add", content);
+
             var requestTask = await _client.GetAsync("/project");
 
             string resultContent = await requestTask.Content.ReadAsStringAsync();
@@ -284,8 +264,8 @@ namespace PMS_test.ControllersTest
             {
                 new ProjectResultDto
                 {
-                    Id=1,
-                    Name="project",
+                    Id=2,
+                    Name="testProject",
                     OwnerId = "github_testuser",
                     OwnerName = "testuser"
                 }
