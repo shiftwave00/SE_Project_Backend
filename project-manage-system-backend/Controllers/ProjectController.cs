@@ -22,6 +22,7 @@ namespace project_manage_system_backend.Controllers
             _userService = new UserService(_dbContext);
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult AddProject(ProjectDto projectDto)
         {
@@ -44,6 +45,7 @@ namespace project_manage_system_backend.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("edit")]
         public IActionResult EditProjectName(ProjectDto projectDto)
         {
@@ -125,7 +127,7 @@ namespace project_manage_system_backend.Controllers
             return Ok(result);
         }
 
-
+        [Authorize]
         [HttpPost("get")]
         public IActionResult GetProject(ProjectDto projectDto)
         {
