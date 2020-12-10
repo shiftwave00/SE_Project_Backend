@@ -116,10 +116,10 @@ namespace project_manage_system_backend.Controllers
         }
 
         [Authorize]
-        [HttpPost("get")]
-        public IActionResult GetProject(ProjectDto projectDto)
+        [HttpGet("{projectId}")]
+        public IActionResult GetProject(int projectId)
         {
-            var result = _projectService.GetProjectByProjectId(projectDto);
+            var result = _projectService.GetProjectByProjectId(projectId, User.Identity.Name);
             return Ok(result);
         }
 

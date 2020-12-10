@@ -81,13 +81,13 @@ namespace project_manage_system_backend.Services
             return query;
         }
 
-        public ProjectResultDto GetProjectByProjectId(ProjectDto projectDto)
+        public ProjectResultDto GetProjectByProjectId(int projectId, string account)
         {
-            List<ProjectResultDto> userProject = GetProjectByUserAccount(projectDto.UserId);
+            List<ProjectResultDto> userProject = GetProjectByUserAccount(account);
 
             foreach (ProjectResultDto projectResultDto in userProject)
             {
-                if (projectResultDto.Id == projectDto.ProjectId)
+                if (projectResultDto.Id == projectId)
                 {
                     return projectResultDto;
                 }
