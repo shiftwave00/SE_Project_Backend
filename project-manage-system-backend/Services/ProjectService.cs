@@ -11,13 +11,13 @@ namespace project_manage_system_backend.Services
     {
         public ProjectService(PMSContext dbContext) : base(dbContext) { }
 
-        public void Create(ProjectDto projectDto)
+        public void CreateProject(ProjectDto projectDto, string userId)
         {
             if (projectDto.ProjectName == "")
             {
                 throw new Exception("please enter project name");
             }
-            var user = _dbContext.Users.Include(u => u.Projects).ThenInclude(p => p.Project).FirstOrDefault(u => u.Account.Equals(projectDto.UserId));
+            var user = _dbContext.Users.Include(u => u.Projects).ThenInclude(p => p.Project).FirstOrDefault(u => u.Account.Equals(userId));
             
             if (user != null)
             {
@@ -56,6 +56,10 @@ namespace project_manage_system_backend.Services
             {
                 throw new Exception("please enter project name");
             }
+            else if (_dbContext.Projects.Where(p => p.Name == projectDto.ProjectName).ToList().Count != 0)
+            {
+                throw new Exception("duplicate project name");
+            }
 
             var project = _dbContext.Projects.Find(projectDto.ProjectId);
 
@@ -77,13 +81,13 @@ namespace project_manage_system_backend.Services
             return query;
         }
 
-        public ProjectResultDto GetProjectByProjectId(ProjectDto projectDto)
+        public ProjectResultDto GetProjectByProjectId(int projectId, string account)
         {
-            List<ProjectResultDto> userProject = GetProjectByUserAccount(projectDto.UserId);
+            List<ProjectResultDto> userProject = GetProjectByUserAccount(account);
 
             foreach (ProjectResultDto projectResultDto in userProject)
             {
-                if (projectResultDto.Id == projectDto.ProjectId)
+                if (projectResultDto.Id == projectId)
                 {
                     return projectResultDto;
                 }

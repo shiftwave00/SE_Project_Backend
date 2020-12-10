@@ -22,12 +22,13 @@ namespace project_manage_system_backend.Controllers
             _userService = new UserService(_dbContext);
         }
 
-        [HttpPost]
+        [Authorize]
+        [HttpPost("add")]
         public IActionResult AddProject(ProjectDto projectDto)
         {
             try
             {
-                _projectService.Create(projectDto);
+                _projectService.CreateProject(projectDto, User.Identity.Name);
                 return Ok(new ResponseDto
                 {
                     success = true,
@@ -44,12 +45,13 @@ namespace project_manage_system_backend.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("edit")]
         public IActionResult EditProjectName(ProjectDto projectDto)
         {
             try
             {
-                if (CheckUserIsProjectOwner(projectDto.UserId, projectDto.ProjectId))
+                if (CheckUserIsProjectOwner(User.Identity.Name, projectDto.ProjectId))
                 {
                     _projectService.EditProjectName(projectDto);
                     return Ok(new ResponseDto
@@ -78,42 +80,30 @@ namespace project_manage_system_backend.Controllers
         [HttpDelete("{projectId}/{userId}")]
         public IActionResult DeleteProject(int projectId, string userId)
         {
-            if (_userService.CheckUserExist(userId))
+            try
             {
-                var user = _userService.GetUserModel(userId);
-                if (_userService.IsProjectOwner(user, projectId))
+                if (CheckUserIsProjectOwner(userId, projectId))
                 {
-                    try
-                    {
-                        _projectService.DeleteProject(projectId);
+                    _projectService.DeleteProject(projectId);
 
-                        return Ok(new ResponseDto
-                        {
-                            success = true,
-                            message = "�芷��",
-                        });
-                    }
-                    catch (Exception e)
+                    return Ok(new ResponseDto
                     {
-                        return NotFound(new ResponseDto
-                        {
-                            success = false,
-                            message = e.Message,
-                        });
-                    }
+                        success = true,
+                        message = "刪除成功",
+                    });
                 }
                 else
                 {
-                    return Ok(new ResponseDto
-                    {
-                        success = false,
-                        message = "��獢����⊥��芷甇文�獢�",
-                    });
+                    return NotFound();
                 }
             }
-            else
+            catch (Exception ex)
             {
-                return NotFound();
+                return Ok(new ResponseDto
+                {
+                    success = false,
+                    message = ex.Message,
+                });
             }
         }
 
@@ -125,11 +115,11 @@ namespace project_manage_system_backend.Controllers
             return Ok(result);
         }
 
-
-        [HttpPost("get")]
-        public IActionResult GetProject(ProjectDto projectDto)
+        [Authorize]
+        [HttpGet("{projectId}")]
+        public IActionResult GetProject(int projectId)
         {
-            var result = _projectService.GetProjectByProjectId(projectDto);
+            var result = _projectService.GetProjectByProjectId(projectId, User.Identity.Name);
             return Ok(result);
         }
 
