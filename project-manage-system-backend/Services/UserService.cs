@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Models;
 using project_manage_system_backend.Shares;
@@ -75,12 +75,12 @@ namespace project_manage_system_backend.Services
 
         public void DeleteUserByAccount(string accouunt)
         {
-            var user = _dbContext.Users.Include(u => u.Projects).FirstOrDefault(u =>  u.Account == accouunt);
+            var user = _dbContext.Users.Include(u => u.Projects).ThenInclude(up => up.Project).ThenInclude(upp => upp.Owner).FirstOrDefault(u => u.Account == accouunt);
             if (user == null)
                 throw new Exception("User not found!");
             if (user.Projects.Any())
             {
-                var userProjects = user.Projects.Where(p => p.Account == user.Account).ToList();
+                var userProjects = user.Projects.Where(up => up.Project.Owner.Account == user.Account).ToList();
                 ProjectService projectService = new ProjectService(_dbContext);
                 userProjects.ForEach(up => projectService.DeleteProject(up.ProjectId));
             }
