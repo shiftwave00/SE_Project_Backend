@@ -95,6 +95,11 @@ namespace project_manage_system_backend.Services
             throw new Exception("error project");
         }
 
+        public List<ProjectResultDto> GetAllProject()
+        {
+            return _dbContext.Projects.Select(p => new ProjectResultDto { Id = p.ID, Name = p.Name, OwnerId = p.Owner.Account, OwnerName = p.Owner.Name, Members = p.Users.Count }).ToList();
+        }
+
         public void DeleteProject(int projectId)
         {
             var invitations = _dbContext.Invitations.Where(i => i.InvitedProject.ID.Equals(projectId));
