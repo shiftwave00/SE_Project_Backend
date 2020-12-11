@@ -6,6 +6,7 @@ using project_manage_system_backend.Shares;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace project_manage_system_backend.Services
 {
@@ -66,6 +67,32 @@ namespace project_manage_system_backend.Services
                 Name = u.Name,
                 AvatarUrl = u.AvatarUrl
             }).ToList();
+        }
+
+        public void EditUserName(string account, string newUserName)
+        {
+            string regexPattern = "^[A-Za-z0-9]+";
+            Regex regex = new Regex(regexPattern);
+            if (newUserName == "" || !regex.IsMatch(newUserName))
+            {
+                throw new Exception("please enter user name");
+            }
+
+            User user = _dbContext.Users.Find(account);
+            if (user != null)
+            {
+                user.Name = newUserName;
+                _dbContext.Update(user);
+            }
+            else
+            {
+                throw new Exception("user not found");
+            }
+
+            if(_dbContext.SaveChanges() == 0)
+            {
+                throw new Exception("edit user name fail");
+            }
         }
 
         public User GetUserModel(string account)
