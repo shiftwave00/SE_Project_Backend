@@ -71,7 +71,7 @@ namespace PMS_test
         [Fact]
         public async Task TestFirstLogin()
         {
-            AuthorizeDto token = await _authorizeService.AuthenticateGithub(new RequestGithubLoginDto { Code = "testcode" });
+            AuthorizeDto token = await _authorizeService.AuthenticateGithub(new GithubLoginDto { Code = "testcode" });
             Assert.True(token != null);
             Assert.True(_userService.CheckUserExist("github_testuser"));
         }
@@ -79,7 +79,7 @@ namespace PMS_test
         [Fact]
         public async Task TestSecondLogin()
         {
-            AuthorizeDto token = await _authorizeService.AuthenticateGithub(new RequestGithubLoginDto { Code = "testcode" });
+            AuthorizeDto token = await _authorizeService.AuthenticateGithub(new GithubLoginDto { Code = "testcode" });
             Assert.True(token != null);
             Assert.True(_userService.CheckUserExist("github_testuser"));
         }

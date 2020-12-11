@@ -66,7 +66,7 @@ namespace PMS_test.ControllersTest
         [Fact]
         public async Task TestCheckAuthentucate()
         {
-            AuthorizeDto token = await _authorizeService.AuthenticateGithub(new RequestGithubLoginDto { Code = "testcode" });
+            AuthorizeDto token = await _authorizeService.AuthenticateGithub(new GithubLoginDto { Code = "testcode" });
             var client = factory.CreateClient();
 
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token.Token);

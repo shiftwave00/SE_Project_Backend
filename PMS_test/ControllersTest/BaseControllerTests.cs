@@ -77,7 +77,7 @@ namespace PMS_test.ControllersTest
 
         private AuthorizeDto GetTestToken()
         {
-            var task = _authorizeService.AuthenticateGithub(new RequestGithubLoginDto { Code = "testcode" });
+            var task = _authorizeService.AuthenticateGithub(new GithubLoginDto { Code = "testcode" });
             task.Wait();
             return task.Result; 
         }
