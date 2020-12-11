@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Isopoh.Cryptography.Argon2;
+using Microsoft.EntityFrameworkCore;
 using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Models;
 using project_manage_system_backend.Shares;
@@ -15,6 +16,23 @@ namespace project_manage_system_backend.Services
         public void CreateUser(User model)
         {
             _dbContext.Users.Add(model);
+            if (_dbContext.SaveChanges() == 0)
+            {
+                throw new Exception("create user fail");
+            }
+        }
+
+        public void CreateUser(LocalAccountDto dto)
+        {
+            User user = new User
+            {
+                Account = dto.Account,
+                Authority = "Admin",
+                AvatarUrl = "",
+                Name = "管理員",
+                Password = Argon2.Hash(dto.Password)
+            };
+            _dbContext.Users.Add(user);
             if (_dbContext.SaveChanges() == 0)
             {
                 throw new Exception("create user fail");
