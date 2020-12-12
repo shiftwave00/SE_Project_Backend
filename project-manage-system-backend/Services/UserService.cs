@@ -28,7 +28,7 @@ namespace project_manage_system_backend.Services
             {
                 Account = dto.Account,
                 Authority = "Admin",
-                AvatarUrl = "",
+                AvatarUrl = "https://i.imgur.com/GzkyKYM.jpg",
                 Name = "管理員",
                 Password = Argon2.Hash(dto.Password)
             };
