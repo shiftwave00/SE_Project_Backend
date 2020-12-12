@@ -259,5 +259,23 @@ namespace PMS_test.ControllersTest
             var actualStr = JsonSerializer.Serialize(actual);
             Assert.Equal(expectedStr, actualStr);
         }
+
+        [Fact]
+        public async Task TestDeleteProject()
+        {
+            await _client.DeleteAsync("/project/1/testAccount");
+
+            var requestTask = await _client.GetAsync("/project");
+
+            string resultContent = await requestTask.Content.ReadAsStringAsync();
+            var actual = JsonSerializer.Deserialize<List<ProjectResultDto>>(resultContent,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            var expected = new List<ProjectResultDto>();
+
+            var expectedStr = JsonSerializer.Serialize(expected);
+            var actualStr = JsonSerializer.Serialize(actual);
+            Assert.Equal(expectedStr, actualStr);
+        }
     }
 }
