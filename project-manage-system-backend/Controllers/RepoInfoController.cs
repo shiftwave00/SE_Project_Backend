@@ -21,7 +21,8 @@ namespace project_manage_system_backend.Controllers
         [HttpGet("commit/{repoId}")]
         public async Task<IActionResult> GetCommitInfo(int repoId)
         {
-            return Ok(await _repoInfoService.RequestCommitInfo(repoId));
+            string oauth_token = User.Claims.FirstOrDefault(c => c.Type.Equals("oauth")).Value;
+            return Ok(await _repoInfoService.RequestCommitInfo(repoId, oauth_token));
         }
 
         [HttpGet("codebase/{repoId}")]
