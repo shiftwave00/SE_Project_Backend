@@ -27,11 +27,11 @@ namespace PMS_test.ControllersTest
         }
 
         [Fact]
-        public void TestCheckAuthentucate()
+        public async Task TestCheckAuthentucate()
         {
-            var response = _client.GetAsync("/authorize");
+            var response = await _client.GetAsync("/authorize");
 
-            Assert.True(response.Result.IsSuccessStatusCode);
+            Assert.True(response.IsSuccessStatusCode);
         }
     }
 }
