@@ -76,15 +76,10 @@ namespace PMS_test.ControllersTest
 
             Assert.True(requestTask.IsSuccessStatusCode);
 
-            var actual = _dbContext.Users.Find("github_testuser");
+            requestTask = await _client.GetAsync("/user");
 
-            actual.Name = "testEditUser";
-
-            _dbContext.Update(actual);
-
-            _dbContext.SaveChanges();
-
-            actual = _dbContext.Users.Find("github_testuser");
+            string resultContent = await requestTask.Content.ReadAsStringAsync();
+            var actual = JsonSerializer.Deserialize<UserInfoDto>(resultContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             string expectedName = "testEditUser";
 
