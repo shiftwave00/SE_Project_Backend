@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Services;
 using project_manage_system_backend.Shares;
+using System;
 
 namespace project_manage_system_backend.Controllers
 {
@@ -48,6 +49,29 @@ namespace project_manage_system_backend.Controllers
                 return Ok(new ResponseDto { success = false, message = $"delete fail：{e.Message}" });
             }
             return BadRequest();
+        }
+
+        [Authorize]
+        [HttpPost("edit")]
+        public IActionResult EditUserName(UserInfoDto userinfoDto)
+        {
+            try
+            {
+                _userService.EditUserName(User.Identity.Name, userinfoDto.Name);
+                return Ok(new ResponseDto
+                {
+                    success = true,
+                    message = "已成功修改"
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new ResponseDto
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
         }
     }
 }
