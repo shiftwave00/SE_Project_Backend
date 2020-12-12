@@ -19,12 +19,13 @@ namespace project_manage_system_backend.Services
             _httpClient = client ?? new HttpClient();
         }
 
-        public async Task<CommitInfoDto> RequestCommitInfo(int repoId)
+        public async Task<CommitInfoDto> RequestCommitInfo(int repoId, string oauth_token)
         {
             Repo repo = _dbContext.Repositories.Find(repoId);
             string url = "https://api.github.com/repos/" + repo.Owner + "/" + repo.Name + "/stats/commit_activity";
 
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "request");
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", oauth_token);
 
             var response = await _httpClient.GetAsync(url);
             string content = await response.Content.ReadAsStringAsync();
