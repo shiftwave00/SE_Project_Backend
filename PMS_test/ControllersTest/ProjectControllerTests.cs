@@ -85,22 +85,6 @@ namespace PMS_test.ControllersTest
         }
 
         [Fact]
-        public async Task TestAddProjectFail()
-        {
-            ProjectDto dto = new ProjectDto
-            {
-                ProjectName = "testProject"
-            };
-
-            var content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
-            var requestTask = await _client.PostAsync("/project/add", content);
-
-            var result = requestTask.Content.ReadAsStringAsync().Result;
-            var responseDto = JsonSerializer.Deserialize<ResponseDto>(result);
-            Assert.False(responseDto.success);
-        }
-
-        [Fact]
         public async Task TestAddDuplicateProject()
         {
             ProjectDto dto = new ProjectDto

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Isopoh.Cryptography.Argon2;
+using Microsoft.Extensions.Configuration;
 using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Models;
 using project_manage_system_backend.Shares;
@@ -24,20 +25,12 @@ namespace project_manage_system_backend.Services
         {
             _configuration = configuration;
             _jwtHelper = jwt;
-
-            if(client == null)
-            {
-                _httpClient = new HttpClient();
-            }
-            else
-            {
-                _httpClient = client;
-            }
+            _httpClient = client ?? new HttpClient();
 
             _userService = new UserService(dbContext);
         }
 
-        public async Task<AuthorizeDto> AuthenticateGithub(RequestGithubLoginDto dto)
+        public async Task<AuthorizeDto> AuthenticateGithub(GithubLoginDto dto)
         {
             string accessToken = await RequestGithubAccessToken(dto.Code);
 
@@ -60,6 +53,22 @@ namespace project_manage_system_backend.Services
             {
                 throw new Exception("error code");
             }
+        }
+
+        public AuthorizeDto AuthenticateLocal(LocalAccountDto dto)
+        {
+            User loginUser = _dbContext.Users.Find(dto.Account);
+
+            if(loginUser != null && Argon2.Verify(loginUser.Password, dto.Password))
+            {
+                string accessToken = _configuration.GetValue<string>("githubConfig:admin_token");
+                return new AuthorizeDto
+                {
+                    Token = _jwtHelper.GenerateToken(loginUser.Account, accessToken, loginUser.Authority),
+                    OauthToken = accessToken
+                };
+            }
+            return null;
         }
 
         public async Task<string> RequestGithubAccessToken(string code)

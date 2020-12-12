@@ -1,3 +1,4 @@
+using Isopoh.Cryptography.Argon2;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using project_manage_system_backend;
 using project_manage_system_backend.Dtos;
+using project_manage_system_backend.Models;
 using project_manage_system_backend.Services;
 using project_manage_system_backend.Shares;
 using RichardSzalay.MockHttp;
@@ -27,7 +29,6 @@ namespace PMS_test
         private readonly HttpClient _client;
         private readonly AuthorizeService _authorizeService;
         private readonly UserService _userService;
-        private readonly WebApplicationFactory<Startup> factory = new WebApplicationFactory<Startup>();
 
         public AuthorizeServiceTests()
         {
@@ -56,8 +57,9 @@ namespace PMS_test
             _client = mockHttp.ToHttpClient();
             _authorizeService = new AuthorizeService(_dbContext, _configuration, new JwtHelper(_configuration), _client);
             _userService = new UserService(_dbContext);
-        }
 
+            InitialDatabase();
+        }
 
         private static DbConnection CreateInMemoryDatabase()
         {
@@ -68,10 +70,21 @@ namespace PMS_test
             return connection;
         }
 
+        internal void InitialDatabase()
+        {
+            _dbContext.Users.Add(new User
+            {
+                Account = "admin",
+                Password = Argon2.Hash("password"),
+                Authority = "Admin",
+                Name = "ºÞ²z­û"
+            });
+        }
+
         [Fact]
         public async Task TestFirstLogin()
         {
-            AuthorizeDto token = await _authorizeService.AuthenticateGithub(new RequestGithubLoginDto { Code = "testcode" });
+            AuthorizeDto token = await _authorizeService.AuthenticateGithub(new GithubLoginDto { Code = "testcode" });
             Assert.True(token != null);
             Assert.True(_userService.CheckUserExist("github_testuser"));
         }
@@ -79,9 +92,37 @@ namespace PMS_test
         [Fact]
         public async Task TestSecondLogin()
         {
-            AuthorizeDto token = await _authorizeService.AuthenticateGithub(new RequestGithubLoginDto { Code = "testcode" });
+            AuthorizeDto token = await _authorizeService.AuthenticateGithub(new GithubLoginDto { Code = "testcode" });
             Assert.True(token != null);
             Assert.True(_userService.CheckUserExist("github_testuser"));
+        }
+
+        [Fact]
+        public void TestAdminLoginSuccess()
+        {
+            LocalAccountDto dto = new LocalAccountDto
+            {
+                Account = "admin",
+                Password = "password"
+            };
+
+            var result = _authorizeService.AuthenticateLocal(dto);
+
+            Assert.True(result != null);
+        }
+
+        [Fact]
+        public void TestAdminLoginFail()
+        {
+            LocalAccountDto dto = new LocalAccountDto
+            {
+                Account = "admin",
+                Password = "fail"
+            };
+
+            var result = _authorizeService.AuthenticateLocal(dto);
+
+            Assert.True(result == null);
         }
     }
 }
