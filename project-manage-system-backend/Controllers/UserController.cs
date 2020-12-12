@@ -37,7 +37,7 @@ namespace project_manage_system_backend.Controllers
         public IActionResult DeleteUser(string account)
         {
             try
-            { 
+            {
                 if (_userService.IsAdmin(User.Identity.Name))
                 {
                     _userService.DeleteUserByAccount(account);

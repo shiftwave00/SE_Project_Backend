@@ -6,7 +6,7 @@
     }
 
     public class ResponseGithubRepoInfoDto
-    { 
+    {
         public bool IsSucess { get; set; }
         public string name { get; set; }
         public string url { get; set; }

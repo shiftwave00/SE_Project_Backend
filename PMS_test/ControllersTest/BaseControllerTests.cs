@@ -1,20 +1,13 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using project_manage_system_backend;
 using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Services;
 using project_manage_system_backend.Shares;
 using RichardSzalay.MockHttp;
-using System;
-using System.Collections.Generic;
-using System.Data.Common;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PMS_test.ControllersTest
 {
@@ -79,7 +72,7 @@ namespace PMS_test.ControllersTest
         {
             var task = _authorizeService.AuthenticateGithub(new GithubLoginDto { Code = "testcode" });
             task.Wait();
-            return task.Result; 
+            return task.Result;
         }
     }
 }

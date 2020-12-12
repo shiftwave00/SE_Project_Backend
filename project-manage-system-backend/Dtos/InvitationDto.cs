@@ -2,7 +2,7 @@
 {
     public class InvitationDto
     {
-        public string ApplicantId { get; set; } 
+        public string ApplicantId { get; set; }
         public int ProjectId { get; set; }
     }
     public class ReplyToInvitationDto
