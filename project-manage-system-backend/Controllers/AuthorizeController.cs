@@ -37,7 +37,7 @@ namespace project_manage_system_backend.Controllers
             {
                 return Ok(result);
             }
-            return NotFound("帳號密碼錯誤！");
+            return ValidationProblem("帳號密碼錯誤！");
         }
 
         [HttpPost]
