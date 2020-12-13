@@ -119,7 +119,7 @@ namespace PMS_test.ControllersTest
         [Fact]
         public async Task TestRequestCommitInfo()
         {
-            var commitInfo = await _repoInfoService.RequestCommitInfo(1);
+            var commitInfo = await _repoInfoService.RequestCommitInfo(1, null);
 
             List<WeekTotalData> weekTotalDatas = new List<WeekTotalData>()
             {
