@@ -5,6 +5,7 @@ using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Models;
 using project_manage_system_backend.Services;
 using project_manage_system_backend.Shares;
+using System;
 using System.Data.Common;
 using Xunit;
 
@@ -44,8 +45,18 @@ namespace PMS_test
                 Authority = "Admin",
                 Name = "管理員"
             });
+
+            _dbContext.Users.Add(new User
+            {
+                Account = "github_testDeleteUser",
+                Password = Argon2.Hash("password"),
+                Authority = "User",
+                Name = "一般使用者"
+            });
+            _dbContext.SaveChanges();
         }
 
+        [Fact]
         public void TestCreateAdminUser()
         {
             _userService.CreateUser(new LocalAccountDto
@@ -57,6 +68,56 @@ namespace PMS_test
             var actualUser = _dbContext.Users.Find("testAdmin");
             Assert.Equal("testAdmin", actualUser.Account);
             Assert.Equal("Admin", actualUser.Authority);
+        }
+
+        [Fact]
+        public void TestDeleteUserSuccess()
+        {
+            string account = "github_testDeleteUser";
+            _userService.DeleteUserByAccount(account);
+            var actual = Assert.Throws<Exception>(() => { _userService.GetUser(account); });
+            Assert.Equal("User not found!", actual.Message);
+        }
+
+        [Fact]
+        public void TestDeleteUserWithProject()
+        {
+            string account = "github_testDeleteUser";
+            var user = _dbContext.Users.Find(account);
+            user.Projects.Add(new UserProject { Account = user.Account, Project = new Project { Name = "project01", Owner = user }, User = user });
+            _dbContext.SaveChanges();
+
+            _userService.DeleteUserByAccount(account);
+            var actual = Assert.Throws<Exception>(() => { _userService.GetUser(account); });
+            Assert.Equal("User not found!", actual.Message);
+        }
+
+        [Fact]
+        public void TestDeleteUserFail()
+        {
+            string account = "github_testDeleteUser";
+            _userService.DeleteUserByAccount(account);
+            var actual = Assert.Throws<Exception>(() => { _userService.DeleteUserByAccount(account); });
+            Assert.Equal("User not found!", actual.Message);
+        }
+
+        [Fact]
+        public void TestGetAllUserNotInclude()
+        {
+            string account = "github_testDeleteUser";
+            var users = _userService.GetAllUserNotInclude(account);
+
+            Assert.Single(users);
+            Assert.Equal("admin", users[0].Account);
+            Assert.Equal("Admin", users[0].Authority);
+            Assert.Equal("管理員", users[0].Name);
+        }
+
+        [Fact]
+        public void TestIsAdmin()
+        {
+           Assert.True(_userService.IsAdmin(_dbContext.Users.Find("admin").Account));
+           Assert.False(_userService.IsAdmin(_dbContext.Users.Find("github_testDeleteUser").Account));
         }
     }
 }
