@@ -1,4 +1,4 @@
-using Isopoh.Cryptography.Argon2;
+﻿using Isopoh.Cryptography.Argon2;
 using Microsoft.EntityFrameworkCore;
 using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Models;
@@ -55,7 +55,8 @@ namespace project_manage_system_backend.Services
         public UserInfoDto GetUser(string account)
         {
             var user = _dbContext.Users.Find(account);
-
+            if (user == null)
+                throw new Exception("User not found!");
             return new UserInfoDto { Id = user.Account, Name = user.Name, AvatarUrl = user.AvatarUrl };
         }
 
