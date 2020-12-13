@@ -1,4 +1,4 @@
-using Isopoh.Cryptography.Argon2;
+﻿using Isopoh.Cryptography.Argon2;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using project_manage_system_backend.Dtos;
@@ -113,5 +113,11 @@ namespace PMS_test
             Assert.Equal("管理員", users[0].Name);
         }
 
+        [Fact]
+        public void TestIsAdmin()
+        {
+           Assert.True(_userService.IsAdmin(_dbContext.Users.Find("admin").Account));
+           Assert.False(_userService.IsAdmin(_dbContext.Users.Find("github_testDeleteUser").Account));
+        }
     }
 }
