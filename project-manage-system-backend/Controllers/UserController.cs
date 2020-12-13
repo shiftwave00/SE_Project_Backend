@@ -29,7 +29,7 @@ namespace project_manage_system_backend.Controllers
         [HttpGet("admin")]
         public IActionResult GetAllUser()
         {
-            return Ok(_userService.GetAllUserExceptAdmin(User.Identity.Name));
+            return Ok(_userService.GetAllUserNotInclude(User.Identity.Name));
         }
 
         [Authorize]

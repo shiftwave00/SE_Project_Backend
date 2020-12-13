@@ -1,4 +1,4 @@
-﻿using Isopoh.Cryptography.Argon2;
+using Isopoh.Cryptography.Argon2;
 using Microsoft.EntityFrameworkCore;
 using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Models;
@@ -113,7 +113,7 @@ namespace project_manage_system_backend.Services
             }
         }
 
-        public List<User> GetAllUserExceptAdmin(string account)
+        public List<User> GetAllUserNotInclude(string account)
         {
             return _dbContext.Users.Where(u => u.Account != account).ToList();
         }
