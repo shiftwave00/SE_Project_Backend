@@ -15,15 +15,15 @@ namespace project_manage_system_backend.Services
     public class RepoService : BaseService
     {
         private readonly HttpClient _httpClient;
-        public RepoService(PMSContext dbContext, HttpClient client = null) : base(dbContext) 
-        { 
-            _httpClient = client ?? new HttpClient(); 
+        public RepoService(PMSContext dbContext, HttpClient client = null) : base(dbContext)
+        {
+            _httpClient = client ?? new HttpClient();
         }
 
         public async Task<ResponseGithubRepoInfoDto> CheckRepoExist(string url)
         {
             string matchPatten = @"^http(s)?://([\w-]+.)+[\w-]+(/[\w- ./?%&=])?$";
-            if(!Regex.IsMatch(url, matchPatten))
+            if (!Regex.IsMatch(url, matchPatten))
                 return new ResponseGithubRepoInfoDto() { message = "Url Error" };
 
             url = url.Replace(".git", "");
@@ -38,9 +38,9 @@ namespace project_manage_system_backend.Services
         public void CreateRepo(Repo model)
         {
             //get project by id
-            var project = _dbContext.Projects.Include(r => r.Repositories).Where(p=>p.ID==model.Project.ID).First();
+            var project = _dbContext.Projects.Include(r => r.Repositories).Where(p => p.ID == model.Project.ID).First();
 
-            var repo = project.Repositories.Where(r=>r.Url==model.Url);
+            var repo = project.Repositories.Where(r => r.Url == model.Url);
 
             // check duplicate =>  add or throw exception
             if (!repo.Any())
@@ -67,7 +67,7 @@ namespace project_manage_system_backend.Services
             return project;
         }
 
-        public bool DeleteRepo(int projectId,int repoId)
+        public bool DeleteRepo(int projectId, int repoId)
         {
             //var project = _dbContext.Projects.Include(r => r.Repositories).Where(p => p.ID == projectId).First();
             try
@@ -79,7 +79,7 @@ namespace project_manage_system_backend.Services
             catch (Exception)
             {
                 return false;
-            }  
+            }
         }
     }
 }

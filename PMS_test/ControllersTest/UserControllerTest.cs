@@ -1,26 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using project_manage_system_backend;
-using project_manage_system_backend.Dtos;
-using project_manage_system_backend.Services;
-using project_manage_system_backend.Shares;
-using RichardSzalay.MockHttp;
-using System.Net.Http;
-using System.Data.Common;
-using System.Threading.Tasks;
-using project_manage_system_backend.Controllers;
+﻿using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Models;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
-using System.Net.Http.Headers;
+using System.Net.Http;
+using System.Text;
 using System.Text.Json;
-using Microsoft.AspNetCore.Hosting;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace PMS_test.ControllersTest
 {

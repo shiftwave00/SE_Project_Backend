@@ -89,7 +89,7 @@ namespace project_manage_system_backend.Services
                 throw new Exception("user not found");
             }
 
-            if(_dbContext.SaveChanges() == 0)
+            if (_dbContext.SaveChanges() == 0)
             {
                 throw new Exception("edit user name fail");
             }
@@ -106,13 +106,13 @@ namespace project_manage_system_backend.Services
         {
             var user = invitation.Applicant;
             user.Projects.Add(new UserProject { User = user, Project = invitation.InvitedProject });
-            
+
             if (_dbContext.SaveChanges() == 0)
             {
                 throw new Exception("Add project fail!");
             }
         }
-        
+
         public List<User> GetAllUserExceptAdmin(string account)
         {
             return _dbContext.Users.Where(u => u.Account != account).ToList();

@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Services;
 using project_manage_system_backend.Shares;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,7 +17,7 @@ namespace project_manage_system_backend.Controllers
         private readonly AuthorizeService _authorizationService;
         private readonly UserService _userService;
         public AuthorizeController(IConfiguration configuration, PMSContext context, JwtHelper jwt)
-        { 
+        {
             _authorizationService = new AuthorizeService(context, configuration, jwt);
             _userService = new UserService(context);
         }
@@ -33,7 +32,7 @@ namespace project_manage_system_backend.Controllers
         public IActionResult AuthenticateLocal(LocalAccountDto dto)
         {
             var result = _authorizationService.AuthenticateLocal(dto);
-            if(result != null)
+            if (result != null)
             {
                 return Ok(result);
             }
@@ -41,7 +40,7 @@ namespace project_manage_system_backend.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateAdmin(LocalAccountDto dto,[FromServices] IWebHostEnvironment webHostEnvironment)
+        public IActionResult CreateAdmin(LocalAccountDto dto, [FromServices] IWebHostEnvironment webHostEnvironment)
         {
             if (webHostEnvironment.EnvironmentName == "Development")
             {

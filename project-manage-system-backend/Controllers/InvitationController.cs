@@ -106,7 +106,7 @@ namespace project_manage_system_backend.Controllers
                         message = "使用者: " + applicant.Name + " 已在專案中"
                     });
                 }
-                
+
             }
 
             return Ok(new ResponseDto
