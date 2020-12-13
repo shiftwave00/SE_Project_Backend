@@ -101,5 +101,17 @@ namespace PMS_test
             Assert.Equal("User not found!", actual.Message);
         }
 
+        [Fact]
+        public void TestGetAllUserNotInclude()
+        {
+            string account = "github_testDeleteUser";
+            var users = _userService.GetAllUserNotInclude(account);
+
+            Assert.Single(users);
+            Assert.Equal("admin", users[0].Account);
+            Assert.Equal("Admin", users[0].Authority);
+            Assert.Equal("管理員", users[0].Name);
+        }
+
     }
 }
