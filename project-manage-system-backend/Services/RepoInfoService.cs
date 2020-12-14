@@ -29,6 +29,7 @@ namespace project_manage_system_backend.Services
 
             var response = await _httpClient.GetAsync(url);
             string content = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(content);
             var commitInfos = JsonSerializer.Deserialize<List<ResponseCommitInfoDto>>(content);
 
             List<WeekTotalData> weekChartDatas = new List<WeekTotalData>();
@@ -110,8 +111,15 @@ namespace project_manage_system_backend.Services
                 item.created_at = Convert.ToDateTime(item.created_at).ToString("yyyy-MM-dd HH:mm:ss");
             }
 
-            result.averageDealwithIssueTime = TimeSpan.FromSeconds(closedTime.Average()).ToString(@"dd\.hh\:mm\:\:ss\.\.");
-            result.averageDealwithIssueTime = result.averageDealwithIssueTime.Replace("..", "秒").Replace(".", "天").Replace("::", "分鐘").Replace(":", "小時");
+            if(closedTime.Count != 0)
+            {
+                result.averageDealwithIssueTime = TimeSpan.FromSeconds(closedTime.Average()).ToString(@"dd\.hh\:mm\:\:ss\.\.");
+                result.averageDealwithIssueTime = result.averageDealwithIssueTime.Replace("..", "秒").Replace(".", "天").Replace("::", "分鐘").Replace(":", "小時");
+            }
+            else
+            {
+                result.averageDealwithIssueTime = "尚無資料";
+            }
             return result;
         }
 
