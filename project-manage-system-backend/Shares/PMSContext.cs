@@ -3,9 +3,9 @@ using project_manage_system_backend.Models;
 
 namespace project_manage_system_backend.Shares
 {
-    public class PMSContext: DbContext
+    public class PMSContext : DbContext
     {
-        public PMSContext(DbContextOptions<PMSContext> options): base(options) {}
+        public PMSContext(DbContextOptions<PMSContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Project> Projects { get; set; }
@@ -17,7 +17,7 @@ namespace project_manage_system_backend.Shares
             modelBuilder.Entity<UserProject>().HasKey(p => new { p.ProjectId, p.Account });
             modelBuilder.Entity<UserProject>()
                 .HasOne(up => up.Project)
-                .WithMany(p=>p.Users)
+                .WithMany(p => p.Users)
                 .HasForeignKey(ut => ut.ProjectId);
 
             modelBuilder.Entity<UserProject>()

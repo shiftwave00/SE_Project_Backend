@@ -1,22 +1,14 @@
 using Isopoh.Cryptography.Argon2;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using project_manage_system_backend;
 using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Models;
 using project_manage_system_backend.Services;
 using project_manage_system_backend.Shares;
 using RichardSzalay.MockHttp;
-using System;
 using System.Data.Common;
-using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -47,7 +39,7 @@ namespace PMS_test
             string content = "{\"client_id\":\"" + clientId + "\",\"client_secret\":\"" + clientSecret + "\",\"code\":\"testcode\"}";
             mockHttp.When(HttpMethod.Post, "https://github.com/login/oauth/access_token")
                     .WithContent(content)
-                    .Respond("application/text", 
+                    .Respond("application/text",
                     "access_token=token&scope=&token_type=bearer");
 
             mockHttp.When(HttpMethod.Get, "https://api.github.com/user")

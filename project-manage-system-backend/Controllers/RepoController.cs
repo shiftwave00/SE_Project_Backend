@@ -65,9 +65,9 @@ namespace project_manage_system_backend.Controllers
             }
         }
 
-        
+
         [HttpDelete]
-        public IActionResult DeleteRepo(int repoId,int projectId)
+        public IActionResult DeleteRepo(int repoId, int projectId)
         {
             try
             {
@@ -85,7 +85,7 @@ namespace project_manage_system_backend.Controllers
                     success = false,
                     message = e.Message
                 });
-            } 
+            }
         }
 
         [Authorize]

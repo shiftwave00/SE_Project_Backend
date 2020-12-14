@@ -13,15 +13,15 @@ using System.Threading.Tasks;
 
 namespace project_manage_system_backend.Services
 {
-    public class AuthorizeService: BaseService
+    public class AuthorizeService : BaseService
     {
         private readonly JwtHelper _jwtHelper;
         private readonly UserService _userService;
         private readonly HttpClient _httpClient;
-        public AuthorizeService(PMSContext dbContext, 
-                                IConfiguration configuration, 
-                                JwtHelper jwt, 
-                                HttpClient client = null):base(dbContext, configuration)
+        public AuthorizeService(PMSContext dbContext,
+                                IConfiguration configuration,
+                                JwtHelper jwt,
+                                HttpClient client = null) : base(dbContext, configuration)
         {
             _configuration = configuration;
             _jwtHelper = jwt;
@@ -43,8 +43,8 @@ namespace project_manage_system_backend.Services
                     _userService.CreateUser(userModel);
                 }
 
-                return new AuthorizeDto 
-                { 
+                return new AuthorizeDto
+                {
                     Token = _jwtHelper.GenerateToken(userModel.Account, accessToken, userModel.Authority),
                     OauthToken = accessToken
                 };
@@ -59,7 +59,7 @@ namespace project_manage_system_backend.Services
         {
             User loginUser = _dbContext.Users.Find(dto.Account);
 
-            if(loginUser != null && Argon2.Verify(loginUser.Password, dto.Password))
+            if (loginUser != null && Argon2.Verify(loginUser.Password, dto.Password))
             {
                 string accessToken = _configuration.GetValue<string>("githubConfig:admin_token");
                 return new AuthorizeDto

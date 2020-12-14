@@ -1,33 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using project_manage_system_backend;
-using project_manage_system_backend.Dtos;
-using project_manage_system_backend.Services;
-using project_manage_system_backend.Shares;
-using RichardSzalay.MockHttp;
-using System.Net.Http;
-using System.Data.Common;
-using System.Threading.Tasks;
-using project_manage_system_backend.Controllers;
+﻿using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Models;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
-using System.Net.Http.Headers;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
 using System.Text.Json;
-using Microsoft.AspNetCore.Hosting;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace PMS_test.ControllersTest
 {
     [TestCaseOrderer("XUnit.Project.Orderers.AlphabeticalOrderer", "XUnit.Project")]
-    public class ProjectControllerTests:BaseControllerTests
+    public class ProjectControllerTests : BaseControllerTests
     {
-        public ProjectControllerTests():base()
+        public ProjectControllerTests() : base()
         {
             InitialDatabase();
         }
@@ -254,6 +239,24 @@ namespace PMS_test.ControllersTest
                     OwnerName = "testuser"
                 }
             };
+
+            var expectedStr = JsonSerializer.Serialize(expected);
+            var actualStr = JsonSerializer.Serialize(actual);
+            Assert.Equal(expectedStr, actualStr);
+        }
+
+        [Fact]
+        public async Task TestDeleteProject()
+        {
+            await _client.DeleteAsync("/project/1/testAccount");
+
+            var requestTask = await _client.GetAsync("/project");
+
+            string resultContent = await requestTask.Content.ReadAsStringAsync();
+            var actual = JsonSerializer.Deserialize<List<ProjectResultDto>>(resultContent,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            var expected = new List<ProjectResultDto>();
 
             var expectedStr = JsonSerializer.Serialize(expected);
             var actualStr = JsonSerializer.Serialize(actual);

@@ -4,6 +4,7 @@ using project_manage_system_backend.Shares;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace project_manage_system_backend.Services
 {
@@ -13,12 +14,14 @@ namespace project_manage_system_backend.Services
 
         public void CreateProject(ProjectDto projectDto, string userId)
         {
-            if (projectDto.ProjectName == "")
+            string regexPattern = "^[A-Za-z0-9]+";
+            Regex regex = new Regex(regexPattern);
+            if (projectDto.ProjectName == "" || !regex.IsMatch(projectDto.ProjectName))
             {
                 throw new Exception("please enter project name");
             }
             var user = _dbContext.Users.Include(u => u.Projects).ThenInclude(p => p.Project).FirstOrDefault(u => u.Account.Equals(userId));
-            
+
             if (user != null)
             {
                 var userProject = (from up in user.Projects
@@ -44,7 +47,7 @@ namespace project_manage_system_backend.Services
             }
 
 
-            if(_dbContext.SaveChanges() == 0)
+            if (_dbContext.SaveChanges() == 0)
             {
                 throw new Exception("create project fail");
             }
@@ -52,7 +55,9 @@ namespace project_manage_system_backend.Services
 
         public void EditProjectName(ProjectDto projectDto)
         {
-            if (projectDto.ProjectName == "")
+            string regexPattern = "^[A-Za-z0-9]+";
+            Regex regex = new Regex(regexPattern);
+            if (projectDto.ProjectName == "" || !regex.IsMatch(projectDto.ProjectName))
             {
                 throw new Exception("please enter project name");
             }
@@ -77,7 +82,7 @@ namespace project_manage_system_backend.Services
         {
             var user = _dbContext.Users.Include(u => u.Projects).ThenInclude(p => p.Project).ThenInclude(p => p.Owner).FirstOrDefault(u => u.Account.Equals(account));
             var query = (from up in user.Projects
-                        select new ProjectResultDto { Id = up.Project.ID, Name = up.Project.Name, OwnerId = up.Project.Owner.Account, OwnerName = up.Project.Owner.Name }).ToList();
+                         select new ProjectResultDto { Id = up.Project.ID, Name = up.Project.Name, OwnerId = up.Project.Owner.Account, OwnerName = up.Project.Owner.Name }).ToList();
             return query;
         }
 

@@ -6,6 +6,7 @@ using project_manage_system_backend.Shares;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace project_manage_system_backend.Services
 {
@@ -54,7 +55,8 @@ namespace project_manage_system_backend.Services
         public UserInfoDto GetUser(string account)
         {
             var user = _dbContext.Users.Find(account);
-
+            if (user == null)
+                throw new Exception("User not found!");
             return new UserInfoDto { Id = user.Account, Name = user.Name, AvatarUrl = user.AvatarUrl };
         }
 
@@ -68,6 +70,32 @@ namespace project_manage_system_backend.Services
             }).ToList();
         }
 
+        public void EditUserName(string account, string newUserName)
+        {
+            string regexPattern = "^[A-Za-z0-9]+";
+            Regex regex = new Regex(regexPattern);
+            if (newUserName == "" || !regex.IsMatch(newUserName))
+            {
+                throw new Exception("please enter user name");
+            }
+
+            User user = _dbContext.Users.Find(account);
+            if (user != null)
+            {
+                user.Name = newUserName;
+                _dbContext.Update(user);
+            }
+            else
+            {
+                throw new Exception("user not found");
+            }
+
+            if (_dbContext.SaveChanges() == 0)
+            {
+                throw new Exception("edit user name fail");
+            }
+        }
+
         public User GetUserModel(string account)
         {
             var user = _dbContext.Users.Include(u => u.Projects).ThenInclude(p => p.Project).First(u => u.Account.Equals(account));
@@ -79,14 +107,14 @@ namespace project_manage_system_backend.Services
         {
             var user = invitation.Applicant;
             user.Projects.Add(new UserProject { User = user, Project = invitation.InvitedProject });
-            
+
             if (_dbContext.SaveChanges() == 0)
             {
                 throw new Exception("Add project fail!");
             }
         }
-        
-        public List<User> GetAllUserExceptAdmin(string account)
+
+        public List<User> GetAllUserNotInclude(string account)
         {
             return _dbContext.Users.Where(u => u.Account != account).ToList();
         }

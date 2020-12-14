@@ -21,7 +21,8 @@ namespace project_manage_system_backend.Controllers
         [HttpGet("commit/{repoId}")]
         public async Task<IActionResult> GetCommitInfo(int repoId)
         {
-            return Ok(await _repoInfoService.RequestCommitInfo(repoId));
+            string oauth_token = User.Claims.FirstOrDefault(c => c.Type.Equals("oauth")).Value;
+            return Ok(await _repoInfoService.RequestCommitInfo(repoId, oauth_token));
         }
 
         [HttpGet("codebase/{repoId}")]
@@ -29,7 +30,7 @@ namespace project_manage_system_backend.Controllers
         {
             return Ok(await _repoInfoService.RequestCodebase(repoId));
         }
-        
+
         [Authorize]
         [HttpGet("contribute/{repoId}")]
         public async Task<IActionResult> GetContributorsActtivity(int repoId)
@@ -37,12 +38,12 @@ namespace project_manage_system_backend.Controllers
             string oauth_token = User.Claims.FirstOrDefault(c => c.Type.Equals("oauth")).Value;
             return Ok(await _repoInfoService.RequestContributorsActivity(repoId, oauth_token));
         }
-        
+
         [HttpGet("issue/{repoId}")]
         public async Task<IActionResult> GetIssueInfo(int repoId)
         {
             string token = User.Claims.FirstOrDefault(c => c.Type.Equals("oauth")).Value;
-            return Ok(await _repoInfoService.RequestIssueInfo(repoId,token));
+            return Ok(await _repoInfoService.RequestIssueInfo(repoId, token));
         }
     }
 }

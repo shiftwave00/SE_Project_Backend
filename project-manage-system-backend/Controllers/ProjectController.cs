@@ -65,7 +65,7 @@ namespace project_manage_system_backend.Controllers
                     return NotFound();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Ok(new ResponseDto
                 {
