@@ -1,4 +1,5 @@
 ﻿using Isopoh.Cryptography.Argon2;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Models;
@@ -138,6 +139,13 @@ namespace project_manage_system_backend.Services
         public bool IsAdmin(string accouunt)
         {
             return _dbContext.Users.Find(accouunt).Authority.Equals("Admin");
+        }
+
+        public bool EditUserInfo(string editsAccount, JsonPatchDocument<User> newUserInfo)
+        {
+            var user = GetUserModel(editsAccount);
+            newUserInfo.ApplyTo(user);
+            return !(_dbContext.SaveChanges() == 0);
         }
     }
 }
