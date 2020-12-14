@@ -116,8 +116,8 @@ namespace PMS_test
         [Fact]
         public void TestIsAdmin()
         {
-           Assert.True(_userService.IsAdmin(_dbContext.Users.Find("admin").Account));
-           Assert.False(_userService.IsAdmin(_dbContext.Users.Find("github_testDeleteUser").Account));
+            Assert.True(_userService.IsAdmin(_dbContext.Users.Find("admin").Account));
+            Assert.False(_userService.IsAdmin(_dbContext.Users.Find("github_testDeleteUser").Account));
         }
     }
 }
