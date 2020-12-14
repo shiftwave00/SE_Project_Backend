@@ -141,9 +141,9 @@ namespace project_manage_system_backend.Services
             return _dbContext.Users.Find(accouunt).Authority.Equals("Admin");
         }
 
-        public bool EditUserInfo(string editsAccount, JsonPatchDocument<User> newUserInfo)
+        public bool EditUserInfo(string accounr, JsonPatchDocument<User> newUserInfo)
         {
-            var user = GetUserModel(editsAccount);
+            var user = GetUserModel(accounr);
             newUserInfo.ApplyTo(user);
             return !(_dbContext.SaveChanges() == 0);
         }
