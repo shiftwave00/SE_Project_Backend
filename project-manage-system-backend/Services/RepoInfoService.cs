@@ -28,8 +28,14 @@ namespace project_manage_system_backend.Services
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", oauth_token);
 
             var response = await _httpClient.GetAsync(url);
+
+            if(response.StatusCode == System.Net.HttpStatusCode.Accepted)
+            {
+                await Task.Delay(1000);
+                response = await _httpClient.GetAsync(url);
+            }
+
             string content = await response.Content.ReadAsStringAsync();
-            Console.WriteLine(content);
             var commitInfos = JsonSerializer.Deserialize<List<ResponseCommitInfoDto>>(content);
 
             List<WeekTotalData> weekChartDatas = new List<WeekTotalData>();
