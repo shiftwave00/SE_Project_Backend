@@ -101,6 +101,7 @@ namespace PMS_test
             var result = _authorizeService.AuthenticateLocal(dto);
 
             Assert.True(result != null);
+            Assert.True(result.Authority == "Admin");
         }
 
         [Fact]
