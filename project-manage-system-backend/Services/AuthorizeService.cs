@@ -36,17 +36,17 @@ namespace project_manage_system_backend.Services
 
             if (!string.IsNullOrEmpty(accessToken))
             {
-                User userModel = await RequestGithubUserInfo(accessToken);
+                User user = await RequestGithubUserInfo(accessToken);
 
-                if (!_userService.CheckUserExist(userModel.Account))
+                if (!_userService.CheckUserExist(user.Account))
                 {
-                    _userService.CreateUser(userModel);
+                    _userService.CreateUser(user);
                 }
 
                 return new AuthorizeDto
                 {
-                    Token = _jwtHelper.GenerateToken(userModel.Account, accessToken, userModel.Authority),
-                    OauthToken = accessToken
+                    Token = _jwtHelper.GenerateToken(user.Account, accessToken, user.Authority),
+                    Authority = user.Authority
                 };
             }
             else
@@ -65,7 +65,7 @@ namespace project_manage_system_backend.Services
                 return new AuthorizeDto
                 {
                     Token = _jwtHelper.GenerateToken(loginUser.Account, accessToken, loginUser.Authority),
-                    OauthToken = accessToken
+                    Authority = loginUser.Authority
                 };
             }
             return null;

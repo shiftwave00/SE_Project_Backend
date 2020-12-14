@@ -4,9 +4,6 @@
     {
         public string Token { get; set; }
 
-        /// <summary>
-        /// 第三方token
-        /// </summary>
-        public string OauthToken { get; set; }
+        public string Authority { get; set; }
     }
 }

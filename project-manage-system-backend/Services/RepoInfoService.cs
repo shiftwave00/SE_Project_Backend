@@ -28,6 +28,13 @@ namespace project_manage_system_backend.Services
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", oauth_token);
 
             var response = await _httpClient.GetAsync(url);
+
+            if(response.StatusCode == System.Net.HttpStatusCode.Accepted)
+            {
+                await Task.Delay(1000);
+                response = await _httpClient.GetAsync(url);
+            }
+
             string content = await response.Content.ReadAsStringAsync();
             var commitInfos = JsonSerializer.Deserialize<List<ResponseCommitInfoDto>>(content);
 
@@ -110,8 +117,15 @@ namespace project_manage_system_backend.Services
                 item.created_at = Convert.ToDateTime(item.created_at).ToString("yyyy-MM-dd HH:mm:ss");
             }
 
-            result.averageDealwithIssueTime = TimeSpan.FromSeconds(closedTime.Average()).ToString(@"dd\.hh\:mm\:\:ss\.\.");
-            result.averageDealwithIssueTime = result.averageDealwithIssueTime.Replace("..", "秒").Replace(".", "天").Replace("::", "分鐘").Replace(":", "小時");
+            if(closedTime.Count != 0)
+            {
+                result.averageDealwithIssueTime = TimeSpan.FromSeconds(closedTime.Average()).ToString(@"dd\.hh\:mm\:\:ss\.\.");
+                result.averageDealwithIssueTime = result.averageDealwithIssueTime.Replace("..", "秒").Replace(".", "天").Replace("::", "分鐘").Replace(":", "小時");
+            }
+            else
+            {
+                result.averageDealwithIssueTime = "尚無資料";
+            }
             return result;
         }
 

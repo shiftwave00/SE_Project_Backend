@@ -32,9 +32,7 @@ namespace project_manage_system_backend.Controllers
             _logger.LogError(context.Error.Message);
             _logger.LogError(context.Error.StackTrace);
 
-            return Problem(
-                detail: context.Error.StackTrace,
-                title: context.Error.Message);
+            return NotFound(context.Error.Message);
         }
 
         [Route("/error")]
