@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using project_manage_system_backend.Dtos;
+using project_manage_system_backend.Models;
 using project_manage_system_backend.Services;
 using project_manage_system_backend.Shares;
 using System;
@@ -72,6 +74,30 @@ namespace project_manage_system_backend.Controllers
                     message = ex.Message
                 });
             }
+        }
+
+        [Authorize]
+        [HttpPatch("{accounr}")]
+        public IActionResult EditUserInfo(string accounr, [FromBody] JsonPatchDocument<User> newUserInfo)
+        {
+            if (_userService.IsAdmin(User.Identity.Name))
+            {
+                if (_userService.EditUserInfo(accounr, newUserInfo))
+                {
+                    return Ok(new ResponseDto
+                    {
+                        success = true,
+                        message = "已成功修改"
+                    });
+                }
+
+                return Ok(new ResponseDto
+                {
+                    success = false,
+                    message = "修改失敗"
+                });
+            }
+            return BadRequest("Who are you?");
         }
     }
 }

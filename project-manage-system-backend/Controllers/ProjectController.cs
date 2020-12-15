@@ -13,7 +13,7 @@ namespace project_manage_system_backend.Controllers
     {
         private readonly ProjectService _projectService;
         private readonly UserService _userService;
-        private PMSContext _dbContext;
+        private readonly PMSContext _dbContext;
 
         public ProjectController(PMSContext dbContext)
         {
@@ -111,7 +111,6 @@ namespace project_manage_system_backend.Controllers
         [HttpGet]
         public IActionResult GetProject()
         {
-            // TODO: 討論此方法是否適合
             var result = _userService.IsAdmin(User.Identity.Name) ? _projectService.GetAllProject() : _projectService.GetProjectByUserAccount(User.Identity.Name);
             return Ok(result);
         }

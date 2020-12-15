@@ -71,8 +71,6 @@ namespace PMS_test.ControllersTest
             dto.openIssues = JsonConvert.DeserializeObject<List<ResponseGithubRepoIssuesDto>>(CreateFakeIssues("open"));
             dto.closeIssues = JsonConvert.DeserializeObject<List<ResponseGithubRepoIssuesDto>>(CreateFakeIssues("closed"));
 
-            string json = JsonConvert.SerializeObject(dto);
-
             mockHttp.When(HttpMethod.Get, _openIssueUrl)
                     .Respond("application/json", CreateFakeIssues("open"));
             mockHttp.When(HttpMethod.Get, _closedIssueUrl)
