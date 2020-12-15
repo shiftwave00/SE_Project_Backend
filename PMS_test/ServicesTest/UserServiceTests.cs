@@ -1,11 +1,15 @@
 ﻿using Isopoh.Cryptography.Argon2;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.Operations;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Serialization;
 using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Models;
 using project_manage_system_backend.Services;
 using project_manage_system_backend.Shares;
 using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using Xunit;
 
@@ -118,6 +122,26 @@ namespace PMS_test
         {
             Assert.True(_userService.IsAdmin(_dbContext.Users.Find("admin").Account));
             Assert.False(_userService.IsAdmin(_dbContext.Users.Find("github_testDeleteUser").Account));
+        }
+
+        [Fact]
+        public void TestEditUserInfo()
+        {
+            const string editedName = "改名惹";
+            List<Operation<User>> operations = new List<Operation<User>>
+            {
+                new Operation<User>()
+                {
+                    op = "replace",
+                    path = "/name",
+                    value = editedName
+                } ,
+            };
+            JsonPatchDocument<User> jsonPatchDocument = new JsonPatchDocument<User>(operations, new DefaultContractResolver());
+
+            Assert.True(_userService.EditUserInfo("admin", jsonPatchDocument));
+            var user = _userService.GetUserModel("admin");
+            Assert.Equal(editedName, user.Name);
         }
     }
 }
