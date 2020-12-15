@@ -117,5 +117,15 @@ namespace project_manage_system_backend.Services
             if (_dbContext.SaveChanges() == 0)
                 throw new Exception("Delete project fail!");
         }
+
+        public void DeleteProjectMember(string userId, int projectId)
+        {
+            var user = _dbContext.Users.Find(userId);
+            var project = user.Projects.Where(p => p.ProjectId.Equals(projectId)).FirstOrDefault();
+            user.Projects.Remove(project);
+
+            if (_dbContext.SaveChanges() == 0)
+                throw new Exception("Delete project member fail!");
+        }
     }
 }
