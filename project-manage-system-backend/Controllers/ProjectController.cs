@@ -51,19 +51,13 @@ namespace project_manage_system_backend.Controllers
         {
             try
             {
-                if (CheckUserIsProjectOwner(User.Identity.Name, projectDto.ProjectId))
+                CheckUserIsProjectOwner(User.Identity.Name, projectDto.ProjectId);
+                _projectService.EditProjectName(projectDto);
+                return Ok(new ResponseDto
                 {
-                    _projectService.EditProjectName(projectDto);
-                    return Ok(new ResponseDto
-                    {
-                        success = true,
-                        message = "更改成功",
-                    });
-                }
-                else
-                {
-                    return NotFound();
-                }
+                    success = true,
+                    message = "更改成功",
+                });
             }
             catch (Exception ex)
             {
@@ -82,19 +76,54 @@ namespace project_manage_system_backend.Controllers
         {
             try
             {
-                if (CheckUserIsProjectOwner(userId, projectId))
-                {
-                    _projectService.DeleteProject(projectId);
+                CheckUserIsProjectOwner(userId, projectId);
 
-                    return Ok(new ResponseDto
+                _projectService.DeleteProject(projectId);
+
+                return Ok(new ResponseDto
+                {
+                    success = true,
+                    message = "刪除成功",
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new ResponseDto
+                {
+                    success = false,
+                    message = ex.Message,
+                });
+            }
+        }
+
+        [Authorize]
+        [HttpDelete("{projectId}/{userId}")]
+        public IActionResult DeleteProjectMember(int projectId, string userId)
+        {
+            try
+            {
+                CheckUserIsProjectOwner(User.Identity.Name, projectId);
+                if (_userService.CheckUserExist(userId))
+                {
+                    var user = _userService.GetUserModel(userId);
+                    if (!_userService.IsProjectOwner(user, projectId))
                     {
-                        success = true,
-                        message = "刪除成功",
-                    });
+                        _projectService.DeleteProjectMember(userId, projectId);
+
+                        return Ok(new ResponseDto
+                        {
+                            success = true,
+                            message = "刪除成功",
+                        });
+                    }
                 }
                 else
                 {
-                    return NotFound();
+                    return Ok(new ResponseDto
+                    {
+                        success = false,
+                        message = "該使用者不存在",
+                    });
                 }
             }
             catch (Exception ex)
@@ -105,6 +134,8 @@ namespace project_manage_system_backend.Controllers
                     message = ex.Message,
                 });
             }
+
+            return NotFound();
         }
 
         [Authorize]
