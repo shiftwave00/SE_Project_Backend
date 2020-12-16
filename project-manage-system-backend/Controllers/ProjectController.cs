@@ -96,13 +96,13 @@ namespace project_manage_system_backend.Controllers
             }
         }
 
-        //[Authorize]
-        [HttpDelete("{projectId}/{ownerId}/{userId}")]
-        public IActionResult DeleteProjectMember(int projectId, string ownerId, string userId)
+        [Authorize]
+        [HttpDelete("{projectId}/{userId}")]
+        public IActionResult DeleteProjectMember(int projectId, string userId)
         {
             try
             {
-                CheckUserIsProjectOwner(ownerId, projectId);
+                CheckUserIsProjectOwner(User.Identity.Name, projectId);
                 if (_userService.CheckUserExist(userId))
                 {
                     var user = _userService.GetUserModel(userId);
