@@ -97,7 +97,7 @@ namespace project_manage_system_backend.Controllers
         }
 
         [Authorize]
-        [HttpDelete("{projectId}/{userId}")]
+        [HttpDelete("member/{projectId}/{userId}")]
         public IActionResult DeleteProjectMember(int projectId, string userId)
         {
             try
