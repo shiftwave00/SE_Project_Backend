@@ -77,12 +77,12 @@ namespace project_manage_system_backend.Controllers
         }
 
         [Authorize]
-        [HttpPatch("{accounr}")]
-        public IActionResult EditUserInfo(string accounr, [FromBody] JsonPatchDocument<User> newUserInfo)
+        [HttpPatch("{account}")]
+        public IActionResult EditUserInfo(string account, [FromBody] JsonPatchDocument<User> newUserInfo)
         {
             if (_userService.IsAdmin(User.Identity.Name))
             {
-                if (_userService.EditUserInfo(accounr, newUserInfo))
+                if (_userService.EditUserInfo(account, newUserInfo))
                 {
                     return Ok(new ResponseDto
                     {
