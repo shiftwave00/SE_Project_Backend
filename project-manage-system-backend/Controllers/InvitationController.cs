@@ -1,10 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using project_manage_system_backend.Dtos;
+using project_manage_system_backend.Hubs;
 using project_manage_system_backend.Models;
 using project_manage_system_backend.Services;
 using project_manage_system_backend.Shares;
 using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace project_manage_system_backend.Controllers
 {
@@ -15,12 +19,14 @@ namespace project_manage_system_backend.Controllers
         private readonly UserService _userService;
         private readonly InvitationService _invitationService;
         private readonly RepoService _repoService;
+        private readonly IHubContext<NotifyHub, INotifyHub> _notifyHub;
 
-        public InvitationController(PMSContext dbContext)
+        public InvitationController(PMSContext dbContext, IHubContext<NotifyHub, INotifyHub> notifyHub)
         {
             _userService = new UserService(dbContext);
             _invitationService = new InvitationService(dbContext);
             _repoService = new RepoService(dbContext);
+            _notifyHub = notifyHub;
         }
 
         [Authorize]
@@ -61,7 +67,7 @@ namespace project_manage_system_backend.Controllers
 
         [Authorize]
         [HttpPost("sendinvitation")]
-        public IActionResult SendInvitation(InvitationDto invitationDto)
+        public async Task<IActionResult> SendInvitation(InvitationDto invitationDto)
         {
             if (_userService.CheckUserExist(invitationDto.ApplicantId))
             {
@@ -77,6 +83,10 @@ namespace project_manage_system_backend.Controllers
                         if (!_invitationService.IsInvitationExist(invitation))
                         {
                             _invitationService.AddInvitation(invitation);
+
+                            await _notifyHub.Clients.Groups(invitation.Applicant.Account).ReceiveNotification();
+                            //await _notifyHub.Clients.All.ReceiveNotification();
+                            //await _notifyHub.Clients.All.ReceiveNotification();
 
                             return Ok(new ResponseDto
                             {

@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -8,8 +11,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using project_manage_system_backend.Hubs;
+using project_manage_system_backend.Models;
 using project_manage_system_backend.Shares;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace project_manage_system_backend
 {
@@ -56,6 +62,7 @@ namespace project_manage_system_backend
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
+                options.SaveToken = true;
                 options.IncludeErrorDetails = true; // 預設值為 true，有時會特別關閉
 
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -81,6 +88,24 @@ namespace project_manage_system_backend
                     // "1234567890123456" 應該從 IConfiguration 取得
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("JwtSettings:SignKey")))
                 };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Headers["Authorization"];
+
+                        // If the request is for our hub...
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            (path.StartsWithSegments("/hub/notify")))
+                        {
+                            // Read the token out of the query string
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
             services.AddCors(options =>
@@ -102,6 +127,7 @@ namespace project_manage_system_backend
                 });
             });
 
+            services.AddSignalR();
             services.AddControllers().AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
         }
 
@@ -133,8 +159,10 @@ namespace project_manage_system_backend
 
             app.UseAuthorization();
 
+
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<NotifyHub>("/hub/notify");
                 endpoints.MapControllers();
             });
 

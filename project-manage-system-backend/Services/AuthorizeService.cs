@@ -46,7 +46,8 @@ namespace project_manage_system_backend.Services
                 return new AuthorizeDto
                 {
                     Token = _jwtHelper.GenerateToken(user.Account, accessToken, user.Authority),
-                    Authority = user.Authority
+                    Authority = user.Authority,
+                    UserAccount = user.Account
                 };
             }
             else
@@ -65,7 +66,8 @@ namespace project_manage_system_backend.Services
                 return new AuthorizeDto
                 {
                     Token = _jwtHelper.GenerateToken(loginUser.Account, accessToken, loginUser.Authority),
-                    Authority = loginUser.Authority
+                    Authority = loginUser.Authority,
+                    UserAccount = loginUser.Account
                 };
             }
             return null;
