@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using project_manage_system_backend.Dtos;
+using project_manage_system_backend.Models;
 using project_manage_system_backend.Shares;
 using System;
 using System.Collections.Generic;
@@ -98,6 +99,30 @@ namespace project_manage_system_backend.Services
                 }
             }
             throw new Exception("error project");
+        }
+
+        public List<UserInfoDto> GetProjectMember(int projectId)
+        {
+            var projectById = _dbContext.Projects.Include(p => p.Users).ThenInclude(u => u.User).FirstOrDefault(p => p.ID == projectId);
+
+            if (projectById != null)
+            {
+                var projectMember = projectById.Users;
+
+                List<UserInfoDto> result = new List<UserInfoDto>();
+
+                foreach (UserProject userProject in projectMember)
+                {
+                    result.Add(new UserInfoDto { Id = userProject.User.Account, Name = userProject.User.Name });
+                }
+
+                return result;
+            }
+            else
+            {
+                throw new Exception("project is not found");
+            }
+
         }
 
         public List<ProjectResultDto> GetAllProject()

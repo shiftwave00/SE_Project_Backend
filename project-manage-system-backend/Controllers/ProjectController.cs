@@ -173,5 +173,19 @@ namespace project_manage_system_backend.Controllers
                 throw new Exception("you are not the system user");
             }
         }
+
+        [Authorize]
+        [HttpGet("member/{projectId}")]
+        public IActionResult GetProjectMember(int projectId)
+        {
+            try
+            {
+                return Ok(_projectService.GetProjectMember(projectId));
+            }
+            catch(Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }
