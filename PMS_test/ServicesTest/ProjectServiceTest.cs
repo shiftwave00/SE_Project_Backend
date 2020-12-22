@@ -77,8 +77,8 @@ namespace PMS_test.ServicesTest
                 },
                 new UserProject
                 {
-                    User = testUser2,
-                    Project = project1,
+                    User = testUser1,
+                    Project = project2,
                 },
             };
 
@@ -86,8 +86,8 @@ namespace PMS_test.ServicesTest
             {
                 new UserProject
                 {
-                    User = testUser1,
-                    Project = project2,
+                    User = testUser2,
+                    Project = project1,
                 },
                 new UserProject
                 {
@@ -105,9 +105,9 @@ namespace PMS_test.ServicesTest
                 },
             };
 
-            project1.Users = testUser1Project;
-            project2.Users = testUser2Project;
-            //testUser3.Projects = testUser3Project;
+            testUser1.Projects = testUser1Project;
+            testUser2.Projects = testUser2Project;
+            testUser3.Projects = testUser3Project;
 
             _dbContext.Projects.Add(project1);
             _dbContext.Projects.Add(project2);
@@ -122,7 +122,7 @@ namespace PMS_test.ServicesTest
         {
             List<UserInfoDto> projectMembers = _projectService.GetProjectMember(1);
 
-            Assert.Equal(2, projectMembers.Count);
+            Assert.Equal(3, projectMembers.Count);
             Assert.Equal("testUser1", projectMembers[0].Name);
         }
 
@@ -131,5 +131,38 @@ namespace PMS_test.ServicesTest
         {
             Assert.Throws<Exception>(() => _projectService.GetProjectMember(4));
         }
+
+        [Fact]
+        public void TestGetProjectById()
+        {
+            ProjectResultDto result = _projectService.GetProjectByProjectId(1, "github_testUser1");
+
+            Assert.Equal("testProject1", result.Name);
+        }
+
+        [Fact]
+        public void TestGetProjectByIdButNotProjectMember()
+        {
+            Assert.Throws<Exception>(() => _projectService.GetProjectByProjectId(2, "github_testUser3"));
+        }
+
+        [Fact]
+        public void TestGetAllProject()
+        {
+            List<ProjectResultDto> result = _projectService.GetAllProject();
+
+            Assert.Equal(2, result.Count);
+        }
+
+        [Fact]
+        public void TestDeleteProjectMember()
+        {
+            _projectService.DeleteProjectMember("github_testUser3", 1);
+
+            List<UserInfoDto> result = _projectService.GetProjectMember(1);
+
+            Assert.Equal(2, result.Count);
+        }
     }
+
 }
