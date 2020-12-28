@@ -24,7 +24,9 @@ namespace project_manage_system_backend.Controllers
         public async Task<IActionResult> AddRepo(RequestAddRepoDto addRepoDto)
         {
             var response = await _repoService.CheckRepoExist(addRepoDto.url);
-            if (response.IsSucess)
+            var responseForSonarqube = await _repoService.checkSonarqubeAliveAndProjectExisted(addRepoDto.sonarqubeUrl, addRepoDto.accountColonPw,addRepoDto.projectKey);
+
+            if (response.IsSucess && responseForSonarqube.success)
             {
                 var project = _repoService.GetProjectByProjectId(addRepoDto.projectId);
 
@@ -33,7 +35,10 @@ namespace project_manage_system_backend.Controllers
                     Name = response.name,
                     Owner = response.owner.login,
                     Url = response.html_url,
-                    Project = project
+                    Project = project,
+                    sonarqubeUrl = addRepoDto.sonarqubeUrl,
+                    accountColonPw = addRepoDto.accountColonPw,
+                    projectKey = addRepoDto.projectKey
                 };
                 try
                 {
@@ -59,13 +64,13 @@ namespace project_manage_system_backend.Controllers
                 return Ok(new ResponseDto
                 {
                     success = false,
-                    message = "Add Fail:" + response.message
+                    message = "Add Fail:" + (!response.IsSucess ? response.message : responseForSonarqube.message)
                 });
 
             }
         }
 
-
+        [Authorize]
         [HttpDelete]
         public IActionResult DeleteRepo(int repoId, int projectId)
         {

@@ -13,5 +13,21 @@
         public string Owner { get; set; }
 
         public Project Project { get; set; }
+
+        /// <summary>
+        /// foramt: "帳號:密碼"
+        /// encryption: base64
+        /// </summary>
+        public string accountColonPw { get; set; }
+
+        /// <summary>
+        /// Sonarqube url
+        /// </summary>
+        public string sonarqubeUrl { get; set; }
+
+        /// <summary>
+        /// sonarqube projectkey
+        /// </summary>
+        public string projectKey { get; set; }
     }
 }

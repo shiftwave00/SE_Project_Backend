@@ -7,5 +7,20 @@
 
         public string url { get; set; }
 
+        /// <summary>
+        /// foramt: "帳號:密碼"
+        /// encryption:base64
+        /// </summary>
+        public string accountColonPw { get; set; }
+
+        /// <summary>
+        /// Sonarqube網址
+        /// </summary>
+        public string sonarqubeUrl { get; set; }
+
+        /// <summary>
+        /// sonarqube projectkey
+        /// </summary>
+        public string projectKey { get; set; }
     }
 }
