@@ -7,6 +7,8 @@
 
         public string url { get; set; }
 
+        public bool isSonarqube { get; set; }
+
         /// <summary>
         /// foramt: "帳號:密碼"
         /// encryption:base64

@@ -103,7 +103,7 @@ namespace project_manage_system_backend.Services
                 ResponseDto responseDto = new ResponseDto()
                 {
                     success = false,
-                    message = ex.Message+" Or Sonarqube Timeout"
+                    message = ex.Message
                 };
                 return responseDto;
             }
