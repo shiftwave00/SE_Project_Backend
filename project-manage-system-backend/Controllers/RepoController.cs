@@ -19,24 +19,34 @@ namespace project_manage_system_backend.Controllers
             _repoService = new RepoService(dbContext);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         public async Task<IActionResult> AddRepo(RequestAddRepoDto addRepoDto)
         {
             var response = await _repoService.CheckRepoExist(addRepoDto.url);
+
             if (response.IsSucess)
             {
-                var project = _repoService.GetProjectByProjectId(addRepoDto.projectId);
-
-                Repo model = new Repo()
-                {
-                    Name = response.name,
-                    Owner = response.owner.login,
-                    Url = response.html_url,
-                    Project = project
-                };
                 try
                 {
+                    var result = await _repoService.checkSonarqubeAliveAndProjectExisted(addRepoDto.sonarqubeUrl, addRepoDto.accountColonPw, addRepoDto.projectKey);
+                    bool isSonarqubeExisted = result.success;
+
+                    if (addRepoDto.isSonarqube && !isSonarqubeExisted)
+                        return Ok(new ResponseDto() { success = false, message = "Sonarqube isn't online" });
+
+                    var project = _repoService.GetProjectByProjectId(addRepoDto.projectId);
+                    Repo model = new Repo()
+                    {
+                        Name = response.name,
+                        Owner = response.owner.login,
+                        Url = response.html_url,
+                        Project = project,
+                        isSonarqube = addRepoDto.isSonarqube,
+                        sonarqubeUrl = isSonarqubeExisted && addRepoDto.isSonarqube ? addRepoDto.sonarqubeUrl : string.Empty,
+                        accountColonPw = isSonarqubeExisted && addRepoDto.isSonarqube ? addRepoDto.accountColonPw : string.Empty,
+                        projectKey = isSonarqubeExisted && addRepoDto.isSonarqube ? addRepoDto.projectKey : string.Empty
+                    };
                     _repoService.CreateRepo(model);
                     return Ok(new ResponseDto
                     {
@@ -59,13 +69,13 @@ namespace project_manage_system_backend.Controllers
                 return Ok(new ResponseDto
                 {
                     success = false,
-                    message = "Add Fail:" + response.message
+                    message = "Add Fail: " + response.message
                 });
 
             }
         }
 
-
+        [Authorize]
         [HttpDelete]
         public IActionResult DeleteRepo(int repoId, int projectId)
         {

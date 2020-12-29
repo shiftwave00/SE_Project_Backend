@@ -18,13 +18,14 @@ namespace project_manage_system_backend.Services
         public RepoService(PMSContext dbContext, HttpClient client = null) : base(dbContext)
         {
             _httpClient = client ?? new HttpClient();
+            _httpClient.Timeout = TimeSpan.FromSeconds(3);
         }
 
         public async Task<ResponseGithubRepoInfoDto> CheckRepoExist(string url)
         {
             string matchPatten = @"^http(s)?://([\w-]+.)+[\w-]+(/[\w- ./?%&=])?$";
             if (!Regex.IsMatch(url, matchPatten))
-                return new ResponseGithubRepoInfoDto() { message = "Url Error" };
+                return new ResponseGithubRepoInfoDto() { IsSucess=false ,message = "Url Error" };
 
             url = url.Replace(".git", "");
             url = url.Replace("github.com", "api.github.com/repos");
@@ -35,6 +36,7 @@ namespace project_manage_system_backend.Services
             msg.IsSucess = string.IsNullOrEmpty(msg.message);
             return msg;
         }
+
         public void CreateRepo(Repo model)
         {
             //get project by id
@@ -80,6 +82,32 @@ namespace project_manage_system_backend.Services
             {
                 return false;
             }
+        }
+
+        public async Task<ResponseDto> checkSonarqubeAliveAndProjectExisted(string url, string accountColonPw, string projectKey)
+        {
+            try
+            {
+                url += $"/api/project_analyses/search?project={projectKey}";
+                _httpClient.DefaultRequestHeaders.Add("Authorization", accountColonPw);
+                var result = await _httpClient.GetAsync(url);
+                ResponseDto responseDto = new ResponseDto()
+                {
+                    success = result.IsSuccessStatusCode,
+                    message = result.IsSuccessStatusCode ? "Sonarqube online" : "Sonarqube Project doesn't exist"
+                };
+                return responseDto;
+            }
+            catch (Exception ex)
+            {
+                ResponseDto responseDto = new ResponseDto()
+                {
+                    success = false,
+                    message = ex.Message
+                };
+                return responseDto;
+            }
+            
         }
     }
 }
