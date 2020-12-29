@@ -24,17 +24,17 @@ namespace project_manage_system_backend.Controllers
         public async Task<IActionResult> AddRepo(RequestAddRepoDto addRepoDto)
         {
             var response = await _repoService.CheckRepoExist(addRepoDto.url);
-            bool isSonarqubeExisted;
 
-            var result = await _repoService.checkSonarqubeAliveAndProjectExisted(addRepoDto.sonarqubeUrl, addRepoDto.accountColonPw, addRepoDto.projectKey);
-            isSonarqubeExisted = result.success;
-
-
-
-            if (response.IsSucess && isSonarqubeExisted)
+            if (response.IsSucess)
             {
                 try
                 {
+                    var result = await _repoService.checkSonarqubeAliveAndProjectExisted(addRepoDto.sonarqubeUrl, addRepoDto.accountColonPw, addRepoDto.projectKey);
+                    bool isSonarqubeExisted = result.success;
+
+                    if (addRepoDto.isSonarqube && !isSonarqubeExisted)
+                        return Ok(new ResponseDto() { success = false, message = "Sonarqube isn't online" });
+
                     var project = _repoService.GetProjectByProjectId(addRepoDto.projectId);
                     Repo model = new Repo()
                     {
@@ -42,11 +42,11 @@ namespace project_manage_system_backend.Controllers
                         Owner = response.owner.login,
                         Url = response.html_url,
                         Project = project,
-                        sonarqubeUrl = isSonarqubeExisted ? addRepoDto.sonarqubeUrl : string.Empty,
-                        accountColonPw = isSonarqubeExisted ? addRepoDto.accountColonPw : string.Empty,
-                        projectKey = isSonarqubeExisted ? addRepoDto.projectKey : string.Empty
+                        isSonarqube = addRepoDto.isSonarqube,
+                        sonarqubeUrl = isSonarqubeExisted && addRepoDto.isSonarqube ? addRepoDto.sonarqubeUrl : string.Empty,
+                        accountColonPw = isSonarqubeExisted && addRepoDto.isSonarqube ? addRepoDto.accountColonPw : string.Empty,
+                        projectKey = isSonarqubeExisted && addRepoDto.isSonarqube ? addRepoDto.projectKey : string.Empty
                     };
-
                     _repoService.CreateRepo(model);
                     return Ok(new ResponseDto
                     {
@@ -69,7 +69,7 @@ namespace project_manage_system_backend.Controllers
                 return Ok(new ResponseDto
                 {
                     success = false,
-                    message = "Add Fail:" + (!response.IsSucess ? response.message : result.message)
+                    message = "Add Fail: " + response.message
                 });
 
             }

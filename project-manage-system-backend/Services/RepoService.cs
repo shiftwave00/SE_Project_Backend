@@ -25,7 +25,7 @@ namespace project_manage_system_backend.Services
         {
             string matchPatten = @"^http(s)?://([\w-]+.)+[\w-]+(/[\w- ./?%&=])?$";
             if (!Regex.IsMatch(url, matchPatten))
-                return new ResponseGithubRepoInfoDto() { message = "Url Error" };
+                return new ResponseGithubRepoInfoDto() { IsSucess=false ,message = "Url Error" };
 
             url = url.Replace(".git", "");
             url = url.Replace("github.com", "api.github.com/repos");

@@ -13,7 +13,10 @@
         public string Owner { get; set; }
 
         public Project Project { get; set; }
-
+        /// <summary>
+        /// 有無sonarqube
+        /// </summary>
+        public bool isSonarqube { get; set; }
         /// <summary>
         /// foramt: "帳號:密碼"
         /// encryption: base64
