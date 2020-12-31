@@ -45,5 +45,11 @@ namespace project_manage_system_backend.Controllers
             string token = User.Claims.FirstOrDefault(c => c.Type.Equals("oauth")).Value;
             return Ok(await _repoInfoService.RequestIssueInfo(repoId, token));
         }
+
+        [HttpGet("sonarqube/{repoId}")]
+        public async Task<IActionResult> GetSonarqube(int repoid)
+        {
+            return Ok(await _repoInfoService.GetSonarqubeInfo(repoid));
+        }
     }
 }
