@@ -46,6 +46,7 @@ namespace project_manage_system_backend.Controllers
             return Ok(await _repoInfoService.RequestIssueInfo(repoId, token));
         }
 
+        [Authorize]
         [HttpGet("sonarqube/{repoId}")]
         public async Task<IActionResult> GetSonarqube(int repoid)
         {
