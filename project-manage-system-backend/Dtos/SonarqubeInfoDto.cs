@@ -14,7 +14,7 @@ namespace project_manage_system_backend.Dtos
         public string metric { get; set; }
         public string value { get; set; }
         public string component { get; set; }
-        bool bestValue { get; set; }
+        public bool bestValue { get; set; }
     }
 
 }
