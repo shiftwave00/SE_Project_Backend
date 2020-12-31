@@ -52,5 +52,12 @@ namespace project_manage_system_backend.Controllers
         {
             return Ok(await _repoInfoService.GetSonarqubeInfo(repoid));
         }
+
+        [Authorize]
+        [HttpGet("ishavesonarqube/{repoId}")]
+        public async Task<IActionResult> IsHaveSonarqube(int repoid)
+        {
+            return Ok(await _repoInfoService.IsHaveSonarqube(repoid));
+        }
     }
 }

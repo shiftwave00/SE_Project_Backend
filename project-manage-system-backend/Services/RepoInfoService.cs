@@ -216,5 +216,11 @@ namespace project_manage_system_backend.Services
             result.projectName = projectKey;
             return result;
         }
+
+        public async Task<bool> IsHaveSonarqube(int repoId)
+        {
+            Repo repo = await _dbContext.Repositories.FindAsync(repoId);
+            return repo.isSonarqube;
+        }
     }
 }
