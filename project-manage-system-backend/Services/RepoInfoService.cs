@@ -209,6 +209,7 @@ namespace project_manage_system_backend.Services
             string projectKey = repo.projectKey;
             string query = "&metricKeys=bugs,vulnerabilities,code_smells,duplicated_lines_density,coverage";
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "request");
+            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Basic {repo.accountColonPw}");
             var response = await _httpClient.GetAsync($"{sonarqubeHostUrl}{apiUrl}projectKeys={projectKey}{query}");
             string content = await response.Content.ReadAsStringAsync();
             var result = JsonSerializer.Deserialize<SonarqubeInfoDto>(content);
