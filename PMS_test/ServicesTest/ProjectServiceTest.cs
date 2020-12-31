@@ -1,5 +1,4 @@
-﻿using Isopoh.Cryptography.Argon2;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Models;
@@ -8,7 +7,6 @@ using project_manage_system_backend.Shares;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Text;
 using Xunit;
 
 namespace PMS_test.ServicesTest

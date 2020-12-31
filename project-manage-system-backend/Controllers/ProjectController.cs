@@ -182,7 +182,7 @@ namespace project_manage_system_backend.Controllers
             {
                 return Ok(_projectService.GetProjectMember(projectId));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return NotFound(ex.Message);
             }
