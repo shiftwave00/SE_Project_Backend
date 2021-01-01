@@ -43,12 +43,12 @@ namespace project_manage_system_backend.Controllers
                 if (_userService.IsAdmin(User.Identity.Name))
                 {
                     _userService.DeleteUserByAccount(account);
-                    return Ok(new ResponseDto { success = true, message = "delete success!" });
+                    return Ok(new ResponseDto { success = true, message = "Delete success!" });
                 }
             }
             catch (System.Exception e)
             {
-                return Ok(new ResponseDto { success = false, message = $"delete fail：{e.Message}" });
+                return Ok(new ResponseDto { success = false, message = $"Delete fail：{e.Message}" });
             }
             return BadRequest();
         }
@@ -63,7 +63,7 @@ namespace project_manage_system_backend.Controllers
                 return Ok(new ResponseDto
                 {
                     success = true,
-                    message = "已成功修改"
+                    message = "Edited Success"
                 });
             }
             catch (Exception ex)
@@ -87,14 +87,14 @@ namespace project_manage_system_backend.Controllers
                     return Ok(new ResponseDto
                     {
                         success = true,
-                        message = "已成功修改"
+                        message = "Edited Success"
                     });
                 }
 
                 return Ok(new ResponseDto
                 {
                     success = false,
-                    message = "修改失敗"
+                    message = "Edited Error"
                 });
             }
             return BadRequest("Who are you?");

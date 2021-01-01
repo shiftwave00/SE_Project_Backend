@@ -32,7 +32,7 @@ namespace project_manage_system_backend.Controllers
                 return Ok(new ResponseDto
                 {
                     success = true,
-                    message = "新增成功"
+                    message = "Added Success"
                 });
             }
             catch (Exception ex)
@@ -40,7 +40,7 @@ namespace project_manage_system_backend.Controllers
                 return Ok(new ResponseDto
                 {
                     success = false,
-                    message = "新增失敗" + ex.Message
+                    message = "Added Error" + ex.Message
                 });
             }
         }
@@ -56,7 +56,7 @@ namespace project_manage_system_backend.Controllers
                 return Ok(new ResponseDto
                 {
                     success = true,
-                    message = "更改成功",
+                    message = "Added Success",
                 });
             }
             catch (Exception ex)
@@ -83,7 +83,7 @@ namespace project_manage_system_backend.Controllers
                 return Ok(new ResponseDto
                 {
                     success = true,
-                    message = "刪除成功",
+                    message = "Deleted success",
                 });
             }
             catch (Exception ex)
@@ -113,7 +113,7 @@ namespace project_manage_system_backend.Controllers
                         return Ok(new ResponseDto
                         {
                             success = true,
-                            message = "刪除成功",
+                            message = "Deleted success",
                         });
                     }
                 }
@@ -122,7 +122,7 @@ namespace project_manage_system_backend.Controllers
                     return Ok(new ResponseDto
                     {
                         success = false,
-                        message = "該使用者不存在",
+                        message = "User didn't exist",
                     });
                 }
             }
@@ -165,12 +165,12 @@ namespace project_manage_system_backend.Controllers
                 }
                 else
                 {
-                    throw new Exception("you are not the project owner");
+                    throw new Exception("You are not the project owner");
                 }
             }
             else
             {
-                throw new Exception("you are not the system user");
+                throw new Exception("You are not the system user");
             }
         }
 
