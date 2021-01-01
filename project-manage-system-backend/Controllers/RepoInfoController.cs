@@ -25,6 +25,7 @@ namespace project_manage_system_backend.Controllers
             return Ok(await _repoInfoService.RequestCommitInfo(repoId, oauth_token));
         }
 
+        [Authorize]
         [HttpGet("codebase/{repoId}")]
         public async Task<IActionResult> GetCodebase(int repoId)
         {
@@ -39,6 +40,7 @@ namespace project_manage_system_backend.Controllers
             return Ok(await _repoInfoService.RequestContributorsActivity(repoId, oauth_token));
         }
 
+        [Authorize]
         [HttpGet("issue/{repoId}")]
         public async Task<IActionResult> GetIssueInfo(int repoId)
         {
