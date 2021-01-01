@@ -194,22 +194,49 @@ namespace project_manage_system_backend.Controllers
         [HttpPatch("{projectId}")]
         public IActionResult EfitProjectNameByAdmin(int projectId, [FromBody] JsonPatchDocument<Project> newProject)
         {
-            var userService = new UserService(_dbContext);
-            if (userService.IsAdmin(User.Identity.Name))
+            if (_userService.IsAdmin(User.Identity.Name))
             {
                 if (_projectService.EditProjectNameByAdmin(projectId, newProject))
                 {
                     return Ok(new ResponseDto
                     {
                         success = true,
-                        message = "modify success!"
+                        message = "Edited success!"
                     });
                 }
                 return Ok(new ResponseDto
                 {
                     success = false,
-                    message = "修改失敗"
+                    message = "Edited Error"
                 });
+            }
+            return BadRequest("Who are you?");
+        }
+
+        [Authorize]
+        [HttpDelete("{projectId}")]
+        public IActionResult DeleteProjectByAdmin(int projectId)
+        {
+            if (_userService.IsAdmin(User.Identity.Name))
+            {
+                try
+                {
+                    _projectService.DeleteProject(projectId);
+                    return Ok(new ResponseDto
+                    {
+                        success = true,
+                        message = "Delete success!"
+                    });
+                }
+                catch(Exception e)
+                {
+                    return Ok(new ResponseDto
+                    {
+                        success = false,
+                        message = $"Delete Error：{e.Message}"
+                    });
+                }
+                
             }
             return BadRequest("Who are you?");
         }
