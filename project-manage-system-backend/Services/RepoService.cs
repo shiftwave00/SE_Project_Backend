@@ -71,7 +71,6 @@ namespace project_manage_system_backend.Services
 
         public bool DeleteRepo(int projectId, int repoId)
         {
-            //var project = _dbContext.Projects.Include(r => r.Repositories).Where(p => p.ID == projectId).First();
             try
             {
                 var repo = _dbContext.Repositories.Include(p => p.Project).First(r => r.ID == repoId && r.Project.ID == projectId);
@@ -103,7 +102,7 @@ namespace project_manage_system_backend.Services
                 ResponseDto responseDto = new ResponseDto()
                 {
                     success = false,
-                    message = ex.Message +"Sonarqube Error"
+                    message = ex.Message + "Sonarqube Error"
                 };
                 return responseDto;
             }

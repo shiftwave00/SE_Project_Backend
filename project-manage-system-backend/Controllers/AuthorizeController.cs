@@ -36,7 +36,7 @@ namespace project_manage_system_backend.Controllers
             {
                 return Ok(result);
             }
-            return ValidationProblem("帳號密碼錯誤！");
+            return ValidationProblem("Account or password error！");
         }
 
         [HttpPost]
