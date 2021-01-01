@@ -38,14 +38,14 @@ namespace project_manage_system_backend.Controllers
                 return Ok(new ResponseDto
                 {
                     success = true,
-                    message = "專案擁有者，可以邀請人"
+                    message = "Is project owner"
                 });
             }
 
             return Ok(new ResponseDto
             {
                 success = false,
-                message = "非專案的擁有者，無法邀請其他人加入專案"
+                message = "Not project owner"
             });
         }
 
@@ -61,7 +61,7 @@ namespace project_manage_system_backend.Controllers
             return Ok(new ResponseDto
             {
                 success = false,
-                message = "非專案的擁有者，無法邀請其他人加入專案"
+                message = "Not project owner, can't invite other user"
             });
         }
 
@@ -85,13 +85,11 @@ namespace project_manage_system_backend.Controllers
                             _invitationService.AddInvitation(invitation);
 
                             await _notifyHub.Clients.Groups(invitation.Applicant.Account).ReceiveNotification();
-                            //await _notifyHub.Clients.All.ReceiveNotification();
-                            //await _notifyHub.Clients.All.ReceiveNotification();
 
                             return Ok(new ResponseDto
                             {
                                 success = true,
-                                message = "送出邀請"
+                                message = "Send invitation"
                             });
                         }
                         else
@@ -99,7 +97,7 @@ namespace project_manage_system_backend.Controllers
                             return Ok(new ResponseDto
                             {
                                 success = false,
-                                message = "已送出邀請，請勿重複邀請"
+                                message = "Send invitation, don't send again"
                             });
                         }
                     }
@@ -113,7 +111,7 @@ namespace project_manage_system_backend.Controllers
                     return Ok(new ResponseDto
                     {
                         success = false,
-                        message = "使用者: " + applicant.Name + " 已在專案中"
+                        message = "User: " + applicant.Name + " has been project contributer"
                     });
                 }
 
@@ -122,7 +120,7 @@ namespace project_manage_system_backend.Controllers
             return Ok(new ResponseDto
             {
                 success = false,
-                message = "找不到該使用者，請輸入正確的使用者名稱"
+                message = "Can't find the user, enter user name again"
             });
         }
 
@@ -152,7 +150,7 @@ namespace project_manage_system_backend.Controllers
                 return Ok(new ResponseDto
                 {
                     success = true,
-                    message = "刪除成功"
+                    message = "Delete success"
                 });
             }
             catch (Exception e)
