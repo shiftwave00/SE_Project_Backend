@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using project_manage_system_backend.Dtos;
+using project_manage_system_backend.Models;
 using project_manage_system_backend.Services;
 using project_manage_system_backend.Shares;
 using System;
@@ -186,6 +188,30 @@ namespace project_manage_system_backend.Controllers
             {
                 return NotFound(ex.Message);
             }
+        }
+
+        [Authorize]
+        [HttpPatch("{projectId}")]
+        public IActionResult EfitProjectNameByAdmin(int projectId, [FromBody] JsonPatchDocument<Project> newProject)
+        {
+            var userService = new UserService(_dbContext);
+            if (userService.IsAdmin(User.Identity.Name))
+            {
+                if (_projectService.EditProjectNameByAdmin(projectId, newProject))
+                {
+                    return Ok(new ResponseDto
+                    {
+                        success = true,
+                        message = "modify success!"
+                    });
+                }
+                return Ok(new ResponseDto
+                {
+                    success = false,
+                    message = "修改失敗"
+                });
+            }
+            return BadRequest("Who are you?");
         }
     }
 }
