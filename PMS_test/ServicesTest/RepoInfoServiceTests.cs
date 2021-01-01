@@ -186,7 +186,7 @@ namespace PMS_test.ControllersTest
             RepoIssuesDto dto = new RepoIssuesDto();
             DateTime closed = Convert.ToDateTime("2020-12-03");
             DateTime created = Convert.ToDateTime("2020-12-01");
-            dto.averageDealwithIssueTime = TimeSpan.FromSeconds((created - closed).TotalSeconds).ToString(@"dd\.hh\:mm\:\:ss\.\.").Replace("..", "秒").Replace(".", "天").Replace("::", "分鐘").Replace(":", "小時"); ;
+            dto.averageDealwithIssueTime = TimeSpan.FromSeconds((created - closed).TotalSeconds).ToString(@"dd\.hh\:mm\:\:ss\.\.").Replace("..", "Seconds").Replace(".", "Day(s) ").Replace("::", "Minute(s) ").Replace(":", "Hour(s) "); ;
             dto.openIssues = JsonConvert.DeserializeObject<List<ResponseGithubRepoIssuesDto>>(CreateFakeIssues("open"));
             dto.closeIssues = JsonConvert.DeserializeObject<List<ResponseGithubRepoIssuesDto>>(CreateFakeIssues("closed"));
             var excepted = JsonConvert.SerializeObject(dto);

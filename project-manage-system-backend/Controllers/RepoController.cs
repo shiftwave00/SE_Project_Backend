@@ -29,11 +29,13 @@ namespace project_manage_system_backend.Controllers
             {
                 try
                 {
+                    if (!addRepoDto.sonarqubeUrl.EndsWith("/"))
+                        addRepoDto.sonarqubeUrl += "/";
                     var result = await _repoService.checkSonarqubeAliveAndProjectExisted(addRepoDto.sonarqubeUrl, addRepoDto.accountColonPw, addRepoDto.projectKey);
                     bool isSonarqubeExisted = result.success;
 
                     if (addRepoDto.isSonarqube && !isSonarqubeExisted)
-                        return Ok(new ResponseDto() { success = false, message = "Sonarqube isn't online" });
+                        return Ok(new ResponseDto() { success = false, message = result.message });
 
                     var project = _repoService.GetProjectByProjectId(addRepoDto.projectId);
                     Repo model = new Repo()
