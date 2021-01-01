@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using project_manage_system_backend.Dtos;
 using project_manage_system_backend.Models;
@@ -151,6 +152,13 @@ namespace project_manage_system_backend.Services
 
             if (_dbContext.SaveChanges() == 0)
                 throw new Exception("Delete project member fail!");
+        }
+
+        public bool EditProjectNameByAdmin(int projectId, JsonPatchDocument<Project> newProject)
+        {
+            var project = _dbContext.Projects.Find(projectId);
+            newProject.ApplyTo(project);
+            return !(_dbContext.SaveChanges() == 0);
         }
     }
 }
