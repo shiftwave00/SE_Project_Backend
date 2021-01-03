@@ -205,7 +205,7 @@ namespace project_manage_system_backend.Services
         {
             Repo repo = _dbContext.Repositories.Find(repoId);
             string sonarqubeHostUrl = repo.sonarqubeUrl;
-            string apiUrl = "/api/measures/search?";
+            string apiUrl = "api/measures/search?";
             string projectKey = repo.projectKey;
             string query = "&metricKeys=bugs,vulnerabilities,code_smells,duplicated_lines_density,coverage";
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "request");
