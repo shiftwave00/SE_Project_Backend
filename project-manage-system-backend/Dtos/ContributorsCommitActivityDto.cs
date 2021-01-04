@@ -32,5 +32,6 @@ namespace project_manage_system_backend.Dtos
         public int total { get; set; }
         public int totalAdditions { get; set; }
         public int totalDeletions { get; set; }
+        public string commitsHtmlUrl { get; set; }
     }
 }
