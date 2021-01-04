@@ -73,7 +73,7 @@ namespace project_manage_system_backend.Services
 
         public void EditUserName(string account, string newUserName)
         {
-            string regexPattern = "^[A-Za-z0-9]+";
+            string regexPattern = "^[A-Za-z0-9]+$";
             Regex regex = new Regex(regexPattern);
             if (newUserName == "" || !regex.IsMatch(newUserName))
             {

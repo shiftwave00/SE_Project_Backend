@@ -191,6 +191,7 @@ namespace project_manage_system_backend.Services
 
             foreach (var item in result)
             {
+                item.commitsHtmlUrl = $"https://github.com/{repo.Owner}/{repo.Name}/commits?author={item.author.login}";
                 foreach (var week in item.weeks)
                 {
                     week.ws = DateHandler.ConvertToDateString(week.w);

@@ -144,8 +144,17 @@ namespace project_manage_system_backend.Controllers
         [HttpGet]
         public IActionResult GetProject()
         {
-            var result = _userService.IsAdmin(User.Identity.Name) ? _projectService.GetAllProject() : _projectService.GetProjectByUserAccount(User.Identity.Name);
+            var result = _projectService.GetProjectByUserAccount(User.Identity.Name);
             return Ok(result);
+        }
+
+        [Authorize]
+        [HttpGet("admin")]
+        public IActionResult GetAllProjectByAdmin()
+        {
+            if (_userService.IsAdmin(User.Identity.Name))
+                return Ok(_projectService.GetAllProject());
+            return BadRequest("You are not a Admin");
         }
 
         [Authorize]

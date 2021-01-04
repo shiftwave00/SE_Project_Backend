@@ -57,7 +57,7 @@ namespace project_manage_system_backend.Services
 
         public void EditProjectName(ProjectDto projectDto)
         {
-            string regexPattern = "^[A-Za-z0-9]+";
+            string regexPattern = "^[A-Za-z0-9_-]+$";
             Regex regex = new Regex(regexPattern);
             if (projectDto.ProjectName == "" || !regex.IsMatch(projectDto.ProjectName))
             {

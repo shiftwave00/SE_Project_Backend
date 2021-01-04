@@ -23,7 +23,8 @@ namespace project_manage_system_backend.Services
 
         public async Task<ResponseGithubRepoInfoDto> CheckRepoExist(string url)
         {
-            string matchPatten = @"^http(s)?://([\w-]+.)+[\w-]+(/[\w- ./?%&=])?$";
+            const string GITHUB_COM = "github.com";
+            string matchPatten = $@"^http(s)?://{GITHUB_COM}/([\w-]+.)+[\w-]+(/[\w- ./?%&=])?$";
             if (!Regex.IsMatch(url, matchPatten))
                 return new ResponseGithubRepoInfoDto() { IsSucess = false, message = "Url Error" };
 
