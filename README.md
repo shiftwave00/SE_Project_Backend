@@ -11,7 +11,7 @@ Response User Model
 
 EF Core
 ```
-dotnet tool install --global dotnet-ef //安裝EFCORE TOOL
+dotnet tool install --global dotnet-ef --version 5.0.2 //安裝EFCORE TOOL
 dotnet ef migrations add InitialCreate //當有變動到DB MODEL時需執行
 dotnet ef database update //更新資料庫
 ```

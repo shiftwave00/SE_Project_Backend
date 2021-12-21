@@ -1,0 +1,16 @@
+„
+{C:\NTUT_KAI\Project_Manage_Project_ForCourse\backend-main\backend-main\PMS_test\ControllersTest\AuthorizeControllerTests.csutf-8
+vC:\NTUT_KAI\Project_Manage_Project_ForCourse\backend-main\backend-main\PMS_test\ControllersTest\BaseControllerTests.csutf-8‚
+yC:\NTUT_KAI\Project_Manage_Project_ForCourse\backend-main\backend-main\PMS_test\ControllersTest\ProjectControllerTests.csutf-8~
+uC:\NTUT_KAI\Project_Manage_Project_ForCourse\backend-main\backend-main\PMS_test\ControllersTest\UserControllerTest.csutf-8|
+sC:\NTUT_KAI\Project_Manage_Project_ForCourse\backend-main\backend-main\PMS_test\RepoInfoTest\GitlabRepoInfoTests.csutf-8}
+uC:\NTUT_KAI\Project_Manage_Project_ForCourse\backend-main\backend-main\PMS_test\ServicesTest\AuthorizeServiceTests.csbig5
+vC:\NTUT_KAI\Project_Manage_Project_ForCourse\backend-main\backend-main\PMS_test\ServicesTest\InvitationServiceTests.csutf-8{
+rC:\NTUT_KAI\Project_Manage_Project_ForCourse\backend-main\backend-main\PMS_test\ServicesTest\ProjectServiceTest.csutf-8}
+tC:\NTUT_KAI\Project_Manage_Project_ForCourse\backend-main\backend-main\PMS_test\ServicesTest\RepoInfoServiceTests.csutf-8y
+pC:\NTUT_KAI\Project_Manage_Project_ForCourse\backend-main\backend-main\PMS_test\ServicesTest\RepoServiceTests.csutf-8}
+tC:\NTUT_KAI\Project_Manage_Project_ForCourse\backend-main\backend-main\PMS_test\ServicesTest\SonarqubeServierTest.csutf-8y
+pC:\NTUT_KAI\Project_Manage_Project_ForCourse\backend-main\backend-main\PMS_test\ServicesTest\UserServiceTests.csutf-8€
+uC:\Users\NTUT_Kai\.nuget\packages\microsoft.net.test.sdk\16.5.0\build\netcoreapp2.1\Microsoft.NET.Test.Sdk.Program.csutf-8¢
+–C:\NTUT_KAI\Project_Manage_Project_ForCourse\backend-main\backend-main\PMS_test\obj\Debug\netcoreapp3.1\.NETCoreApp,Version=v3.1.AssemblyAttributes.csutf-8Œ
+€C:\NTUT_KAI\Project_Manage_Project_ForCourse\backend-main\backend-main\PMS_test\obj\Debug\netcoreapp3.1\PMS_test.AssemblyInfo.csutf-8

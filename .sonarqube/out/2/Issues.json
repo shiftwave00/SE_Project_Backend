@@ -1,0 +1,224 @@
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Microsoft (R) Visual C# 編譯器",
+        "version": "4.0.0.0",
+        "fileVersion": "4.0.0-6.21526.21 (c7d6f9fa)",
+        "semanticVersion": "4.0.0",
+        "language": "zh-TW"
+      },
+      "results": [
+        {
+          "ruleId": "S3433",
+          "level": "warning",
+          "message": "Make this test method non-'async' or return 'Task'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/NTUT_KAI/Project_Manage_Project_ForCourse/backend-main/backend-main/PMS_test/ServicesTest/RepoServiceTests.cs",
+                "region": {
+                  "startLine": 124,
+                  "startColumn": 27,
+                  "endLine": 124,
+                  "endColumn": 63
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3433",
+          "level": "warning",
+          "message": "Make this test method non-'async' or return 'Task'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/NTUT_KAI/Project_Manage_Project_ForCourse/backend-main/backend-main/PMS_test/ServicesTest/RepoServiceTests.cs",
+                "region": {
+                  "startLine": 138,
+                  "startColumn": 27,
+                  "endLine": 138,
+                  "endColumn": 66
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3433",
+          "level": "warning",
+          "message": "Make this test method non-'async' or return 'Task'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/NTUT_KAI/Project_Manage_Project_ForCourse/backend-main/backend-main/PMS_test/ServicesTest/RepoServiceTests.cs",
+                "region": {
+                  "startLine": 155,
+                  "startColumn": 27,
+                  "endLine": 155,
+                  "endColumn": 67
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3433",
+          "level": "warning",
+          "message": "Make this test method non-'async' or return 'Task'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/NTUT_KAI/Project_Manage_Project_ForCourse/backend-main/backend-main/PMS_test/RepoInfoTest/GitlabRepoInfoTests.cs",
+                "region": {
+                  "startLine": 89,
+                  "startColumn": 27,
+                  "endLine": 89,
+                  "endColumn": 45
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3433",
+          "level": "warning",
+          "message": "Make this test method non-'async' or return 'Task'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/NTUT_KAI/Project_Manage_Project_ForCourse/backend-main/backend-main/PMS_test/RepoInfoTest/GitlabRepoInfoTests.cs",
+                "region": {
+                  "startLine": 132,
+                  "startColumn": 27,
+                  "endLine": 132,
+                  "endColumn": 49
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3433",
+          "level": "warning",
+          "message": "Make this test method non-'async' or return 'Task'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/NTUT_KAI/Project_Manage_Project_ForCourse/backend-main/backend-main/PMS_test/ServicesTest/SonarqubeServierTest.cs",
+                "region": {
+                  "startLine": 215,
+                  "startColumn": 27,
+                  "endLine": 215,
+                  "endColumn": 62
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3433",
+          "level": "warning",
+          "message": "Make this test method non-'async' or return 'Task'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/NTUT_KAI/Project_Manage_Project_ForCourse/backend-main/backend-main/PMS_test/ServicesTest/SonarqubeServierTest.cs",
+                "region": {
+                  "startLine": 221,
+                  "startColumn": 27,
+                  "endLine": 221,
+                  "endColumn": 63
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3433",
+          "level": "warning",
+          "message": "Make this test method non-'async' or return 'Task'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/NTUT_KAI/Project_Manage_Project_ForCourse/backend-main/backend-main/PMS_test/ServicesTest/SonarqubeServierTest.cs",
+                "region": {
+                  "startLine": 227,
+                  "startColumn": 27,
+                  "endLine": 227,
+                  "endColumn": 57
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3433",
+          "level": "warning",
+          "message": "Make this test method non-'async' or return 'Task'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/NTUT_KAI/Project_Manage_Project_ForCourse/backend-main/backend-main/PMS_test/ServicesTest/SonarqubeServierTest.cs",
+                "region": {
+                  "startLine": 182,
+                  "startColumn": 27,
+                  "endLine": 182,
+                  "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "S3433": {
+          "id": "S3433",
+          "shortDescription": "Test method signatures should be correct",
+          "fullDescription": "A method is detected as test method if marked with one of the following attributes [TestMethod] or [DataTestMethod] (for mstest), [Fact] or [Theory] (for xunit) or [Test], [TestCase], [TestCaseSource] or [Theory] (for nunit). However, whether or not they have a test attribute, non-public methods are not recognized as tests, and therefore not executed. Neither are async void methods, or methods with generics anywhere in their signatures.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-3433",
+          "properties": {
+            "category": "Blocker Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "TestSourceScope"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
