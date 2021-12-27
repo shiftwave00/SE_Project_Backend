@@ -17,8 +17,9 @@ dotnet ef database update //更新資料庫
 ```
 ## 測試與Jenkins的連線(12/27)
 
-第一次failed
-第二次進行中
+第一次failed\n
+第二次failed\n
+第三次ing
 
 
 [參考資料](https://docs.microsoft.com/en-us/ef/core/get-started/overview/first-app?tabs=netcore-cli)
