@@ -19,7 +19,8 @@ dotnet ef database update //更新資料庫
 
 第一次failed\n
 第二次failed\n
-第三次ing
+第三次failed\n
+第四次ing
 
 
 [參考資料](https://docs.microsoft.com/en-us/ef/core/get-started/overview/first-app?tabs=netcore-cli)
