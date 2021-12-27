@@ -15,4 +15,6 @@ dotnet tool install --global dotnet-ef --version 5.0.2 //安裝EFCORE TOOL
 dotnet ef migrations add InitialCreate //當有變動到DB MODEL時需執行
 dotnet ef database update //更新資料庫
 ```
+##測試與Jenkins的連線(12/27)
+
 [參考資料](https://docs.microsoft.com/en-us/ef/core/get-started/overview/first-app?tabs=netcore-cli)
