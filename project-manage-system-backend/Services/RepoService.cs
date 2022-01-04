@@ -97,7 +97,11 @@ namespace project_manage_system_backend.Services
                 IsSonarqube = addRepoDto.isSonarqube,
                 SonarqubeUrl = addRepoDto.sonarqubeUrl,
                 AccountColonPw = addRepoDto.accountColonPassword,
-                ProjectKey = addRepoDto.projectKey
+                ProjectKey = addRepoDto.projectKey,
+                JobName = addRepoDto.jobName,
+                IsJenkins = addRepoDto.isJenkins,
+                JenkinsUrl = addRepoDto.jenkinsUrl,
+                AccountColonPwJenkins = addRepoDto.accountColonPwJenkins
             };
         }
 

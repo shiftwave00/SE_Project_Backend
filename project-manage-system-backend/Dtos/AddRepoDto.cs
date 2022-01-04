@@ -25,5 +25,13 @@
         /// sonarqube projectkey
         /// </summary>
         public string projectKey { get; set; }
+
+        public string jobName { get; set; }
+
+        public bool isJenkins { get; set; }
+
+        public string jenkinsUrl { get; set; }
+
+        public string accountColonPwJenkins { get; set; }
     }
 }

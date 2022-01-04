@@ -37,5 +37,15 @@
         /// gitlab repository id
         /// </summary>
         public string RepoId { get; set; }
+
+        public string JobName { get; set; }
+
+        public bool IsJenkins { get; set; }
+
+        public string JenkinsUrl { get; set; }
+
+        public string AccountColonPwJenkins { get; set; }
+
+        
     }
 }
