@@ -75,20 +75,31 @@ namespace project_manage_system_backend.Services
             {
                 var githubResponse = await GetRepositoryInformation(addRepoDto.url);
                 var sonarqubeResponse = await CheckSonarqubeAliveAndProjectExisted(addRepoDto);
+                var jenkinsResponse = await CheckJenkinsAliveAndProjectExisted(addRepoDto);
                 ResponseDto result = new ResponseDto() { success = githubResponse.success, message = githubResponse.message };
                 if (githubResponse.success)
                 {// github repo存在
-                    if ((!addRepoDto.isSonarqube) || sonarqubeResponse.success)
-                    {// 有sonarqube＆sonarqube存在 或 沒有sonarqube
+                    if ((!addRepoDto.isSonarqube && !addRepoDto.isJenkins) || (sonarqubeResponse.success && jenkinsResponse.success))
+                    {// 沒有sonarqube & jenkins    或    有git ＆ sonarqube & jenkins存在
                         Repo model = MakeRepoModel(githubResponse, addRepoDto);
                         CreateRepo(model);
                         result.message = "Add Success";
                         return result;
                     }
-                    else
-                    {// 有sonarqube 但是sonarqube有問題
+                    else if(addRepoDto.isSonarqube && !addRepoDto.isJenkins && !sonarqubeResponse.success)
+                    {// 有sonarqube沒jenkins  且sonarqube有問題
                         result.success = sonarqubeResponse.success;
                         result.message = sonarqubeResponse.message;
+                    }
+                    else if (!addRepoDto.isSonarqube && addRepoDto.isJenkins && !jenkinsResponse.success)
+                    {// 有jenkins沒sonarqube  且jenkins有問題
+                        result.success = jenkinsResponse.success;
+                        result.message = jenkinsResponse.message;
+                    }
+                    else
+                    {//兩個都有 兩個都有問題
+                        result.success = false;
+                        result.message = "Add Failed, Check the input data";
                     }
                 }
                 return result;
