@@ -13,10 +13,12 @@ namespace project_manage_system_backend.Controllers
     {
         private readonly RepoInfoService _repoInfoService;
         private readonly SonarqubeService _sonarqubeService;
+        private readonly JenkinsService _jenkinsService;
         public RepoInfoController(PMSContext dbContext)
         {
             _repoInfoService = new RepoInfoService(dbContext);
             _sonarqubeService = new SonarqubeService(dbContext);
+            _jenkinsService = new JenkinsService(dbContext);
         }
 
         [Authorize]
@@ -87,6 +89,24 @@ namespace project_manage_system_backend.Controllers
         public async Task<IActionResult> GetDuplicationSheet(int repoid)
         {
             return Ok(await _sonarqubeService.GetDuplication(repoid));
+        }
+
+        [HttpGet("jenkins/jobInformation/{repoId}")]
+        public async Task<IActionResult> GetJenkinsInfoAsync(int repoid)
+        {
+            return Ok(await _jenkinsService.GetJenkinsInfoAsync(repoid));
+        }
+
+        [HttpGet("jenkins/jobIssue/{repoid}")]
+        public async Task<IActionResult> GetJenkinsJobIssue(int repoid)
+        {
+            return Ok(await _jenkinsService.GetJenkinsJobIssue(repoid));
+        }
+
+        [HttpGet("ishavejenkins/{repoId}")]
+        public async Task<IActionResult> IsHaveJenkins(int repoid)
+        {
+            return Ok(await _jenkinsService.IsHaveJenkins(repoid));
         }
     }
 }

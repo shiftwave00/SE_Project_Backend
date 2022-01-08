@@ -83,7 +83,7 @@ namespace project_manage_system_backend.Services
         public List<ProjectResultDto> GetProjectByUserAccount(string account)
         {
             var user = _dbContext.Users.Include(u => u.Projects).ThenInclude(p => p.Project).ThenInclude(p => p.Owner).FirstOrDefault(u => u.Account.Equals(account));
-            var query = (from up in user.Projects
+             var query = (from up in user.Projects
                          select new ProjectResultDto { Id = up.Project.ID, Name = up.Project.Name, OwnerId = up.Project.Owner.Account, OwnerName = up.Project.Owner.Name }).ToList();
             return query;
         }

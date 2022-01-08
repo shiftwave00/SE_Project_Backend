@@ -49,6 +49,26 @@ namespace project_manage_system_backend.Services
             }
         }
 
+        private async Task<ResponseDto> CheckJenkinsAliveAndProjectExisted(AddRepoDto addRepoDto)
+        //要動到太多地方，先擱置
+        {
+            ResponseDto responseDto = new ResponseDto() { success = false, message = "Jenkins Error " };
+            try
+            {
+                var jenkinsUrl = addRepoDto.jenkinsUrl + $"job/{addRepoDto.jobName}//api/json";
+                _httpClient.DefaultRequestHeaders.Add("Authorization", $"Basic {addRepoDto.accountColonPwJenkins}");
+                var result = await _httpClient.GetAsync(jenkinsUrl);
+                responseDto.success = result.IsSuccessStatusCode;
+                responseDto.message = result.IsSuccessStatusCode ? "Jenkins online" : "Jenkins Job doesn't exist";
+                return responseDto;
+            }
+            catch (Exception ex)
+            {
+                responseDto.message.Insert(0, ex.Message);
+                return responseDto;
+            }
+        }
+
         public async Task<ResponseDto> AddRepo(AddRepoDto addRepoDto)
         {
             try
