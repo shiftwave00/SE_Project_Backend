@@ -36,6 +36,7 @@ namespace project_manage_system_backend.Services
             try
             {
                 var sonarqubeUrl = addRepoDto.sonarqubeUrl + $"api/project_analyses/search?project={addRepoDto.projectKey}";
+                _httpClient.DefaultRequestHeaders.Clear();
                 _httpClient.DefaultRequestHeaders.Add("Authorization", $"Basic {addRepoDto.accountColonPassword}");
                 var result = await _httpClient.GetAsync(sonarqubeUrl);
                 responseDto.success = result.IsSuccessStatusCode;
@@ -55,11 +56,16 @@ namespace project_manage_system_backend.Services
             ResponseDto responseDto = new ResponseDto() { success = false, message = "Jenkins Error " };
             try
             {
-                var jenkinsUrl = addRepoDto.jenkinsUrl + $"job/{addRepoDto.jobName}//api/json";
+                //Console.WriteLine(addRepoDto.jenkinsUrl);
+                var jenkinsUrl = addRepoDto.jenkinsUrl + $"job/{addRepoDto.jobName}/api/json";
+                //Console.WriteLine(jenkinsUrl);
+                _httpClient.DefaultRequestHeaders.Clear();
                 _httpClient.DefaultRequestHeaders.Add("Authorization", $"Basic {addRepoDto.accountColonPwJenkins}");
                 var result = await _httpClient.GetAsync(jenkinsUrl);
-                responseDto.success = result.IsSuccessStatusCode;
+                responseDto.success = true;
                 responseDto.message = result.IsSuccessStatusCode ? "Jenkins online" : "Jenkins Job doesn't exist";
+                //Console.WriteLine(responseDto.message);
+                //Console.WriteLine(responseDto.success);
                 return responseDto;
             }
             catch (Exception ex)
@@ -71,11 +77,21 @@ namespace project_manage_system_backend.Services
 
         public async Task<ResponseDto> AddRepo(AddRepoDto addRepoDto)
         {
+            //Console.WriteLine(addRepoDto.isJenkins);
+            //Console.WriteLine(addRepoDto.isSonarqube);
+            //Console.WriteLine(addRepoDto.jenkinsUrl);
+            //Console.WriteLine(addRepoDto.sonarqubeUrl);
+            //Console.WriteLine(addRepoDto.jobName);
+            //Console.WriteLine(addRepoDto.projectKey);
             try
             {
                 var githubResponse = await GetRepositoryInformation(addRepoDto.url);
                 var sonarqubeResponse = await CheckSonarqubeAliveAndProjectExisted(addRepoDto);
+                //Console.WriteLine(sonarqubeResponse.message);
+                //Console.WriteLine(sonarqubeResponse.success);
                 var jenkinsResponse = await CheckJenkinsAliveAndProjectExisted(addRepoDto);
+                //Console.WriteLine(jenkinsResponse.message);
+                //Console.WriteLine(jenkinsResponse.success);
                 ResponseDto result = new ResponseDto() { success = githubResponse.success, message = githubResponse.message };
                 if (githubResponse.success)
                 {// github repo存在
@@ -86,15 +102,35 @@ namespace project_manage_system_backend.Services
                         result.message = "Add Success";
                         return result;
                     }
-                    else if(addRepoDto.isSonarqube && !addRepoDto.isJenkins && !sonarqubeResponse.success)
-                    {// 有sonarqube沒jenkins  且sonarqube有問題
-                        result.success = sonarqubeResponse.success;
-                        result.message = sonarqubeResponse.message;
+                    else if(addRepoDto.isSonarqube && !addRepoDto.isJenkins)
+                    {// 有sonarqube沒jenkins
+                        if(sonarqubeResponse.success){
+                            Repo model = MakeRepoModel(githubResponse, addRepoDto);
+                            CreateRepo(model);
+                            result.message = "Add Success";
+                            return result;
+                        }
+                        else
+                        {
+                            result.success = sonarqubeResponse.success;
+                            result.message = sonarqubeResponse.message;
+                        }
+                        
                     }
-                    else if (!addRepoDto.isSonarqube && addRepoDto.isJenkins && !jenkinsResponse.success)
-                    {// 有jenkins沒sonarqube  且jenkins有問題
-                        result.success = jenkinsResponse.success;
-                        result.message = jenkinsResponse.message;
+                    else if (!addRepoDto.isSonarqube && addRepoDto.isJenkins)
+                    {// 有jenkins沒sonarqube
+                        if (jenkinsResponse.success)
+                        {
+                            Repo model = MakeRepoModel(githubResponse, addRepoDto);
+                            CreateRepo(model);
+                            result.message = "Add Success";
+                            return result;
+                        }
+                        else
+                        {
+                            result.success = jenkinsResponse.success;
+                            result.message = jenkinsResponse.message;
+                        }
                     }
                     else
                     {//兩個都有 兩個都有問題
